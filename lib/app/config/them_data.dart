@@ -4,6 +4,10 @@ class ThemConfig {
   static ThemeData createTheme() {
     return ThemeData(
       fontFamily: 'peyda',
+      scaffoldBackgroundColor: Colors.white,
+      appBarTheme: AppBarTheme(
+        elevation: 0,color: Colors.white,centerTitle: false,
+      ),
       textTheme: const TextTheme(
         displayLarge: TextStyle(
           color: Colors.white,
@@ -11,7 +15,7 @@ class ThemConfig {
           fontWeight: FontWeight.w700,
         ),
         displayMedium: TextStyle(
-            color: Colors.black, fontSize: 23, fontWeight: FontWeight.w700),
+            color: Colors.black, fontSize: 12, fontWeight: FontWeight.w700),
         titleMedium: TextStyle(
             color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
         titleSmall: TextStyle(
@@ -19,13 +23,26 @@ class ThemConfig {
         bodyLarge: TextStyle(
             color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
         bodyMedium: TextStyle(
-            color: Colors.black, fontSize: 13, fontWeight: FontWeight.w500),
+            color: Colors.black, fontSize: 14, fontWeight: FontWeight.w500),
         bodySmall: TextStyle(
-            color: Colors.black, fontSize: 12, fontWeight: FontWeight.w500,letterSpacing: 0),
+            color: Colors.black,
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0),
+        labelLarge: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0),
         labelMedium: TextStyle(
-            color: Colors.black, fontSize: 12, fontWeight: FontWeight.w400,letterSpacing: 0),
+            color: Colors.black,
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0),
         labelSmall: TextStyle(
-            color: Colors.black, fontSize: 10, fontWeight: FontWeight.w400,letterSpacing: 0),
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0),
       ),
     );
   }
