@@ -49,9 +49,9 @@ class BasePage extends StatelessWidget {
                   ),
                 ],
                 bottom: PreferredSize(
-                  preferredSize: const Size(double.infinity, 60),
+                  preferredSize: const Size(double.infinity, 70),
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
                     width: double.infinity,
                     height: 50,
                     decoration: BoxDecoration(
@@ -94,7 +94,7 @@ class BasePage extends StatelessWidget {
                 border: Border(
                     top: BorderSide(color: Color(0xffF0F2F4), width: 1.5))),
             child: Padding(
-              padding: const EdgeInsets.only(left: 5, right: 5, bottom: 20),
+              padding: const EdgeInsets.only(bottom: 20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -134,64 +134,6 @@ class BasePage extends StatelessWidget {
     );
   }
 
-  myFlexibleAppBar() {
-    return Container(
-      padding: EdgeInsets.only(top: MediaQuery.of(Get.context!).padding.top),
-      height: MediaQuery.of(Get.context!).padding.top + 66,
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey,
-            spreadRadius: 0,
-            blurRadius: 250,
-            offset: Offset(0, 0), // changes position of shadow
-          ),
-        ],
-        color: Colors.white,
-      ),
-      child: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 16, right: 20, left: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SvgPicture.asset('assets/icons/share_ic.svg'),
-                const Expanded(child: SizedBox()),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'مرتب سازی بر اساس',
-                      style: Theme.of(Get.context!)
-                          .textTheme
-                          .bodySmall!
-                          .copyWith(color: AppColors.secondTextColor),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                SvgPicture.asset('assets/icons/sort_ic.svg'),
-                const SizedBox(
-                  width: 20,
-                ),
-                const Text('فیلتر'),
-                const SizedBox(
-                  width: 12,
-                ),
-                SvgPicture.asset('assets/icons/filter_ic.svg'),
-              ],
-            ),
-          ),
-        ],
-      )),
-    );
-  }
 
   myNavigationItem({
     required Icon icon,
@@ -204,7 +146,6 @@ class BasePage extends StatelessWidget {
         pageIndex.value = index;
       },
       child: Obx(() => SizedBox(
-            width: 85,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,

@@ -12,8 +12,7 @@ class AppColors{
 
 
   static const Color primaryTextColor = Color(0xff100F0F);
-  static const Color secondTextColor = Color(0xff6E7E85);
-  static const Color secondTextColor2 = Color(0xff536E7B);
+  static Color secondTextColor = const Color(0xff100F0F80).withOpacity(0.5);
   static const Color disabledText = Color(0xff939393);
 
 }

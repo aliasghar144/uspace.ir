@@ -10,7 +10,7 @@ String formatAmount(double input) {
     } else if (i == 0) {
       priceInText = "$str$priceInText";
     } else {
-      priceInText = ".$str$priceInText";
+      priceInText = "،$str$priceInText";
     }
   }
   return priceInText.trim();

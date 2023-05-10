@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   get:
   flutter_svg:
+  smooth_page_indicator:
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:
@@ -79,20 +81,14 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: peyda
+    - family: iransans
       fonts:
-        - asset: assets/fonts/Peyda-Regular.ttf
+        - asset: assets/fonts/IRANSans(FaNum).ttf
           weight: 400
-        - asset: assets/fonts/Peyda-Black.ttf
-          weight: 900
-        - asset: assets/fonts/Peyda-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Peyda-Bold.ttf
+        - asset: assets/fonts/IRANSans(FaNum)_Bold.ttf
           weight: 700
-        - asset: assets/fonts/Peyda-Medium.ttf
+        - asset: assets/fonts/IRANSans(FaNum)_Medium.ttf
           weight: 500
-        - asset: assets/fonts/Peyda-ExtraBold.ttf
-          weight: 800
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
