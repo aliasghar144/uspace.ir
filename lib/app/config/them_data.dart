@@ -16,7 +16,9 @@ class ThemConfig {
           fontWeight: FontWeight.w700,
         ),
         displayMedium: TextStyle(
-            color: AppColors.primaryTextColor, fontSize: 12, fontWeight: FontWeight.w700),
+            color: AppColors.primaryTextColor, fontSize: 14, fontWeight: FontWeight.w700),
+          displaySmall: TextStyle(
+              color: AppColors.primaryTextColor, fontSize: 12, fontWeight: FontWeight.w700),
         bodyLarge: TextStyle(
             color: AppColors.primaryTextColor, fontSize: 16, fontWeight: FontWeight.w500),
         bodyMedium: TextStyle(

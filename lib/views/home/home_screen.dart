@@ -36,9 +36,6 @@ class HomeScreen extends StatelessWidget {
               height: 20,
             ),
             seasonalOffers(),
-            const SizedBox(
-              height: 100,
-            ),
           ],
         ),
       ),

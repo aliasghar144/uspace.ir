@@ -39,6 +39,9 @@ dependencies:
   flutter_svg:
   smooth_page_indicator:
   cached_network_image: ^3.2.3
+  dropdown_button2: ^2.1.0
+#  number_paginator: ^0.2.3
+
 
 dev_dependencies:
   flutter_test:

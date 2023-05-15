@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/views/home/home_screen.dart';
+import 'package:uspace_ir/views/search/search_screen.dart';
 
 class BasePage extends StatelessWidget {
   BasePage({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class BasePage extends StatelessWidget {
   final page = [
     HomeScreen(),
     HomeScreen(),
-    HomeScreen(),
+    SearchScreen(),
     HomeScreen(),
   ];
 
@@ -33,18 +34,18 @@ class BasePage extends StatelessWidget {
                 leading: Padding(
                   padding: const EdgeInsets.only(left: 15,top: 15.0),
                   child: IconButton(
-                    onPressed: (){},
-                    splashRadius: 20,
-                    icon: Icon(Icons.menu,color: Colors.grey,),
-                  ),
+                  splashRadius: 20,
+                  icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
+                  onPressed: () {},
+                ),
                 ),
                 actions: [
                   Padding(
                     padding: const EdgeInsets.only(right: 15,top: 15.0),
                     child: IconButton(
+                      onPressed: (){},
                       splashRadius: 20,
-                      icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
-                      onPressed: () {},
+                      icon: Icon(Icons.menu,color: Colors.grey,),
                     ),
                   ),
                 ],
@@ -100,31 +101,25 @@ class BasePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   myNavigationItem(
-                      icon: const Icon(Icons.person_outline_rounded,
-                          color: AppColors.disabledIcon),
-                      iconSelected:
-                          const Icon(Icons.person, color: AppColors.mainColor),
+                      picture: 'assets/icons/profile_nav_outline_ic.svg',
+                      pictureSelected:
+                          'assets/icons/profile_nav_fill_ic.svg',
                       text: "پروفایل",
                       index: 0),
                   myNavigationItem(
-                      icon: const Icon(Icons.description_outlined,
-                          color: AppColors.disabledIcon),
-                      iconSelected: const Icon(Icons.description,
-                          color: AppColors.mainColor),
+                      picture: 'assets/icons/paper_outline_ic.svg',
+                      pictureSelected: 'assets/icons/paper_nav_fill_ic.svg',
                       text: 'تاریخچه',
                       index: 1),
                   myNavigationItem(
-                      icon: const Icon(Icons.location_on_outlined,
-                          color: AppColors.disabledIcon),
-                      iconSelected: const Icon(Icons.location_on,
-                          color: AppColors.mainColor),
+                      picture: 'assets/icons/location_pin_nav_outline_ic.svg',
+                      pictureSelected: 'assets/icons/location_pin_nav_fill_ic.svg',
                       text: "جست و جو",
                       index: 2),
                   myNavigationItem(
-                      icon: const Icon(Icons.home_outlined,
-                          color: AppColors.disabledIcon),
-                      iconSelected:
-                          const Icon(Icons.home, color: AppColors.mainColor),
+                      picture: 'assets/icons/home_nav_outline_ic.svg',
+                      pictureSelected:
+                          'assets/icons/home_nav_outline_ic.svg',
                       text: 'صفحه اصلی',
                       index: 3),
                 ],
@@ -136,8 +131,8 @@ class BasePage extends StatelessWidget {
 
 
   myNavigationItem({
-    required Icon icon,
-    required Icon iconSelected,
+    required String picture,
+    required String pictureSelected,
     required String text,
     required int index,
   }) {
@@ -151,7 +146,8 @@ class BasePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Expanded(child: SizedBox()),
-                pageIndex.value == index ? iconSelected : icon,
+                pageIndex.value == index ? SvgPicture.asset(pictureSelected)
+                    : SvgPicture.asset(picture),
                 const SizedBox(
                   height: 3,
                 ),
