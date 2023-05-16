@@ -40,8 +40,9 @@ dependencies:
   smooth_page_indicator:
   cached_network_image: ^3.2.3
   dropdown_button2: ^2.1.0
-#  number_paginator: ^0.2.3
-
+  readmore: ^2.2.0
+  flutter_map: ^4.0.0
+  latlong2: ^0.8.1
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +87,8 @@ flutter:
   fonts:
     - family: iransans
       fonts:
+        - asset: assets/fonts/IRANSans_Light.ttf
+          weight: 300
         - asset: assets/fonts/IRANSans(FaNum).ttf
           weight: 400
         - asset: assets/fonts/IRANSans(FaNum)_Bold.ttf

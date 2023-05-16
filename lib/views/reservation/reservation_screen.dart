@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:readmore/readmore.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/custom_tab_indicator.dart';
 
@@ -9,6 +13,45 @@ class ReservationScreen extends StatelessWidget {
   ReservationScreen({Key? key}) : super(key: key);
 
   PageController secondPageController = PageController();
+
+  ///------->details text
+  String roomInformation = """
+  هتل سنتی شیران در شهر زیبای اصفهان، مربوط به دوره قاجار واقع شده است. خانه تاریخی محمد قلی شیران به عنوان یکی از آثار ملی ایران به ثبت رسیده است و پس از مرمت و احیا اکـنـون با نام هتل سنتی شیران آماده پذیرایی از مهمـانـان و گـردشگران داخـلی و خـارجی می باشد.
+هتل سنتی شیران دارای 5 اتاق با طراحی داخلی متفاوت می باشد. این اتاق ها با نام های ناصرالدین شاه، فتحعلی شاه (شاه نشین)، مظفرالدین شاه، پریخان خانم و عباس میرزا نـام گذاری شده است. تمامی اتـاق ها دارای تخت هستند و حداکثر ظرفیت پذیرش 17 مهمـان را دارد. سرویس بهداشتی تمـام اتـاق ها اختصاصی است. سیستم سرمایش اتـاق های این هتل سنتی اسپلیت و سیستم گرمایش آن شوفاژ می باشد.""";
+
+  String roomEquipments =
+      """از جمله امکانات و خدماتی که هتل سنتی شیران اصفهان برای رفاه مهمانان گرامی در نـظـر گرفته می توان به جای پارک خودرو در مقابل هتل، پرسنل مسلط به زبـان انگلیسی و کـافی شاپ اشاره نمود. مهمـانـان این هتل سنتی می توانند در فضـای سنتی و دلنشین محوطـه و کـافی شـاپ لحظات خوشی را تجربه کنند.تخت هستند و حـداکـثـر ظرفـیت پـذیـرش 17 مهمان را دارد. سرویس بهداشتی تمام اتاق ها اختصاصی است. سیستم سرمـایش اتـاق های این هتل سنتی اسپلیت و سیستم گرمایش آن شوفاژ می باشد.""";
+
+  String roomLocation =
+      """هتل سنتی شیران اصفهان به دلیل آئینه کاری های کم نظیر در معماری داخلی خود، همچون الـمـاس می درخشد و می تواند بـه عـنـوان یـک جاذبه گردشگری منحصر بفرد مورد توجه گـردشگـران داخلی و خـارجی قرار گیرد. شهر اصفهان با بناهای تاریخی به جا مانده از دوران قاجار، عباسیان و صفوی همه ساله گردشگران داخلی و خارجی زیادی را به خود جلب می کند. از جمله آثار باستانی اصفهان می توان به میدان نقش جهان و مساجد و بازار آن، مسجد امام، کلیسای وانـک و مـحـله جـلـفـا، سی وسه پل، پل خواجو، کاخ عالی قـاپـو، کـاخ چهلستون، کاخ هشت بهشت، منار جنبان، آتشگاه، مدرسه چهار باغ اشاره کرد. اصفهان دارای جاذبه های طبیعی و تفریحی مانند باغ پرندگان، باغ گلها، آکواریوم، کوه صفه و پـارک جنگلی نـاژوان نیز می باشد.""";
+
+  String importantLocationDistance =
+      """فاصله تا فرودگاه بین المللی شهید بهشتی اصفهان --> 24.4 کیلومتر (28 دقیقه)
+فاصله تا ایستگاه راه آهن اصفهان --> 24.5 کیلومتر (31 دقیقه)
+فاصله تا پایانه مسافربری کاوه اصفهان --> 3.8 کیلومتر (9 دقیقه)
+فاصله تا پایانه مسافربری صفه اصفهان --> 20.5 کیلومتر (28 دقیقه)
+فاصله تا میدان نقش جهان و مسجد شیخ لطف الله --> 3.4 کیلومتر (9 دقیقه)
+فاصله تا مسجد امام اصفهان --> 3.1 کیلومتر (9 دقیقه)
+فاصله تا کاخ چهل ستون --> 2.7 کیلومتر (7 دقیقه)
+فاصله تا مدرسه چهار باغ --> 3.5 کیلومتر (11 دقیقه)
+فاصله تا پل خواجو --> 5.7 کیلومتر (16 دقیقه)
+فاصله تا سی و سی پل --> 4 کیلومتر (10 دقیقه)
+فاصله تا کاخ هشت بهشت --> 5.1 کیلومتر (14دقیقه)
+فاصله تا باغ گلهای اصفهان --> 8.4 کیلومتر (18 دقیقه)
+فاصله تا باغ پرندگان --> 11.4 کیلومتر (22 دقیقه)
+فاصله تا اکواریوم اصفهان --> 10.8 کیلومتر (20 دقیقه)
+فاصله تا منارجنبان --> 9.1 کیلومتر (22 دقیقه)
+فاصله تا نزدیک ترین ایستگاه مترو --> 650 متر (9 دقیقه به صورت پیاده)""";
+
+  String facilitiesAndFeatures = """
+  اسپلیت
+  ایوان
+  پرسنل مسلط به انگلیسی
+  حمام مستقل
+  شوفاژ
+  سرویس بهداشتی""";
+
+  ////////////////////
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +69,7 @@ class ReservationScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: IconButton(
-                          splashRadius: 20,
+                            splashRadius: 20,
                             onPressed: () {},
                             icon: SvgPicture.asset(
                               'assets/icons/bell_ic.svg',
@@ -36,7 +79,7 @@ class ReservationScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: IconButton(
-                          splashRadius: 20,
+                            splashRadius: 20,
                             onPressed: () {},
                             icon: const Icon(Icons.arrow_forward_rounded,
                                 color: AppColors.disabledIcon)),
@@ -67,55 +110,41 @@ class ReservationScreen extends StatelessWidget {
                                 clipBehavior: Clip.none,
                                 alignment: Alignment.bottomCenter,
                                 children: [
-                                  Positioned(
-                                    right: 7,
-                                    bottom: Get.width * 0.090,
-                                    left: 0,
+                                  Align(
+                                    alignment: Alignment.topCenter,
                                     child: Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 160,
+                                      clipBehavior: Clip.hardEdge,
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(25),
-                                          boxShadow: const [
+                                          boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black45,
-                                              offset: Offset(
-                                                6.0,
-                                                5.0,
+                                              color: Colors.grey.shade300,
+                                              offset: const Offset(
+                                                1.0,
+                                                2.0,
                                               ),
-                                              blurRadius: 8.0,
+                                              blurRadius: 10.0,
                                               spreadRadius: 0.0,
                                             ), //BoxShadow
-                                            BoxShadow(
+                                            const BoxShadow(
                                               color: Colors.white,
                                               offset: Offset(0.0, 0.0),
                                               blurRadius: 0.0,
                                               spreadRadius: 0.0,
                                             ),
-                                          ]),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: Container(
-                                      clipBehavior: Clip.none,
+                                          ],
+                                          borderRadius:
+                                              BorderRadius.circular(25)),
                                       margin: const EdgeInsets.symmetric(
                                           horizontal: 20),
                                       width: MediaQuery.of(context).size.width,
                                       height: 170,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(25),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              "http://via.placeholder.com/320x150&text=image",
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(
-                                                  Icons.broken_image_outlined),
-                                        ),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            "http://via.placeholder.com/320x150&text=image",
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(
+                                                Icons.broken_image_outlined),
                                       ),
                                     ),
                                   ),
@@ -206,28 +235,28 @@ class ReservationScreen extends StatelessWidget {
                                             ))),
                                   ),
                                   Positioned(
-                                    bottom: Get.width * 0.05,
+                                    bottom: Get.width * 0.045,
                                     right: Get.width / 10 + 20,
                                     left: Get.width / 10 + 20,
                                     child: Container(
-                                      height: 30,
+                                      height: 38,
                                       decoration: BoxDecoration(
                                           color: Colors.white,
-                                          boxShadow: const [
+                                          boxShadow: [
                                             BoxShadow(
-                                              color: Colors.black45,
-                                              offset: Offset(
+                                              color: Colors.grey.shade300,
+                                              offset: const Offset(
                                                 1.0,
-                                                5.0,
+                                                2.0,
                                               ),
-                                              blurRadius: 6.0,
+                                              blurRadius: 4.0,
                                               spreadRadius: 0.0,
                                             ), //BoxShadow
-                                            BoxShadow(
+                                            const BoxShadow(
                                               color: Colors.white,
                                               offset: Offset(0.0, 0.0),
                                               blurRadius: 0.0,
-                                              spreadRadius: 5.0,
+                                              spreadRadius: 0.0,
                                             ),
                                           ],
                                           borderRadius:
@@ -296,70 +325,412 @@ class ReservationScreen extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      TabBar(
-                        labelColor: AppColors.primaryTextColor,
-                        unselectedLabelColor: AppColors.disabledText,
-                        indicator: CustomTabIndicator(
-                          color: AppColors.mainColor,
-                          indicatorHeight: 3,
-                          radius: 4,
-                        ),
+                      const TabBar(
+                          labelColor: AppColors.primaryTextColor,
+                          unselectedLabelColor: AppColors.disabledText,
+                          indicator: CustomTabIndicator(
+                            color: AppColors.mainColor,
+                            indicatorHeight: 3,
+                            radius: 4,
+                          ),
                           tabs: [
-                        Tab(
-                            child: Center(
-                              child: Text("نظرات",style:TextStyle(
-                                fontSize: 14,fontWeight: FontWeight.w400,
-                              ),),
+                            Tab(
+                                child: Center(
+                              child: Text(
+                                "نظرات",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             )),
-                        Tab(
-                            child: Center(
-                              child: Text("اتاق ها",style:TextStyle(
-                                fontSize: 14,fontWeight: FontWeight.w400,
-                              ),),
+                            Tab(
+                                child: Center(
+                              child: Text(
+                                "اتاق ها",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
                             )),
-                        Tab(
-                            child: Center(
-                              child: Text("نکات مهم",style:TextStyle(
-                                fontSize: 14,fontWeight: FontWeight.w400,
-                              )),
+                            Tab(
+                                child: Center(
+                              child: Text("نکات مهم",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  )),
                             )),
-                        Tab(
-                            child: Center(
-                          child: Text("توضیحات",style:TextStyle(
-                            fontSize: 14,fontWeight: FontWeight.w400,
-                          ),),
-                        )),
-                      ])
+                            Tab(
+                                child: Center(
+                              child: Text(
+                                "توضیحات",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )),
+                          ])
                     ],
                   ),
                 )
               ];
             },
             body: TabBarView(
+              physics: const NeverScrollableScrollPhysics(),
               children: [
-                Container(
-                  width: Get.width,
-                  height: 500,
-                  color: Colors.red,
-                ),
-                Container(
-                  width: Get.width,
-                  height: 500,
-                  color: Colors.blue,
-                ),
-                Container(
-                  width: Get.width,
-                  height: 500,
-                  color: Colors.yellow,
-                ),
-                Container(
-                  width: Get.width,
-                  height: 500,
-                  color: Colors.yellow,
-                ),
+                details(),
+                details(),
+                importantPoints(),
+                details(),
               ],
             )),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {}, child: const Icon(Icons.chat_bubble)),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       ),
     );
+  }
+
+  details() {
+    return ScrollConfiguration(
+      behavior: const ScrollBehavior().copyWith(overscroll: false),
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        dragStartBehavior: DragStartBehavior.down,
+        child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+          Container(
+            height: 1,
+            width: Get.width,
+            color: Colors.black.withOpacity(0.1),
+          ),
+          Padding(
+              padding: const EdgeInsets.only(right: 15, left: 15, top: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text('اطلاعات اقامتگاه',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ReadMoreText(
+                    roomInformation,
+                    textAlign: TextAlign.justify,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    trimLines: 4,
+                    textDirection: TextDirection.rtl,
+                    trimMode: TrimMode.Line,
+                    lessStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                    trimCollapsedText: 'نمایش بیشتر',
+                    trimExpandedText: 'نمایش کمتر',
+                    moreStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text('امکانات اقامتگاه',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ReadMoreText(
+                    roomEquipments,
+                    textAlign: TextAlign.justify,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    trimLines: 4,
+                    textDirection: TextDirection.rtl,
+                    trimMode: TrimMode.Line,
+                    lessStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                    trimCollapsedText: 'نمایش بیشتر',
+                    trimExpandedText: 'نمایش کمتر',
+                    moreStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text('موقعیت جغرافیایی',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ReadMoreText(
+                    roomLocation,
+                    textAlign: TextAlign.justify,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    trimLines: 4,
+                    textDirection: TextDirection.rtl,
+                    trimMode: TrimMode.Line,
+                    lessStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                    trimCollapsedText: 'نمایش بیشتر',
+                    trimExpandedText: 'نمایش کمتر',
+                    moreStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                      'فاصله (تقریبی) این هتل سنتی تا جاذبه های گردشگری و مکان های مهم',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  ReadMoreText(
+                    importantLocationDistance,
+                    textAlign: TextAlign.justify,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    trimLines: 4,
+                    textDirection: TextDirection.rtl,
+                    trimMode: TrimMode.Line,
+                    lessStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                    trimCollapsedText: 'نمایش بیشتر',
+                    trimExpandedText: 'نمایش کمتر',
+                    moreStyle: Theme.of(Get.context!)
+                        .textTheme
+                        .titleSmall!
+                        .copyWith(fontSize: 10, color: Colors.blue),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Text('ادرس اقامتگاه',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                      'استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم',
+                      style: Theme.of(Get.context!).textTheme.titleSmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'جستجو بر روی نقشه',
+                        style: Theme.of(Get.context!)
+                            .textTheme
+                            .labelSmall!
+                            .copyWith(color: AppColors.mainColor),
+                      )),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Container(
+                    height: 165,
+                    width: Get.width,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(23),
+                    ),
+                    child: FlutterMap(
+                      options: MapOptions(
+                        center: LatLng(33.86834369769126, 57.428369220286626),
+                        minZoom: 3,
+                        maxZoom: 20,
+                      ),
+                      children: [
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          userAgentPackageName:
+                              'dev.fleaflet.flutter_map.example',
+                        ),
+                        MarkerLayer(markers: [
+                          Marker(
+                            rotate: true,
+                            width: 80,
+                            height: 80,
+                            point:
+                                LatLng(33.86834369769126, 57.428369220286626),
+                            builder: (ctx) => const Icon(
+                              Icons.location_on,
+                              size: 35,
+                              color: Colors.red,
+                            ),
+                            anchorPos: AnchorPos.align(AnchorAlign.center),
+                          ),
+                        ]),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('امکانات و ویژگی ها',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(facilitiesAndFeatures,
+                      textAlign: TextAlign.end,
+                      style: Theme.of(Get.context!).textTheme.titleSmall),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                ],
+              )),
+        ]),
+      ),
+    );
+  }
+
+  importantPoints() {
+    return ScrollConfiguration(
+        behavior: const ScrollBehavior().copyWith(overscroll: false),
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          dragStartBehavior: DragStartBehavior.down,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                height: 1,
+                width: Get.width,
+                color: Colors.black.withOpacity(0.1),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15, left: 15, top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('رزرو کودکان',
+                        style: Theme.of(Get.context!).textTheme.bodySmall),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'اقامت کودکان کمتر از 5 سال رایگان می باشد.',
+                      textAlign: TextAlign.right,
+                      textDirection: TextDirection.rtl,
+                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text('شرایط کنسلی رزرو اقامتگاه',
+                        style: Theme.of(Get.context!).textTheme.bodySmall),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      """در صورت کنسلی تا 48 ساعت قبل از ورود و ایام تعطیلات، هزینه شب اول کسر می‌گردد پس از آن کل هزینه به عنوان جریمه محاسبه خواهد شد. در صورت کنسلی رزرو های تاریخ 25 اسفند تا 13 فروردین به هیچ عنوان هزینه ای عودت داده نخواهد شد.
+همچنین هزینه کنسلینگ سامانه یواسپیس، 10 درصد می باشد که به هزینه کنسلینگ اقامتگاه افزوده می شود.""",
+                      textAlign: TextAlign.justify,
+                      textDirection: TextDirection.rtl,
+                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text('کنسلی در نوروز یا ایام پیک',
+                        style: Theme.of(Get.context!).textTheme.bodySmall),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      """کنسلی در نوروز (۲۰ اسفند تا ۲۰ فروردین)، تعطیلات رسمی و ایام پیک سفر ممکن است با قوانین کنسلی عادی اقامتگاه متفاوت باشد. لطفا قبل از کنسلی برای دریافت شرایط با سایت تماس بگیرید یا از طریق ارسال تیکت در بخش مدیریت سفارشات خود، پیگیر باشید""",
+                      textAlign: TextAlign.justify,
+                      textDirection: TextDirection.rtl,
+                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text('قوانین و مقررات اقامتگاه',
+                        style: Theme.of(Get.context!).textTheme.bodySmall),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      """ارائه مدارک محرمیت در زمان پذیرش الزامی است.
+هتل سنتی شیران اصفهان از پذیرش حیوانات خانگی معذور است.
+ارائه مدارک محرمیت معتبر در زمان پذیرش الزامی است.
+هتل از پذیرش حیوانات خانگی معذور است.
+با توجه به تفاوت نرخ و شرایط پذیرش مهمانان خارجی، قبل از قطعی کردن رزرو با پشتیبانی هماهنگ کنید.""",
+                      textAlign: TextAlign.justify,
+                      textDirection: TextDirection.rtl,
+                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children:[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(
+                                children:[Text("نفر",textDirection:TextDirection.rtl, style:Theme.of(Get.context!).textTheme.labelSmall),
+                                  Text('15',textDirection:TextDirection.rtl, style:Theme.of(Get.context!).textTheme.labelSmall),
+                                  Text('ظرفیت: ',textDirection:TextDirection.rtl, style:Theme.of(Get.context!).textTheme.labelSmall),
+                                  const SizedBox(width:5),
+                                  SvgPicture.asset('assets/icons/capacity_ic.svg',width: 20,),]
+                            ),
+                            const SizedBox(height:20),
+                            Row(children:[
+                              Text("واحد",textDirection:TextDirection.rtl, style:Theme.of(Get.context!).textTheme.labelSmall),
+                              Text('15',textDirection:TextDirection.rtl, style:Theme.of(Get.context!).textTheme.labelSmall),
+                              Text('اتاق ها: ',textDirection:TextDirection.rtl, style:Theme.of(Get.context!).textTheme.labelSmall),
+                              const SizedBox(width:5),
+                              SvgPicture.asset('assets/icons/rooms_ic.svg',width: 20,),
+                            ]),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 25,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Row(children:[
+                              Text('14:00',textDirection:TextDirection.rtl ,style:Theme.of(Get.context!).textTheme.labelSmall),
+                              Text('زمان تحویل: ',textDirection:TextDirection.rtl ,style:Theme.of(Get.context!).textTheme.labelSmall),
+                              const SizedBox(width:5),
+                              SvgPicture.asset('assets/icons/delivery_time_ic.svg',width: 20,),
+                            ]),
+                            const SizedBox(height:20),
+                            Row(
+                                children:[
+                                  Text('14:00',textDirection:TextDirection.rtl ,style:Theme.of(Get.context!).textTheme.labelSmall),
+                                  Text('زمان تخلیه: ',textDirection:TextDirection.rtl ,style:Theme.of(Get.context!).textTheme.labelSmall),
+                                  const SizedBox(width:5),
+                                  SvgPicture.asset('assets/icons/discharge_time_ic.svg',width: 20,),
+                                ]
+                            ),
+                          ],
+                        ),
+                      ]
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }

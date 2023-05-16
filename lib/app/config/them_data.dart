@@ -43,6 +43,10 @@ class ThemConfig {
             color: AppColors.primaryTextColor,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
+        titleSmall: TextStyle(
+          height: 2,
+          fontSize: 12,fontWeight: FontWeight.w300,letterSpacing: 0,color:AppColors.primaryTextColor
+        ),
       ),
     );
   }

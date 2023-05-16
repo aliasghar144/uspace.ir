@@ -119,7 +119,7 @@ class BasePage extends StatelessWidget {
                   myNavigationItem(
                       picture: 'assets/icons/home_nav_outline_ic.svg',
                       pictureSelected:
-                          'assets/icons/home_nav_outline_ic.svg',
+                          'assets/icons/home_nav_fill_ic.svg',
                       text: 'صفحه اصلی',
                       index: 3),
                 ],

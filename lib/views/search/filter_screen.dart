@@ -8,7 +8,13 @@ import 'package:uspace_ir/controllers/filtter_controller.dart';
 class FilterScreen extends StatelessWidget {
   FilterScreen({Key? key}) : super(key: key);
 
-  final _customTileExpanded = false.obs;
+  final _customTileExpanded1 = false.obs;
+  final _customTileExpanded2 = false.obs;
+  final _customTileExpanded3 = false.obs;
+  final _showMore1 = false.obs;
+  final _showMore2 = false.obs;
+  final _showMore3 = false.obs;
+
   FilterController filterController = Get.put(FilterController());
   Rx<double> start = 0.0.obs;
   Rx<double> end = 100.0.obs;
@@ -18,12 +24,14 @@ class FilterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        bottomSheet: SizedBox(
+        bottomNavigationBar: SizedBox(
           height: 80,
           width: Get.width,
           child: Padding(
             padding: const EdgeInsets.all(15),
-            child: ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(
+            child: ElevatedButton(onPressed: (){
+              Get.back();
+            },style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.mainColor,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -45,13 +53,13 @@ class FilterScreen extends StatelessWidget {
                     children: [
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(Icons.menu,
-                            color: AppColors.disabledIcon),
+                        icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
                       ),
                       const Spacer(),
                       IconButton(
                         onPressed: () {},
-                        icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
+                        icon: const Icon(Icons.menu,
+                            color: AppColors.disabledIcon),
                       ),
                     ],
                   ),
@@ -69,7 +77,7 @@ class FilterScreen extends StatelessWidget {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 15, right: 15.0, left: 5),
+                              top: 25, right: 15.0, left: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
@@ -224,7 +232,7 @@ class FilterScreen extends StatelessWidget {
                                     top: 0,
                                   ),
                                   trailing: Icon(
-                                    _customTileExpanded.value
+                                    _customTileExpanded1.value
                                         ? Icons.keyboard_arrow_up
                                         : Icons.keyboard_arrow_down,
                                     color: const Color(0xff051726),
@@ -247,17 +255,19 @@ class FilterScreen extends StatelessWidget {
                                             const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemCount:
-                                            filterController.categoryList.length +
-                                                1,
+                                            !_showMore1.value ? filterController.categoryList.length +
+                                                1:filterController.categoryList.length,
                                         itemBuilder: (context, index) {
                                           if (index ==
                                               filterController
-                                                  .categoryList.length) {
+                                                  .categoryList.length && !_showMore1.value) {
                                             return Row(
                                               children: [
                                                 const SizedBox(width: 8,),
                                                 TextButton.icon(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    _showMore1.toggle();
+                                                  },
                                                   icon: const Icon(
                                                     Icons.add,
                                                     color: AppColors.mainColor,
@@ -326,12 +336,107 @@ class FilterScreen extends StatelessWidget {
                                         },
                                       ),
                                     ),
+                                    _showMore1.value ? const SizedBox(height: 12,): const SizedBox(),
+                                    Obx(() => _showMore1.value ? SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.zero,
+                                        separatorBuilder: (context, index) {
+                                          return const SizedBox(
+                                            height: 12,
+                                          );
+                                        },
+                                        physics:
+                                        const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: _showMore1.value ?
+                                        filterController.categoryList.length +
+                                            1 : filterController.categoryList.length,
+                                        itemBuilder: (context, index) {
+                                          if (index ==
+                                              filterController
+                                                  .categoryList.length) {
+                                            return Row(
+                                              children: [
+                                                const SizedBox(width: 8,),
+                                                TextButton.icon(
+                                                  onPressed: () {
+                                                    _showMore1.toggle();
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.remove,
+                                                    color: AppColors.mainColor,
+                                                    size: 20,
+                                                  ),
+                                                  label: Text('موارد کمتر',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall!
+                                                          .copyWith(
+                                                          color: AppColors
+                                                              .mainColor)),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                          return SizedBox(
+                                            height: 25,
+                                            child: Row(children: [
+                                              Obx(() => Checkbox(
+                                                value: filterController
+                                                    .categoryList[index]
+                                                ['value']
+                                                    .value,
+                                                shape:
+                                                ContinuousRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(4)),
+                                                onChanged: (value) {
+                                                  filterController
+                                                      .categoryList[index]
+                                                  ['value']
+                                                      .value = value;
+                                                },
+                                                activeColor:
+                                                AppColors.mainColor,
+                                                // Change the color of the checkbox when it is checked
+                                                side: const BorderSide(
+                                                    width: 2,
+                                                    color: Color.fromRGBO(
+                                                        82, 110, 255, 0.24)),
+                                              )),
+                                              InkWell(
+                                                onTap:(){
+                                                  if(filterController.categoryList[index]['value'].value == true
+                                                  ){
+                                                    filterController.categoryList[index]['value'].value = false;
+                                                  }else{
+                                                    filterController.categoryList[index]['value'].value = true;
+                                                  }
+                                                },
+                                                child: Text(
+                                                    filterController
+                                                        .categoryList[index]
+                                                    ['name'],
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelMedium!
+                                                        .copyWith(
+                                                        color: AppColors
+                                                            .primaryTextColor)),
+                                              ),
+                                            ]),
+                                          );
+                                        },
+                                      ),
+                                    ):const SizedBox()),
                                     const SizedBox(
                                       height: 15,
                                     ),
                                   ],
                                   onExpansionChanged: (ex) {
-                                    _customTileExpanded.value = ex;
+                                    _customTileExpanded1.value = ex;
                                   },
                                 ),
                               ),
@@ -366,7 +471,7 @@ class FilterScreen extends StatelessWidget {
                                     top: 0,
                                   ),
                                   trailing: Icon(
-                                    _customTileExpanded.value
+                                    _customTileExpanded2.value
                                         ? Icons.keyboard_arrow_up
                                         : Icons.keyboard_arrow_down,
                                     color: const Color(0xff051726),
@@ -389,8 +494,8 @@ class FilterScreen extends StatelessWidget {
                                             const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemCount:
-                                            filterController.commentList.length +
-                                                1,
+                                        !_showMore2.value ? filterController.commentList.length +
+                                            1:filterController.commentList.length,
                                         itemBuilder: (context, index) {
                                           if (index ==
                                               filterController
@@ -399,7 +504,9 @@ class FilterScreen extends StatelessWidget {
                                               children: [
                                                 const SizedBox(width: 8,),
                                                 TextButton.icon(
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    _showMore2.toggle();
+                                                  },
                                                   icon: const Icon(
                                                     Icons.add,
                                                     color: AppColors.mainColor,
@@ -468,12 +575,107 @@ class FilterScreen extends StatelessWidget {
                                         },
                                       ),
                                     ),
+                                    _showMore2.value ? const SizedBox(height: 12,): const SizedBox(),
+                                    Obx(() => _showMore2.value ? SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ListView.separated(
+                                        padding: EdgeInsets.zero,
+                                        separatorBuilder: (context, index) {
+                                          return const SizedBox(
+                                            height: 12,
+                                          );
+                                        },
+                                        physics:
+                                        const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: _showMore2.value ?
+                                        filterController.commentList.length +
+                                            1 : filterController.commentList.length,
+                                        itemBuilder: (context, index) {
+                                          if (index ==
+                                              filterController
+                                                  .commentList.length) {
+                                            return Row(
+                                              children: [
+                                                const SizedBox(width: 8,),
+                                                TextButton.icon(
+                                                  onPressed: () {
+                                                    _showMore2.toggle();
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.remove,
+                                                    color: AppColors.mainColor,
+                                                    size: 20,
+                                                  ),
+                                                  label: Text('موارد کمتر',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .labelSmall!
+                                                          .copyWith(
+                                                          color: AppColors
+                                                              .mainColor)),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                          return SizedBox(
+                                            height: 25,
+                                            child: Row(children: [
+                                              Obx(() => Checkbox(
+                                                value: filterController
+                                                    .commentList[index]
+                                                ['value']
+                                                    .value,
+                                                shape:
+                                                ContinuousRectangleBorder(
+                                                    borderRadius:
+                                                    BorderRadius
+                                                        .circular(4)),
+                                                onChanged: (value) {
+                                                  filterController
+                                                      .commentList[index]
+                                                  ['value']
+                                                      .value = value;
+                                                },
+                                                activeColor:
+                                                AppColors.mainColor,
+                                                // Change the color of the checkbox when it is checked
+                                                side: const BorderSide(
+                                                    width: 2,
+                                                    color: Color.fromRGBO(
+                                                        82, 110, 255, 0.24)),
+                                              )),
+                                              InkWell(
+                                                onTap:(){
+                                                  if(filterController.commentList[index]['value'].value == true
+                                                  ){
+                                                    filterController.commentList[index]['value'].value = false;
+                                                  }else{
+                                                    filterController.commentList[index]['value'].value = true;
+                                                  }
+                                                },
+                                                child: Text(
+                                                    filterController
+                                                        .commentList[index]
+                                                    ['name'],
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelMedium!
+                                                        .copyWith(
+                                                        color: AppColors
+                                                            .primaryTextColor)),
+                                              ),
+                                            ]),
+                                          );
+                                        },
+                                      ),
+                                    ):const SizedBox()),
                                     const SizedBox(
                                       height: 15,
                                     ),
                                   ],
                                   onExpansionChanged: (ex) {
-                                    _customTileExpanded.value = ex;
+                                    _customTileExpanded2.value = ex;
                                   },
                                 ),
                               ),
@@ -508,7 +710,7 @@ class FilterScreen extends StatelessWidget {
                                 top: 0,
                               ),
                               trailing: Icon(
-                                _customTileExpanded.value
+                                _customTileExpanded3.value
                                     ? Icons.keyboard_arrow_up
                                     : Icons.keyboard_arrow_down,
                                 color: const Color(0xff051726),
@@ -531,8 +733,9 @@ class FilterScreen extends StatelessWidget {
                                     const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount:
+                                        !_showMore3.value ?
                                     filterController.cityList.length +
-                                        1,
+                                        1 : filterController.cityList.length,
                                     itemBuilder: (context, index) {
                                       if (index ==
                                           filterController
@@ -541,7 +744,9 @@ class FilterScreen extends StatelessWidget {
                                           children: [
                                             const SizedBox(width: 8,),
                                             TextButton.icon(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                _showMore3.toggle();
+                                              },
                                               icon: const Icon(
                                                 Icons.add,
                                                 color: AppColors.mainColor,
@@ -610,12 +815,108 @@ class FilterScreen extends StatelessWidget {
                                     },
                                   ),
                                 ),
+                                _showMore3.value ? const SizedBox(height: 15,) : const SizedBox(),
+                                Obx(() => _showMore3.value ?                                 SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: ListView.separated(
+                                    padding: EdgeInsets.zero,
+                                    separatorBuilder: (context, index) {
+                                      return const SizedBox(
+                                        height: 10,
+                                      );
+                                    },
+                                    physics:
+                                    const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount:
+                                    _showMore3.value ?
+                                    filterController.cityList.length +
+                                        1 : filterController.cityList.length,
+                                    itemBuilder: (context, index) {
+                                      if (index ==
+                                          filterController
+                                              .cityList.length) {
+                                        return Row(
+                                          children: [
+                                            const SizedBox(width: 8,),
+                                            TextButton.icon(
+                                              onPressed: () {
+                                                _showMore3.toggle();
+                                              },
+                                              icon: const Icon(
+                                                Icons.remove,
+                                                color: AppColors.mainColor,
+                                                size: 20,
+                                              ),
+                                              label: Text('موارد کمتر',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelSmall!
+                                                      .copyWith(
+                                                      color: AppColors
+                                                          .mainColor)),
+                                            ),
+                                          ],
+                                        );
+                                      }
+                                      return SizedBox(
+                                        height: 25,
+                                        child: Row(children: [
+                                          Obx(() => Checkbox(
+                                            value: filterController
+                                                .cityList[index]
+                                            ['value']
+                                                .value,
+                                            shape:
+                                            ContinuousRectangleBorder(
+                                                borderRadius:
+                                                BorderRadius
+                                                    .circular(4)),
+                                            onChanged: (value) {
+                                              filterController
+                                                  .cityList[index]
+                                              ['value']
+                                                  .value = value;
+                                            },
+                                            activeColor:
+                                            AppColors.mainColor,
+                                            // Change the color of the checkbox when it is checked
+                                            side: const BorderSide(
+                                                width: 2,
+                                                color: Color.fromRGBO(
+                                                    82, 110, 255, 0.24)),
+                                          )),
+                                          InkWell(
+                                            onTap:(){
+                                              if(filterController.cityList[index]['value'].value == true
+                                              ){
+                                                filterController.cityList[index]['value'].value = false;
+                                              }else{
+                                                filterController.cityList[index]['value'].value = true;
+                                              }
+                                            },
+                                            child: Text(
+                                                filterController
+                                                    .cityList[index]
+                                                ['name'],
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelMedium!
+                                                    .copyWith(
+                                                    color: AppColors
+                                                        .primaryTextColor)),
+                                          ),
+                                        ]),
+                                      );
+                                    },
+                                  ),
+                                ):SizedBox(),),
                                 const SizedBox(
                                   height: 15,
                                 ),
                               ],
                               onExpansionChanged: (ex) {
-                                _customTileExpanded.value = ex;
+                                _customTileExpanded3.value = ex;
                               },
                             ),
                           ),

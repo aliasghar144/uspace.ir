@@ -69,7 +69,7 @@ class HomeScreen extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: "http://via.placeholder.com/320x150&text=image",
                         fit: BoxFit.cover,
-                        errorWidget: (context, url, error) => Icon(Icons.broken_image_outlined),
+                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                       ),
                     ),
                   ),
@@ -199,7 +199,7 @@ class HomeScreen extends StatelessWidget {
         ),
         SizedBox(
           width: MediaQuery.of(Get.context!).size.width,
-          height: 195,
+          height: 210,
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: PageView.builder(
@@ -211,84 +211,46 @@ class HomeScreen extends StatelessWidget {
               controller: secondPageController,
               itemBuilder: (context, index) {
                 return Stack(
-                  clipBehavior: Clip.none,
+                  clipBehavior: Clip.antiAlias,
                   alignment: Alignment.bottomCenter,
                   children: [
-                    Positioned(
-                        bottom: Get.width * 0.05,
-                        child: Container(
-                      height: 15,
-                      width: 90,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black45,
-                              offset: Offset(
-                                0.0,
-                                0.0,
-                              ),
-                              blurRadius: 8.0,
-                              spreadRadius: 0.0,
-                            ), //BoxShadow
-                            BoxShadow(
-                              color: Colors.white,
-                              offset: Offset(0.0, 0.0),
-                              blurRadius: 8.0,
-                              spreadRadius: 0.0,
-                            ),
-                          ]),
-                    )),
-                    Positioned(
-                      right: 7,
-                      bottom: Get.width * 0.099,
-                      left: 0,
-                      top: 15,
+                    Align(
+                      alignment: Alignment.center,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20),
-                        width: MediaQuery.of(context).size.width,
-                        height: 175,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25),
-                            boxShadow: const [
+                        clipBehavior: Clip.hardEdge,
+                        decoration:BoxDecoration(
+                            boxShadow: [
                               BoxShadow(
-                                color: Colors.black45,
-                                offset: Offset(
-                                  6.0,
-                                  5.0,
+                                color: Colors.grey.shade300,
+                                offset: const Offset(
+                                  1.0,
+                                  2.0,
                                 ),
-                                blurRadius: 8.0,
+                                blurRadius: 10.0,
                                 spreadRadius: 0.0,
                               ), //BoxShadow
-                              BoxShadow(
+                              const BoxShadow(
                                 color: Colors.white,
                                 offset: Offset(0.0, 0.0),
                                 blurRadius: 0.0,
                                 spreadRadius: 0.0,
                               ),
-                            ]),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        clipBehavior: Clip.none,
+                            ],
+                          borderRadius: BorderRadius.circular(22)
+                        ),
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         width: MediaQuery.of(context).size.width,
                         height: 160,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: CachedNetworkImage(
-                            imageUrl: "http://via.placeholder.com/320x150&text=image",
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                          ),
+                        child: CachedNetworkImage(
+                          imageUrl: "http://via.placeholder.com/320x150&text=image",
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                         ),
                       ),
                     ),
                     Positioned(
                       left: 10,
-                      top: Get.width * 0.15,
+                      top: Get.width * 0.22,
                       child: Container(
                           width: 30,
                           height: 30,
@@ -326,7 +288,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Positioned(
                       right: 10,
-                      top: Get.width * 0.15,
+                      top: Get.width * 0.22,
                       child: Container(
                           width: 30,
                           height: 30,
@@ -362,7 +324,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Positioned(
                         right: Get.width * 0.1,
-                        bottom: Get.width * 0.215,
+                        bottom: Get.width * 0.185,
                         child: Text(
                           "هتل سنتی سهروردی",
                           style: Theme.of(context)
@@ -372,7 +334,7 @@ class HomeScreen extends StatelessWidget {
                         )),
                     Positioned(
                         right: Get.width * 0.10,
-                        bottom: Get.width * 0.155,
+                        bottom: Get.width * 0.135,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -395,12 +357,29 @@ class HomeScreen extends StatelessWidget {
                           ],
                         )),
                     Positioned(
-                      bottom: Get.width * 0.04,
+                      bottom: Get.width * 0.02,
                       child: Container(
                         height: 40,
                         width: 100,
                         decoration: BoxDecoration(
                             color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                offset: const Offset(
+                                  1.0,
+                                  2.0,
+                                ),
+                                blurRadius: 4.0,
+                                spreadRadius: 0.0,
+                              ), //BoxShadow
+                              const BoxShadow(
+                                color: Colors.white,
+                                offset: Offset(0.0, 0.0),
+                                blurRadius: 0.0,
+                                spreadRadius: 0.0,
+                              ),
+                            ],
                             borderRadius: BorderRadius.circular(12)),
                         child:Row(
                           children: [

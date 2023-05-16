@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.uspace_ir">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="uspace_ir"
         android:name="${applicationName}"
