@@ -43,6 +43,7 @@ dependencies:
   readmore: ^2.2.0
   flutter_map: ^4.0.0
   latlong2: ^0.8.1
+  persian_datetime_picker: ^2.6.0
 
 dev_dependencies:
   flutter_test:
