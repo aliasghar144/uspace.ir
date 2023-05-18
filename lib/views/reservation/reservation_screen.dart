@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -54,6 +55,8 @@ class ReservationScreen extends StatelessWidget {
   سرویس بهداشتی""";
 
   ////////////////////
+  ////-------> comment text
+  String commentText = """سلام من در تاريخ ١٠و١١فروردين ١٤٠٢ به همراه خانواده ام اقامت داشتم ،و چهار اتاق رزرو كرده بوديم كه يكي از يكي قشنگتر بود ما كه خييلي لذت برديم از سكوت و آرامش و تميزي وصبحانه عالي و پرسنل محترم از هر لحاظ عالي بود و ما دلمون نميخواست حتي به مكانهاي ديدني بريم انقدر عالي بود من در اتاق پريخان خانوم اقامت داشتم واقعا زيبا بود""";
 
   var selectedDate = DateTime.now().obs;
   var isDateSelected = false.obs;
@@ -387,14 +390,19 @@ class ReservationScreen extends StatelessWidget {
             body: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                details(),
+                comments(),
                 rooms(),
                 importantPoints(),
                 details(),
               ],
             )),
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {}, child: const Icon(Icons.chat_bubble)),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 10,left: 10.0),
+          child: FloatingActionButton(
+            backgroundColor: AppColors.mainColor,
+
+              onPressed: () {}, child: SvgPicture.asset('assets/icons/chat_ic.svg')),
+        ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       ),
     );
@@ -1080,4 +1088,119 @@ class ReservationScreen extends StatelessWidget {
           ])),
     );
   }
+
+  comments(){
+    return ScrollConfiguration(
+      behavior: const ScrollBehavior().copyWith(overscroll: false),
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            Container(
+              height: 1,
+              width: Get.width,
+              color: Colors.black.withOpacity(0.1),
+            ),
+            ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+             return Container(
+               width:Get.width,
+               margin: const EdgeInsets.symmetric(horizontal: 25),
+               child: Column(
+                 children: [
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.end,
+                     crossAxisAlignment: CrossAxisAlignment.center,
+                     children: [
+                       RatingBarIndicator(
+                         rating: 4.0,
+                         itemCount: 5,
+                         itemSize: 17.0,
+                         physics: const BouncingScrollPhysics(),
+                         unratedColor: AppColors.grayColor,
+                         itemPadding: EdgeInsets.symmetric(horizontal: 0),
+                         textDirection: TextDirection.rtl,
+                         itemBuilder: (context, _) => const Icon(
+                           Icons.star_rounded,
+                           color: Color(0xffFFC700),
+                         ),
+                       ),
+                       const Spacer(),
+                       Text('علی اصغر قاسمی کفاش',style:Theme.of(Get.context!).textTheme.bodySmall),
+                       const SizedBox(width: 10,),
+                       Container(
+                         clipBehavior: Clip.hardEdge,
+                         width: 35,height: 35,decoration:const BoxDecoration(
+                         shape: BoxShape.circle
+                       ),
+                         child: CachedNetworkImage(
+                           imageUrl:
+                           "http://via.placeholder.com/320x150&text=image",
+                           fit: BoxFit.cover,
+                           errorWidget: (context, url, error) =>
+                           const Icon(Icons.broken_image_outlined),
+                         ),
+                       ),
+                     ],
+                   ),
+                   Padding(
+                     padding: const EdgeInsets.only(right: 48.0),
+                     child: Column(
+                       mainAxisAlignment: MainAxisAlignment.end,
+                       children: [
+                         ReadMoreText(commentText,
+                           textAlign: TextAlign.justify,
+                           style: Theme.of(Get.context!).textTheme.titleSmall!.copyWith(color:AppColors.grayColor),
+                           trimLines: 4,
+                           textDirection: TextDirection.rtl,
+                           trimMode: TrimMode.Line,
+                           lessStyle: Theme.of(Get.context!)
+                               .textTheme
+                               .titleSmall!
+                               .copyWith(fontSize: 10, color: Colors.blue),
+                           trimCollapsedText: 'نمایش بیشتر',
+                           trimExpandedText: 'نمایش کمتر',
+                           moreStyle: Theme.of(Get.context!)
+                               .textTheme
+                               .titleSmall!
+                               .copyWith(fontSize: 10, color: Colors.blue),),
+                         Row(
+                             mainAxisAlignment : MainAxisAlignment.end,
+                             children:[
+                               Text('14 تیر 1402',style:Theme.of(Get.context!).textTheme.titleSmall!.copyWith(fontSize:10,color:AppColors.grayColor),textDirection: TextDirection.rtl,),
+                               const Spacer(),
+                             InkWell(
+                                 onTap:(){
+                                   print('reply');
+
+                                 },
+                                 child: SvgPicture.asset('assets/icons/reply_ic.svg')),
+                             Padding(
+                               padding: const EdgeInsets.only(left: 6,top: 5.0),
+                               child: InkWell(
+                                 borderRadius: BorderRadius.circular(4),
+                                   onTap: (){
+                                   print('reply');
+                                   },
+                                   child: Text('پاسخ',style:Theme.of(Get.context!).textTheme.titleSmall!.copyWith(color:AppColors.mainColor,fontSize: 10))),
+                             ),
+                           ]
+                         )
+                       ],
+                     ),
+                   )
+                 ],
+               ),
+             );
+            }, separatorBuilder: (context, index) {
+              return const SizedBox(height:20);
+            }, itemCount: 6),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

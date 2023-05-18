@@ -44,6 +44,7 @@ dependencies:
   flutter_map: ^4.0.0
   latlong2: ^0.8.1
   persian_datetime_picker: ^2.6.0
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
