@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
             ),
             category(),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             reserveSection(),
             bestCities(),
@@ -127,7 +127,7 @@ class HomeScreen extends StatelessWidget {
   Widget category() {
     return Column(children: [
       SizedBox(
-        height: 95,
+        height: 100,
         child: Directionality(
             textDirection: TextDirection.rtl,
             child: ListView.builder(
@@ -195,7 +195,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 0,
         ),
         SizedBox(
           width: MediaQuery.of(Get.context!).size.width,
@@ -214,8 +214,9 @@ class HomeScreen extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   alignment: Alignment.bottomCenter,
                   children: [
-                    Align(
-                      alignment: Alignment.center,
+                    Positioned(
+                      top:5,
+                      width: Get.width,
                       child: Container(
                         clipBehavior: Clip.hardEdge,
                         decoration:BoxDecoration(
@@ -240,7 +241,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         width: MediaQuery.of(context).size.width,
-                        height: 160,
+                        height: 180,
                         child: CachedNetworkImage(
                           imageUrl: "http://via.placeholder.com/320x150&text=image",
                           fit: BoxFit.cover,
@@ -250,7 +251,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Positioned(
                       left: 10,
-                      top: Get.width * 0.22,
+                      top: Get.width * 0.20,
                       child: Container(
                           width: 30,
                           height: 30,
@@ -288,7 +289,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     Positioned(
                       right: 10,
-                      top: Get.width * 0.22,
+                      top: Get.width * 0.20,
                       child: Container(
                           width: 30,
                           height: 30,
@@ -323,8 +324,8 @@ class HomeScreen extends StatelessWidget {
                               ))),
                     ),
                     Positioned(
-                        right: Get.width * 0.1,
-                        bottom: Get.width * 0.185,
+                        right: Get.width * 0.10,
+                        bottom: Get.width * 0.21,
                         child: Text(
                           "هتل سنتی سهروردی",
                           style: Theme.of(context)
@@ -333,31 +334,38 @@ class HomeScreen extends StatelessWidget {
                               .copyWith(color: Colors.white),
                         )),
                     Positioned(
-                        right: Get.width * 0.10,
-                        bottom: Get.width * 0.135,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            SvgPicture.asset(
-                                'assets/icons/location_small_pin_ic.svg',
-                                color: Colors.white,
-                                width: 18),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              "استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم",
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(color: Colors.white),
-                            ),
-                          ],
+                        bottom: Get.width * 0.150,
+                        right: Get.width * 0.01,
+                        width:Get.width,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 35),
+                          width: Get.width,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SvgPicture.asset(
+                                  'assets/icons/location_small_pin_ic.svg',
+                                  color: Colors.white,
+                                  width: 18),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم خیابان ملاعبدالله بشروی کوی شهید ناظمیان",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
                         )),
                     Positioned(
-                      bottom: Get.width * 0.02,
+                      bottom: Get.width * 0.03,
                       child: Container(
                         height: 40,
                         width: 100,

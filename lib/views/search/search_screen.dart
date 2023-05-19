@@ -247,8 +247,8 @@ class SearchScreen extends StatelessWidget {
                         else
                           const SizedBox(),
                         Positioned(
-                            right: Get.width * 0.06,
-                            bottom: Get.width * 0.15,
+                            right: Get.width * 0.05,
+                            bottom: Get.width * 0.13,
                             child: Text(
                               "هتل سنتی سهروردی",
                               style: Theme.of(context)
@@ -257,28 +257,35 @@ class SearchScreen extends StatelessWidget {
                                   .copyWith(color: Colors.white),
                             )),
                         Positioned(
-                            right: Get.width * 0.05,
+                            right: 0,
                             bottom: Get.width * 0.08,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SvgPicture.asset(
-                                    'assets/icons/location_small_pin_ic.svg',
-                                    color: Colors.white,
-                                    width: 18),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(color: Colors.white),
-                                ),
-                              ],
+                            width: Get.width,
+                            child: Container(
+                              margin: EdgeInsets.only(right: Get.width * 0.05,left: Get.width * 0.13),
+                              width: Get.width,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  SvgPicture.asset(
+                                      'assets/icons/location_small_pin_ic.svg',
+                                      color: Colors.white,
+                                      width: 18),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      "استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall!
+                                          .copyWith(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             )),
                         Positioned(
                           bottom: -Get.width * 0.03,
