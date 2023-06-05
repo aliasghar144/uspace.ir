@@ -2,7 +2,7 @@
     package="com.example.uspace_ir">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="uspace_ir"
+        android:label="uspace.ir"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

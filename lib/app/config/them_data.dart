@@ -17,8 +17,8 @@ class ThemConfig {
         ),
         displayMedium: TextStyle(
             color: AppColors.primaryTextColor, fontSize: 14, fontWeight: FontWeight.w700),
-          displaySmall: TextStyle(
-              color: AppColors.primaryTextColor, fontSize: 12, fontWeight: FontWeight.w700),
+        displaySmall: TextStyle(
+            color: AppColors.primaryTextColor, fontSize: 12, fontWeight: FontWeight.w700),
         bodyLarge: TextStyle(
             color: AppColors.primaryTextColor, fontSize: 16, fontWeight: FontWeight.w500),
         bodyMedium: TextStyle(
@@ -44,8 +44,8 @@ class ThemConfig {
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
         titleSmall: TextStyle(
-          height: 2,
-          fontSize: 12,fontWeight: FontWeight.w300,letterSpacing: 0,color:AppColors.primaryTextColor
+            height: 2,
+            fontSize: 12,fontWeight: FontWeight.w300,letterSpacing: 0,color:AppColors.primaryTextColor
         ),
       ),
     );

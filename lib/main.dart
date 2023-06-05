@@ -14,7 +14,7 @@ void main(){
   runApp(GetMaterialApp(
       theme: ThemConfig.createTheme(),
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.home,
+      initialRoute: Routes.reservation,
       getPages: Pages().pages
   ));
 }

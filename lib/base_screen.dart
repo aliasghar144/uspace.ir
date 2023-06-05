@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
+import 'package:uspace_ir/views/history/history_screen.dart';
 import 'package:uspace_ir/views/home/home_screen.dart';
+import 'package:uspace_ir/views/profile/profile_screen.dart';
 import 'package:uspace_ir/views/search/search_screen.dart';
 
 class BasePage extends StatelessWidget {
@@ -11,8 +13,8 @@ class BasePage extends StatelessWidget {
   var pageIndex = 3.obs;
 
   final page = [
-    HomeScreen(),
-    HomeScreen(),
+    ProfileScreen(),
+    HistoryScreen(),
     SearchScreen(),
     HomeScreen(),
   ];
@@ -45,7 +47,7 @@ class BasePage extends StatelessWidget {
                     child: IconButton(
                       onPressed: (){},
                       splashRadius: 20,
-                      icon: Icon(Icons.menu,color: Colors.grey,),
+                      icon: const Icon(Icons.menu,color: Colors.grey,),
                     ),
                   ),
                 ],

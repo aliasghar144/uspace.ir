@@ -21,6 +21,8 @@ class SearchScreen extends StatelessWidget {
   ];
   PageController secondPageController = PageController();
 
+  RxInt itemCount = 5.obs;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -174,14 +176,14 @@ class SearchScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Directionality(
                 textDirection: TextDirection.rtl,
-                child: ListView.separated(
+                child: Obx(() => ListView.separated(
                   separatorBuilder: (context, index) {
                     return const SizedBox(
                       height: 25,
                     );
                   },
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 5,
+                  itemCount: itemCount.value,
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(bottom: 15, top: 15),
                   itemBuilder: (context, index) {
@@ -194,7 +196,7 @@ class SearchScreen extends StatelessWidget {
                           child: Container(
                             clipBehavior: Clip.hardEdge,
                             decoration:BoxDecoration(
-                              borderRadius:BorderRadius.circular(25),
+                                borderRadius:BorderRadius.circular(25),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.grey.shade300,
@@ -217,10 +219,10 @@ class SearchScreen extends StatelessWidget {
                             height: 160,
                             child: CachedNetworkImage(
                               imageUrl:
-                                  "http://via.placeholder.com/320x150&text=image",
+                              "http://via.placeholder.com/320x150&text=image",
                               fit: BoxFit.cover,
                               errorWidget: (context, url, error) =>
-                                  const Icon(Icons.broken_image_outlined),
+                              const Icon(Icons.broken_image_outlined),
                             ),
                           ),
                         ),
@@ -322,10 +324,13 @@ class SearchScreen extends StatelessWidget {
                                 const SizedBox(
                                   width: 2,
                                 ),
-                                const Icon(
-                                  Icons.favorite_outline_rounded,
-                                  color: AppColors.mainColor,
-                                  size: 17,
+                                InkWell(
+                                  onTap:(){},
+                                  child: const Icon(
+                                    Icons.favorite_outline_rounded,
+                                    color: AppColors.mainColor,
+                                    size: 17,
+                                  ),
                                 ),
                                 const SizedBox(
                                   width: 10,
@@ -349,7 +354,7 @@ class SearchScreen extends StatelessWidget {
                       ],
                     );
                   },
-                ),
+                )),
               ),
             ),
           ),
@@ -357,7 +362,9 @@ class SearchScreen extends StatelessWidget {
             height: 5,
           ),
           InkWell(
-              onTap: () {},
+              onTap: () {
+                itemCount.value += 5;
+              },
               borderRadius: BorderRadius.circular(2),
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
