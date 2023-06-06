@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,7 @@ class MyTextField extends StatelessWidget {
   final int? length;
   final int? maxline;
   final IconButton? iconButton;
+  final double verticalScrollPadding;
   final TextInputAction? textInputAction;
   final TextEditingController textEditingController;
   final TextInputType? keyboardType;
@@ -22,6 +24,7 @@ class MyTextField extends StatelessWidget {
       this.iconButton,
       this.hintText,
       this.length,
+        this.verticalScrollPadding = 0.0,
         this.focusNode,
       this.onEditingComplete,
       this.validator,
@@ -65,7 +68,7 @@ class MyTextField extends StatelessWidget {
               .copyWith(color: AppColors.grayColor),
           suffixIcon: iconButton,
           labelText: label,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+          contentPadding: EdgeInsets.symmetric(horizontal: 15,vertical: verticalScrollPadding),
           enabledBorder: OutlineInputBorder(
             borderSide:
                 const BorderSide(color: AppColors.grayColor, width: 0.5),

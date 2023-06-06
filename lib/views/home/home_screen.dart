@@ -67,7 +67,7 @@ class HomeScreen extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(25),
                       child: CachedNetworkImage(
-                        imageUrl: "http://via.placeholder.com/320x150&text=image",
+                        imageUrl: "https://www.uspace.ir/public/img/slider/main_slider/majara-ecolodge.jpg",
                         fit: BoxFit.cover,
                         errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                       ),
@@ -133,7 +133,7 @@ class HomeScreen extends StatelessWidget {
             child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 physics: const BouncingScrollPhysics(),
-                itemCount: 5,
+                itemCount: homeController.categoryname.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return SizedBox(
@@ -148,14 +148,14 @@ class HomeScreen extends StatelessWidget {
                             child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
                                 child: CachedNetworkImage(
-                                  imageUrl: "http://via.placeholder.com/320x150&text=image",
+                                  imageUrl: homeController.categoryname[index]['img'],
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                                 ))),
                         const SizedBox(height: 4),
                         Expanded(
                           child: Text(
-                            homeController.categoryname[index],
+                            homeController.categoryname[index]['name'],
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
@@ -243,7 +243,7 @@ class HomeScreen extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         height: 180,
                         child: CachedNetworkImage(
-                          imageUrl: "http://via.placeholder.com/320x150&text=image",
+                          imageUrl: "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638685959.jpg",
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                         ),
@@ -467,7 +467,7 @@ class HomeScreen extends StatelessWidget {
                           child:ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: CachedNetworkImage(
-                                imageUrl: "http://via.placeholder.com/320x150&text=image",
+                                imageUrl: "https://www.uspace.ir/public/img/ecolodge/city/shiraz-city.jpg",
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                               ))),
@@ -559,7 +559,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             SizedBox(width: 180,height: 92,child: ClipRRect(
                                 child: CachedNetworkImage(
-                                  imageUrl: "http://via.placeholder.com/320x150&text=image",
+                                  imageUrl: "https://haftrang.uspace.ir/spaces/haftrang/images/main/_uspace_1573276873.jpg",
                                   fit: BoxFit.cover,
                                   errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                                 )),),

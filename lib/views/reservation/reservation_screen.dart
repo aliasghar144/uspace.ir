@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +12,7 @@ import 'package:readmore/readmore.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/custom_tab_indicator.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:uspace_ir/app/widgets/textfield.dart';
 import 'package:uspace_ir/controllers/dropdown_controller.dart';
 import 'package:uspace_ir/views/reservation/reserve_room_screen.dart';
 
@@ -20,7 +22,7 @@ class ReservationScreen extends StatelessWidget {
   PageController secondPageController = PageController();
   DropDownController dropDownController = Get.put(DropDownController());
 
-  ///------->details text
+  ///-------details text
   String roomInformation = """
   هتل سنتی شیران در شهر زیبای اصفهان، مربوط به دوره قاجار واقع شده است. خانه تاریخی محمد قلی شیران به عنوان یکی از آثار ملی ایران به ثبت رسیده است و پس از مرمت و احیا اکـنـون با نام هتل سنتی شیران آماده پذیرایی از مهمـانـان و گـردشگران داخـلی و خـارجی می باشد.
 هتل سنتی شیران دارای 5 اتاق با طراحی داخلی متفاوت می باشد. این اتاق ها با نام های ناصرالدین شاه، فتحعلی شاه (شاه نشین)، مظفرالدین شاه، پریخان خانم و عباس میرزا نـام گذاری شده است. تمامی اتـاق ها دارای تخت هستند و حداکثر ظرفیت پذیرش 17 مهمـان را دارد. سرویس بهداشتی تمـام اتـاق ها اختصاصی است. سیستم سرمایش اتـاق های این هتل سنتی اسپلیت و سیستم گرمایش آن شوفاژ می باشد.""";
@@ -56,6 +58,17 @@ class ReservationScreen extends StatelessWidget {
   حمام مستقل
   شوفاژ
   سرویس بهداشتی""";
+
+  ///---------------------------------------
+
+  ///--------create comment
+  ///
+  RxBool isTextFieldSelected = false.obs;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
+
+  ///---------------------------------------
 
   ////////////////////
   ////-------> comment text
@@ -124,7 +137,116 @@ class ReservationScreen extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 10, left: 10.0),
           child: FloatingActionButton(
               backgroundColor: AppColors.mainColor,
-              onPressed: () {},
+              onPressed: () {
+                Get.bottomSheet(
+                    SingleChildScrollView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 20),
+                        child: Column(children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 15),
+                                    icon: const Icon(
+                                      Icons.cancel_rounded,
+                                      color: AppColors.grayColor,
+                                    )),
+                                Text('ثبت نظر برای هتل سنتی شیران _ اصفهان',
+                                    style: Theme.of(Get.context!)
+                                        .textTheme
+                                        .labelLarge),
+                              ]),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          FocusScope(
+                            child: Focus(
+                              onFocusChange: (value) {
+                                isTextFieldSelected.value = value;
+                              },
+                              child: Obx(() => MyTextField(
+                                    label: 'نام و نام خانوادگی',
+                                    textEditingController: nameController,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                          RegExp('[ا-ی ئ و ]'))
+                                    ],
+                                    maxline: 1,
+                                    onEditingComplete: () {
+                                      isTextFieldSelected.value = false;
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                    },
+                                    keyboardType: TextInputType.name,
+                                    iconButton: isTextFieldSelected.value
+                                        ? IconButton(
+                                            onPressed: () {
+                                              nameController.clear();
+                                            },
+                                            icon: SvgPicture.asset(
+                                                'assets/icons/close_ic.svg'))
+                                        : null,
+                                    textInputAction: TextInputAction.next,
+                                  )),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          MyTextField(
+                            label: 'پست الکترونیکی',
+                            hintText: 'پست الکترونیکی (اختیاری)',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp('[a-zA-Z0-9@_]')),
+                            ],
+                            textEditingController: emailController,
+                            maxline: 1,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.done,
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          MyTextField(
+                            label: 'نظر شما',
+                            textEditingController: commentController,
+                            verticalScrollPadding: 15,
+                            maxline: 6,
+                            keyboardType: TextInputType.multiline,
+                          ),
+                          const SizedBox(
+                            height: 25,
+                          ),
+                          SizedBox(
+                            width:  Get.width,
+                            height: 45,
+                            child: ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.mainColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              )
+                            ), child: Text('ارسال نظر',style:Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(
+                              color: Colors.white
+                            )),),
+                          )
+                        ]),
+                      ),
+                    ),
+                    backgroundColor: Colors.white,
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(28),
+                            topLeft: Radius.circular(28))));
+              },
               child: SvgPicture.asset('assets/icons/chat_ic.svg')),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
@@ -181,7 +303,7 @@ class ReservationScreen extends StatelessWidget {
                         height: 170,
                         child: CachedNetworkImage(
                           imageUrl:
-                              "http://via.placeholder.com/320x150&text=image",
+                              "https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg",
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) =>
                               const Icon(Icons.broken_image_outlined),
@@ -741,6 +863,67 @@ class ReservationScreen extends StatelessWidget {
                   const SizedBox(
                     height: 25,
                   ),
+                  Text('رزرو کودکان',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    'اقامت کودکان کمتر از 5 سال رایگان می باشد.',
+                    textAlign: TextAlign.right,
+                    textDirection: TextDirection.rtl,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text('شرایط کنسلی رزرو اقامتگاه',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    """در صورت کنسلی تا 48 ساعت قبل از ورود و ایام تعطیلات، هزینه شب اول کسر می‌گردد پس از آن کل هزینه به عنوان جریمه محاسبه خواهد شد. در صورت کنسلی رزرو های تاریخ 25 اسفند تا 13 فروردین به هیچ عنوان هزینه ای عودت داده نخواهد شد.
+همچنین هزینه کنسلینگ سامانه یواسپیس، 10 درصد می باشد که به هزینه کنسلینگ اقامتگاه افزوده می شود.""",
+                    textAlign: TextAlign.justify,
+                    textDirection: TextDirection.rtl,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text('کنسلی در نوروز یا ایام پیک',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    """کنسلی در نوروز (۲۰ اسفند تا ۲۰ فروردین)، تعطیلات رسمی و ایام پیک سفر ممکن است با قوانین کنسلی عادی اقامتگاه متفاوت باشد. لطفا قبل از کنسلی برای دریافت شرایط با سایت تماس بگیرید یا از طریق ارسال تیکت در بخش مدیریت سفارشات خود، پیگیر باشید""",
+                    textAlign: TextAlign.justify,
+                    textDirection: TextDirection.rtl,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text('قوانین و مقررات اقامتگاه',
+                      style: Theme.of(Get.context!).textTheme.bodySmall),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    """ارائه مدارک محرمیت در زمان پذیرش الزامی است.
+هتل سنتی شیران اصفهان از پذیرش حیوانات خانگی معذور است.
+ارائه مدارک محرمیت معتبر در زمان پذیرش الزامی است.
+هتل از پذیرش حیوانات خانگی معذور است.
+با توجه به تفاوت نرخ و شرایط پذیرش مهمانان خارجی، قبل از قطعی کردن رزرو با پشتیبانی هماهنگ کنید.""",
+                    textAlign: TextAlign.justify,
+                    textDirection: TextDirection.rtl,
+                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                  ),
+                  const SizedBox(
+                    height: 35,
+                  ),
                 ],
               )),
         ]),
@@ -967,7 +1150,7 @@ class ReservationScreen extends StatelessWidget {
                                 color: AppColors.disabledIcon),
                             const Spacer(),
                             Obx(() => isDurationSelected.value
-                                ? SizedBox()
+                                ? const SizedBox()
                                 : Text('به مدت',
                                     style: Theme.of(Get.context!)
                                         .textTheme
@@ -995,7 +1178,8 @@ class ReservationScreen extends StatelessWidget {
                                       .textTheme
                                       .bodyMedium!
                                       .copyWith(color: Colors.red),
-                                  titleTextStyle: TextStyle(color: Colors.red),
+                                  titleTextStyle:
+                                      const TextStyle(color: Colors.red),
                                   shape: const RoundedRectangleBorder(
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(15)),
@@ -1007,7 +1191,6 @@ class ReservationScreen extends StatelessWidget {
                           },
                         );
                         var label = picked?.toDateTime();
-                        print(picked);
                         if (picked != null) {
                           isDateSelected.value = true;
                         }
@@ -1170,9 +1353,8 @@ class ReservationScreen extends StatelessWidget {
                                               ]),
                                             ]),
                                         const SizedBox(width: 15),
-                                        index == 1
-                                            ? const SizedBox()
-                                            : Obx(() => Padding(
+                                        index == 0
+                                            ? Obx(() => Padding(
                                                   padding:
                                                       const EdgeInsets.only(
                                                           bottom: 6.0),
@@ -1309,6 +1491,7 @@ class ReservationScreen extends StatelessWidget {
                                                     ),
                                                   ),
                                                 ))
+                                            : const SizedBox(),
                                       ]),
                                   Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -1316,8 +1499,9 @@ class ReservationScreen extends StatelessWidget {
                                         Obx(() => InkWell(
                                               onTap: () {
                                                 dropDownController.dropDownValue
-                                                            .value ==
-                                                        ""
+                                                                .value ==
+                                                            "" &&
+                                                        index == 0
                                                     ? null
                                                     : Get.to(
                                                         RoomReservationScreen());
@@ -1328,9 +1512,10 @@ class ReservationScreen extends StatelessWidget {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                   color: dropDownController
-                                                              .dropDownValue
-                                                              .value ==
-                                                          ""
+                                                                  .dropDownValue
+                                                                  .value ==
+                                                              "" &&
+                                                          index == 0
                                                       ? AppColors.grayColor
                                                       : AppColors.mainColor,
                                                 ),
@@ -1399,7 +1584,7 @@ class ReservationScreen extends StatelessWidget {
                               ),
                               child: CachedNetworkImage(
                                 imageUrl:
-                                    "http://via.placeholder.com/320x150&text=image",
+                                    "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) =>
                                     const Icon(Icons.broken_image_outlined),
@@ -1444,7 +1629,8 @@ class ReservationScreen extends StatelessWidget {
                               itemSize: 17.0,
                               physics: const BouncingScrollPhysics(),
                               unratedColor: AppColors.grayColor,
-                              itemPadding: const EdgeInsets.symmetric(horizontal: 0),
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 0),
                               textDirection: TextDirection.rtl,
                               itemBuilder: (context, _) => const Icon(
                                 Icons.star_rounded,
@@ -1509,14 +1695,13 @@ class ReservationScreen extends StatelessWidget {
                                           .textTheme
                                           .titleSmall!
                                           .copyWith(
-                                              fontSize: 10, 
+                                              fontSize: 10,
                                               color: AppColors.grayColor),
                                       textDirection: TextDirection.rtl,
                                     ),
                                     const Spacer(),
                                     InkWell(
-                                        onTap: () {
-                                        },
+                                        onTap: () {},
                                         child: SvgPicture.asset(
                                             'assets/icons/reply_ic.svg')),
                                     Padding(
@@ -1525,9 +1710,7 @@ class ReservationScreen extends StatelessWidget {
                                       child: InkWell(
                                           borderRadius:
                                               BorderRadius.circular(4),
-                                          onTap: () {
-                                            print('reply');
-                                          },
+                                          onTap: () {},
                                           child: Text('پاسخ',
                                               style: Theme.of(Get.context!)
                                                   .textTheme
