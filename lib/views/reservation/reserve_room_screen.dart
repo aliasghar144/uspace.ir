@@ -195,635 +195,747 @@ class RoomReservationScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const SizedBox(height: 15),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(23),
-          child: Container(
-            clipBehavior: Clip.hardEdge,
-            decoration: BoxDecoration(
-              color: const Color(0xff888888).withOpacity(0.1),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.bottomCenter,
-                  children: [
-                    Container(
-                      width: Get.width,
-                      height: 195,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: const BoxDecoration(),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            "https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg",
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.broken_image_outlined),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: -12,
-                      child: Container(
-                          height: 30,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black54.withOpacity(0.05),
-                                  blurRadius: 5,
-                                  spreadRadius: 0.5,
-                                  offset: const Offset(0, 4))
-                            ],
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                              child: Text(
-                                  'اتاق سه تخته پریخان خانم هتل سنتی شیران_اصفهان',
-                                  textAlign: TextAlign.start,
-                                  textDirection: TextDirection.rtl,
+        mainSection(),
+        Obx(
+          () => reservedRoom.value == 0
+              ? const SizedBox(
+                  height: 30,
+                )
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: SizedBox(
+                    height: Get.width * 0.33,
+                    child: Obx(() => ListView.separated(
+                        reverse: true,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  Get.dialog(removeRoom());
+                                },
+                                child: Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 10, bottom: 5),
+                                    width: Get.width / 5.5,
+                                    height: Get.width / 5.5,
+                                    clipBehavior: Clip.hardEdge,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Stack(
+                                      fit: StackFit.expand,
+                                      children: [
+                                        CachedNetworkImage(
+                                          imageUrl:
+                                              "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(
+                                                  Icons.broken_image_outlined),
+                                        ),
+                                        const Icon(Icons.close_rounded,
+                                            color: Colors.white, size: 40),
+                                      ],
+                                    )),
+                              ),
+                              Text('اتاق سه تخته پریخان خانم',
                                   style: Theme.of(Get.context!)
                                       .textTheme
-                                      .labelSmall))),
-                    )
-                  ],
+                                      .labelSmall!
+                                      .copyWith(fontSize: 8)),
+                              const SizedBox(height: 20)
+                            ],
+                          );
+                        },
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(width: 10),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: reservedRoom.value)),
+                  ),
                 ),
-                const SizedBox(height: 30),
-                Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(mainAxisSize: MainAxisSize.min, children: [
-                          Obx(() => Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton2(
-                                    isExpanded: true,
-                                    style: Theme.of(Get.context!)
+        ),
+        reserverInformation(),
+      ],
+    );
+  }
+
+  mainSection() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(23),
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          color: const Color(0xff888888).withOpacity(0.1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  width: Get.width,
+                  height: 195,
+                  clipBehavior: Clip.hardEdge,
+                  decoration: const BoxDecoration(),
+                  child: Hero(
+                    tag: 'hero ${Get.arguments}',
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.broken_image_outlined),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -12,
+                  child: Container(
+                      height: 30,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black54.withOpacity(0.05),
+                              blurRadius: 5,
+                              spreadRadius: 0.5,
+                              offset: const Offset(0, 4))
+                        ],
+                        color: Colors.white,
+                      ),
+                      child: Center(
+                          child: Text(
+                              'اتاق سه تخته پریخان خانم هتل سنتی شیران_اصفهان',
+                              textAlign: TextAlign.start,
+                              textDirection: TextDirection.rtl,
+                              style: Theme.of(Get.context!)
+                                  .textTheme
+                                  .labelSmall))),
+                )
+              ],
+            ),
+            const SizedBox(height: 30),
+            Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(mainAxisSize: MainAxisSize.min, children: [
+                      Obx(() => Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                isExpanded: true,
+                                style: Theme.of(Get.context!)
+                                    .textTheme
+                                    .labelSmall!
+                                    .copyWith(fontSize: 8),
+                                items:
+                                    durationDropDownItems.map((selectedType) {
+                                  return DropdownMenuItem(
+                                    alignment: Alignment.centerRight,
+                                    value: selectedType,
+                                    child: Text(
+                                      selectedType,
+                                      style: Theme.of(Get.context!)
+                                          .textTheme
+                                          .labelSmall!
+                                          .copyWith(color: AppColors.grayColor),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  durationDropDownValue.value = value!;
+                                },
+                                value: durationDropDownValue.value,
+                                buttonStyleData: ButtonStyleData(
+                                  height: 35,
+                                  width: Get.width / 2.5,
+                                  padding: const EdgeInsets.only(
+                                      right: 10, left: 8, top: 0, bottom: 2),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(18),
+                                    border: Border.all(
+                                      width: 0.3,
+                                      color: AppColors.grayColor,
+                                    ),
+                                  ),
+                                ),
+                                iconStyleData: const IconStyleData(
+                                  icon: Icon(
+                                    Icons.arrow_drop_down_rounded,
+                                  ),
+                                  iconEnabledColor: AppColors.grayColor,
+                                ),
+                                dropdownStyleData: DropdownStyleData(
+                                    elevation: 2,
+                                    width: Get.width / 2.5,
+                                    padding: EdgeInsets.zero,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(12),
+                                          bottomLeft: Radius.circular(12)),
+                                    ),
+                                    direction: DropdownDirection.textDirection,
+                                    scrollbarTheme: ScrollbarThemeData(
+                                      radius: const Radius.circular(40),
+                                      thickness: MaterialStateProperty.all(6),
+                                      thumbVisibility:
+                                          MaterialStateProperty.all(true),
+                                    )),
+                              ),
+                            ),
+                          )),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          Jalali? picked = await showPersianDatePicker(
+                            context: Get.context!,
+                            initialDate: Jalali.now(),
+                            firstDate: Jalali.now(),
+                            lastDate: Jalali(1404, 1),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData(
+                                  dialogTheme: DialogTheme(
+                                    contentTextStyle: Theme.of(Get.context!)
                                         .textTheme
-                                        .labelSmall!
-                                        .copyWith(fontSize: 8),
-                                    items: durationDropDownItems
-                                        .map((selectedType) {
-                                      return DropdownMenuItem(
-                                        alignment: Alignment.centerRight,
-                                        value: selectedType,
-                                        child: Text(
-                                          selectedType,
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.red),
+                                    titleTextStyle:
+                                        TextStyle(color: Colors.red),
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+                          var label = picked?.toDateTime();
+                          print(picked);
+                          if (picked != null) {
+                            isDateSelected.value = true;
+                          }
+                        },
+                        child: Container(
+                            height: 35,
+                            width: Get.width / 2.5,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  width: 0.3, color: AppColors.grayColor),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(children: [
+                                const Icon(Icons.arrow_drop_down_rounded,
+                                    color: AppColors.disabledIcon),
+                                const Spacer(),
+                                Obx(
+                                  () => isDateSelected.value
+                                      ? Text(
+                                          'تاریخ ورود:${selectedDate.value.toJalali().year}/${selectedDate.value.toJalali().month}/${selectedDate.value.toJalali().day}',
+                                          textDirection: TextDirection.rtl,
                                           style: Theme.of(Get.context!)
                                               .textTheme
                                               .labelSmall!
                                               .copyWith(
-                                                  color: AppColors.grayColor),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      durationDropDownValue.value = value!;
-                                    },
-                                    value: durationDropDownValue.value,
-                                    buttonStyleData: ButtonStyleData(
-                                      height: 35,
-                                      width: Get.width / 2.5,
-                                      padding: const EdgeInsets.only(
-                                          right: 10,
-                                          left: 8,
-                                          top: 0,
-                                          bottom: 2),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(18),
-                                        border: Border.all(
-                                          width: 0.3,
-                                          color: AppColors.grayColor,
-                                        ),
-                                      ),
-                                    ),
-                                    iconStyleData: const IconStyleData(
-                                      icon: Icon(
-                                        Icons.arrow_drop_down_rounded,
-                                      ),
-                                      iconEnabledColor: AppColors.grayColor,
-                                    ),
-                                    dropdownStyleData: DropdownStyleData(
-                                        elevation: 2,
-                                        width: Get.width / 2.5,
-                                        padding: EdgeInsets.zero,
-                                        decoration: const BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(12),
-                                              bottomLeft: Radius.circular(12)),
-                                        ),
-                                        direction:
-                                            DropdownDirection.textDirection,
-                                        scrollbarTheme: ScrollbarThemeData(
-                                          radius: const Radius.circular(40),
-                                          thickness:
-                                              MaterialStateProperty.all(6),
-                                          thumbVisibility:
-                                              MaterialStateProperty.all(true),
-                                        )),
-                                  ),
+                                                  color: AppColors.grayColor))
+                                      : Text('تاریخ ورورد',
+                                          style: Theme.of(Get.context!)
+                                              .textTheme
+                                              .labelMedium!
+                                              .copyWith(
+                                                  color:
+                                                      AppColors.disabledText)),
                                 ),
-                              )),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              Jalali? picked = await showPersianDatePicker(
-                                context: Get.context!,
-                                initialDate: Jalali.now(),
-                                firstDate: Jalali.now(),
-                                lastDate: Jalali(1404, 1),
-                                builder: (context, child) {
-                                  return Theme(
-                                    data: ThemeData(
-                                      dialogTheme: DialogTheme(
-                                        contentTextStyle: Theme.of(Get.context!)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .copyWith(color: Colors.red),
-                                        titleTextStyle:
-                                            TextStyle(color: Colors.red),
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
-                                        ),
-                                      ),
-                                    ),
-                                    child: child!,
-                                  );
-                                },
-                              );
-                              var label = picked?.toDateTime();
-                              print(picked);
-                              if (picked != null) {
-                                isDateSelected.value = true;
-                              }
+                              ]),
+                            )),
+                      ),
+                    ]),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: TextButton.icon(
+                            onPressed: () {
+                              Get.dialog(removeRoom());
                             },
-                            child: Container(
-                                height: 35,
-                                width: Get.width / 2.5,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 0.3, color: AppColors.grayColor),
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Row(children: [
-                                    const Icon(Icons.arrow_drop_down_rounded,
-                                        color: AppColors.disabledIcon),
-                                    const Spacer(),
-                                    Obx(
-                                      () => isDateSelected.value
-                                          ? Text(
-                                              'تاریخ ورود:${selectedDate.value.toJalali().year}/${selectedDate.value.toJalali().month}/${selectedDate.value.toJalali().day}',
-                                              textDirection: TextDirection.rtl,
-                                              style: Theme.of(Get.context!)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(
-                                                      color:
-                                                          AppColors.grayColor))
-                                          : Text('تاریخ ورورد',
-                                              style: Theme.of(Get.context!)
-                                                  .textTheme
-                                                  .labelMedium!
-                                                  .copyWith(
-                                                      color: AppColors
-                                                          .disabledText)),
-                                    ),
-                                  ]),
-                                )),
+                            icon: SvgPicture.asset(
+                              'assets/icons/trash_ic.svg',
+                            ),
+                            label: Text('حذف اتاق',
+                                style: Theme.of(Get.context!)
+                                    .textTheme
+                                    .labelMedium!
+                                    .copyWith(color: const Color(0xffEA213B))),
                           ),
-                        ]),
-                        const SizedBox(
-                          height: 10,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextButton.icon(
-                                onPressed: () {},
-                                icon: SvgPicture.asset(
-                                  'assets/icons/trash_ic.svg',
-                                ),
-                                label: Text('حذف اتاق',
-                                    style: Theme.of(Get.context!)
-                                        .textTheme
-                                        .labelMedium!
-                                        .copyWith(
-                                            color: const Color(0xffEA213B))),
-                              ),
+                        Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: TextButton.icon(
+                            onPressed: () {
+                              Get.bottomSheet(moreRoomSelect(),
+                                  isDismissible: true,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.white,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(23),
+                                          topRight: Radius.circular(23))));
+                            },
+                            icon: SvgPicture.asset(
+                              'assets/icons/rooms_ic.svg',
+                              color: AppColors.mainColor,
                             ),
-                            Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: TextButton.icon(
-                                onPressed: () {
-                                  Get.bottomSheet(
-                                      SizedBox(
-                                        height: Get.height * 0.9,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            IconButton(
-                                                onPressed: () {
-                                                  Get.back();
-                                                },
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 15,
-                                                        vertical: 15),
-                                                icon: const Icon(
-                                                  Icons.cancel_rounded,
-                                                  color: AppColors.grayColor,
-                                                )),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 20.0),
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Text(
-                                                        'انتخاب اتاق های بیشتر',
-                                                        style: Theme.of(
-                                                                Get.context!)
-                                                            .textTheme
-                                                            .bodySmall!
-                                                            .copyWith(
-                                                                color: AppColors
-                                                                    .mainColor)),
-                                                    const SizedBox(width: 5),
-                                                    SvgPicture.asset(
-                                                        'assets/icons/rooms_big_ic.svg'),
-                                                  ]),
-                                            ),
-                                            const SizedBox(height: 15),
-                                            Expanded(
-                                                child: Stack(
-                                              children: [
-                                                SingleChildScrollView(
-                                                  physics:
-                                                      const BouncingScrollPhysics(),
-                                                  dragStartBehavior:
-                                                      DragStartBehavior.down,
-                                                  child: Column(
-                                                    children: [
-                                                      ListView.separated(
-                                                        itemCount: 8,
-                                                        scrollDirection:
-                                                            Axis.vertical,
-                                                        physics:
-                                                            const BouncingScrollPhysics(),
-                                                        shrinkWrap: true,
-                                                        separatorBuilder:
-                                                            (context, index) {
-                                                          return const Divider(
-                                                            height: 20,
-                                                          );
-                                                        },
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          return Container(
-                                                              padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      15),
-                                                              height: 110,
-                                                              child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Expanded(
-                                                                      flex: 3,
-                                                                      child: Column(
-                                                                          mainAxisAlignment: MainAxisAlignment
-                                                                              .spaceAround,
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.end,
-                                                                          children: [
-                                                                            Text('اتاق سه تخته پریخان خانم هتل سنتی شیران_اصفهان',
-                                                                                softWrap: true,
-                                                                                textDirection: TextDirection.rtl,
-                                                                                style: Theme.of(Get.context!).textTheme.labelSmall),
-                                                                            Row(crossAxisAlignment: CrossAxisAlignment.end, mainAxisAlignment: MainAxisAlignment.end, children: [
-                                                                              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                                                                                Row(children: [
-                                                                                  Text('1 تخت دبل', style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.disabledText)),
-                                                                                  const SizedBox(
-                                                                                    width: 2,
-                                                                                  ),
-                                                                                  const Icon(
-                                                                                    Icons.done_all_rounded,
-                                                                                    color: AppColors.disabledIcon,
-                                                                                    size: 15,
-                                                                                  ),
-                                                                                ]),
-                                                                                const SizedBox(height: 8),
-                                                                                Row(children: [
-                                                                                  Text('صبحانه', style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.disabledText)),
-                                                                                  const SizedBox(
-                                                                                    width: 2,
-                                                                                  ),
-                                                                                  const Icon(Icons.done_all_rounded, color: AppColors.disabledIcon, size: 15),
-                                                                                ]),
-                                                                              ]),
-                                                                              const SizedBox(width: 15),
-                                                                              Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                                                                                Row(children: [
-                                                                                  Text('حمام مستقل', style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.disabledText)),
-                                                                                  const SizedBox(
-                                                                                    width: 2,
-                                                                                  ),
-                                                                                  const Icon(Icons.done_all_rounded, color: AppColors.disabledIcon, size: 15),
-                                                                                ]),
-                                                                                const SizedBox(height: 8),
-                                                                                Row(children: [
-                                                                                  Text('توالت فرنگی', style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.disabledText)),
-                                                                                  const SizedBox(
-                                                                                    width: 2,
-                                                                                  ),
-                                                                                  const Icon(Icons.done_all_rounded, color: AppColors.disabledIcon, size: 15),
-                                                                                ]),
-                                                                              ]),
-                                                                              const SizedBox(width: 15),
-                                                                              index == 1
-                                                                                  ? const SizedBox()
-                                                                                  : Obx(() => Padding(
-                                                                                        padding: const EdgeInsets.only(bottom: 6.0),
-                                                                                        child: Directionality(
-                                                                                          textDirection: TextDirection.rtl,
-                                                                                          child: DropdownButtonHideUnderline(
-                                                                                            child: DropdownButton2(
-                                                                                              isExpanded: true,
-                                                                                              hint: Text(
-                                                                                                'انتخاب نوع پکیچ',
-                                                                                                style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 8, color: AppColors.mainColor),
-                                                                                              ),
-                                                                                              style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 8),
-                                                                                              items: dropDownController.dropDownItems.map((selectedType) {
-                                                                                                return DropdownMenuItem(
-                                                                                                  alignment: Alignment.centerRight,
-                                                                                                  value: selectedType,
-                                                                                                  child: Text(
-                                                                                                    selectedType,
-                                                                                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
-                                                                                                  ),
-                                                                                                );
-                                                                                              }).toList(),
-                                                                                              onChanged: (value) {
-                                                                                                dropDownController.setSelected(value!);
-                                                                                              },
-                                                                                              value: dropDownController.dropDownValue.value == "" ? null : dropDownController.dropDownValue.value,
-                                                                                              buttonStyleData: ButtonStyleData(
-                                                                                                height: 25,
-                                                                                                width: Get.width / 4.2,
-                                                                                                padding: const EdgeInsets.only(right: 5, left: 0, top: 0, bottom: 2),
-                                                                                                decoration: BoxDecoration(
-                                                                                                  borderRadius: BorderRadius.circular(8),
-                                                                                                  border: Border.all(
-                                                                                                    width: 0.5,
-                                                                                                    color: AppColors.mainColor,
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ),
-                                                                                              iconStyleData: const IconStyleData(
-                                                                                                icon: Icon(
-                                                                                                  Icons.arrow_drop_down_rounded,
-                                                                                                ),
-                                                                                                iconEnabledColor: AppColors.mainColor,
-                                                                                              ),
-                                                                                              dropdownStyleData: DropdownStyleData(
-                                                                                                  elevation: 2,
-                                                                                                  width: Get.width / 4.2,
-                                                                                                  padding: EdgeInsets.zero,
-                                                                                                  decoration: const BoxDecoration(
-                                                                                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                                                                                                  ),
-                                                                                                  offset: const Offset(0, 0),
-                                                                                                  direction: DropdownDirection.textDirection,
-                                                                                                  scrollbarTheme: ScrollbarThemeData(
-                                                                                                    radius: const Radius.circular(40),
-                                                                                                    thickness: MaterialStateProperty.all(6),
-                                                                                                    thumbVisibility: MaterialStateProperty.all(true),
-                                                                                                  )),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      ))
-                                                                            ]),
-                                                                            Row(mainAxisSize: MainAxisSize.min, children: [
-                                                                              Obx(() => InkWell(
-                                                                                    onTap: () {
-                                                                                      dropDownController.dropDownValue.value == "" ? null : reservedRoom.value += 1;
-                                                                                    },
-                                                                                    child: Container(
-                                                                                      width: Get.width / 4.2,
-                                                                                      decoration: BoxDecoration(
-                                                                                        borderRadius: BorderRadius.circular(8),
-                                                                                        color: dropDownController.dropDownValue.value == "" ? AppColors.grayColor : AppColors.mainColor,
-                                                                                      ),
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          'رزرو اتاق',
-                                                                                          style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 10),
-                                                                                        )),
-                                                                                      ),
-                                                                                    ),
-                                                                                  )),
-                                                                              const SizedBox(
-                                                                                width: 10,
-                                                                              ),
-                                                                              Container(
-                                                                                padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                                                                                decoration: BoxDecoration(border: Border.all(color: AppColors.mainColor, width: 0.5), borderRadius: BorderRadius.circular(8)),
-                                                                                child: Padding(
-                                                                                  padding: const EdgeInsets.symmetric(vertical: 6.0),
-                                                                                  child: Center(child: Text('2,000,000 تومان / یک شب', softWrap: true, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(fontSize: 8, color: AppColors.mainColor))),
-                                                                                ),
-                                                                              ),
-                                                                            ])
-                                                                          ]),
-                                                                    ),
-                                                                    const SizedBox(
-                                                                      width: 10,
-                                                                    ),
-                                                                    Expanded(
-                                                                      flex: 1,
-                                                                      child:
-                                                                          Container(
-                                                                        width: Get.width /
-                                                                            4.5,
-                                                                        height: Get.width /
-                                                                            4.5,
-                                                                        clipBehavior:
-                                                                            Clip.hardEdge,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(12),
-                                                                        ),
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                          errorWidget: (context, url, error) =>
-                                                                              const Icon(Icons.broken_image_outlined),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ]));
-                                                        },
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  bottom: 0,
-                                                  right: 0,
-                                                  left: 0,
-                                                  child: Container(
-                                                    height: Get.width * 0.33,
-                                                    width: Get.width,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 15,
-                                                        vertical: 3),
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color: Color(
-                                                                0xffE9E9E9),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .only(
-                                                              topRight: Radius
-                                                                  .circular(23),
-                                                              topLeft: Radius
-                                                                  .circular(23),
-                                                            )),
-                                                    child: Obx(() =>
-                                                        ListView.separated(
-                                                            reverse: true,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              return Column(
-                                                                children: [
-                                                                  InkWell(
-                                                                    onTap: () {
-                                                                      reservedRoom
-                                                                          .value -= 1;
-                                                                    },
-                                                                    child:
-                                                                        Expanded(
-                                                                      child: Container(
-                                                                          margin: const EdgeInsets.only(top: 10, bottom: 5),
-                                                                          width: Get.width / 5.5,
-                                                                          height: Get.width / 5.5,
-                                                                          clipBehavior: Clip.hardEdge,
-                                                                          decoration: BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(8),
-                                                                          ),
-                                                                          child: Stack(
-                                                                            fit:
-                                                                                StackFit.expand,
-                                                                            children: [
-                                                                              CachedNetworkImage(
-                                                                                imageUrl: "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
-                                                                                fit: BoxFit.cover,
-                                                                                errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                                                              ),
-                                                                              const Icon(Icons.close_rounded, color: Colors.white, size: 40),
-                                                                            ],
-                                                                          )),
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                      'اتاق سه تخته پریخان خانم',
-                                                                      style: Theme.of(Get
-                                                                              .context!)
-                                                                          .textTheme
-                                                                          .labelSmall!
-                                                                          .copyWith(
-                                                                              fontSize: 8)),
-                                                                  const SizedBox(
-                                                                      height:
-                                                                          20)
-                                                                ],
-                                                              );
-                                                            },
-                                                            shrinkWrap: true,
-                                                            separatorBuilder:
-                                                                (context,
-                                                                        index) =>
-                                                                    const SizedBox(
-                                                                        width:
-                                                                            10),
-                                                            scrollDirection:
-                                                                Axis.horizontal,
-                                                            itemCount:
-                                                                reservedRoom
-                                                                    .value)),
-                                                  ),
-                                                )
-                                              ],
-                                            )),
-                                          ],
-                                        ),
-                                      ),
-                                      isDismissible: true,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.white,
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(23),
-                                              topRight: Radius.circular(23))));
-                                },
-                                icon: SvgPicture.asset(
-                                  'assets/icons/rooms_ic.svg',
-                                  color: AppColors.mainColor,
-                                ),
-                                label: Text('انتخاب اتاق های بیشتر',
-                                    style: Theme.of(Get.context!)
-                                        .textTheme
-                                        .labelMedium!
-                                        .copyWith(color: AppColors.mainColor)),
-                              ),
-                            ),
-                          ],
+                            label: Text('انتخاب اتاق های بیشتر',
+                                style: Theme.of(Get.context!)
+                                    .textTheme
+                                    .labelMedium!
+                                    .copyWith(color: AppColors.mainColor)),
+                          ),
                         ),
                       ],
+                    ),
+                  ],
+                )),
+            const Divider(
+              height: 20,
+            ),
+            roomServicesAndFacility(),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  moreRoomSelect() {
+    return SizedBox(
+      height: Get.height * 0.9,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const SizedBox(height: 10,),
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0,left: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    icon: const Icon(
+                      Icons.cancel_rounded,
+                      color: AppColors.grayColor,
                     )),
-                const Divider(
-                  height: 20,
-                ),
-                roomServicesAndFacility(),
-                const SizedBox(height: 20),
+                const Spacer(),
+                Text('انتخاب اتاق های بیشتر',
+                    style: Theme.of(Get.context!)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(color: AppColors.mainColor)),
+                const SizedBox(width: 5),
+                SvgPicture.asset('assets/icons/rooms_big_ic.svg'),
               ],
             ),
           ),
-        ),
-        Obx(() =>         reservedRoom.value == 0 ? const SizedBox(height: 30,):Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: SizedBox(
+          const Divider(thickness: 1),
+          Expanded(
+            child: ListView.separated(
+              itemCount: 8,
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              physics: const BouncingScrollPhysics(),
+              separatorBuilder: (context, index) {
+                return const Divider(
+                  thickness: 1,
+                  height: 20,
+                );
+              },
+              itemBuilder: (context, index) {
+                return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    height: 110,
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                      'اتاق سه تخته پریخان خانم هتل سنتی شیران_اصفهان',
+                                      softWrap: true,
+                                      textDirection: TextDirection.rtl,
+                                      style: Theme.of(Get.context!)
+                                          .textTheme
+                                          .labelSmall),
+                                  Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Row(children: [
+                                                Text('1 تخت دبل',
+                                                    style: Theme.of(
+                                                            Get.context!)
+                                                        .textTheme
+                                                        .labelSmall!
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .disabledText)),
+                                                const SizedBox(
+                                                  width: 2,
+                                                ),
+                                                const Icon(
+                                                  Icons.done_all_rounded,
+                                                  color: AppColors.disabledIcon,
+                                                  size: 15,
+                                                ),
+                                              ]),
+                                              const SizedBox(height: 8),
+                                              Row(children: [
+                                                Text('صبحانه',
+                                                    style: Theme.of(
+                                                            Get.context!)
+                                                        .textTheme
+                                                        .labelSmall!
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .disabledText)),
+                                                const SizedBox(
+                                                  width: 2,
+                                                ),
+                                                const Icon(
+                                                    Icons.done_all_rounded,
+                                                    color:
+                                                        AppColors.disabledIcon,
+                                                    size: 15),
+                                              ]),
+                                            ]),
+                                        const SizedBox(width: 15),
+                                        Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Row(children: [
+                                                Text('حمام مستقل',
+                                                    style: Theme.of(
+                                                            Get.context!)
+                                                        .textTheme
+                                                        .labelSmall!
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .disabledText)),
+                                                const SizedBox(
+                                                  width: 2,
+                                                ),
+                                                const Icon(
+                                                    Icons.done_all_rounded,
+                                                    color:
+                                                        AppColors.disabledIcon,
+                                                    size: 15),
+                                              ]),
+                                              const SizedBox(height: 8),
+                                              Row(children: [
+                                                Text('توالت فرنگی',
+                                                    style: Theme.of(
+                                                            Get.context!)
+                                                        .textTheme
+                                                        .labelSmall!
+                                                        .copyWith(
+                                                            color: AppColors
+                                                                .disabledText)),
+                                                const SizedBox(
+                                                  width: 2,
+                                                ),
+                                                const Icon(
+                                                    Icons.done_all_rounded,
+                                                    color:
+                                                        AppColors.disabledIcon,
+                                                    size: 15),
+                                              ]),
+                                            ]),
+                                        const SizedBox(width: 15),
+                                        index == 1
+                                            ? const SizedBox()
+                                            : Obx(() => Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 6.0),
+                                                  child: Directionality(
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    child:
+                                                        DropdownButtonHideUnderline(
+                                                      child: DropdownButton2(
+                                                        isExpanded: true,
+                                                        hint: Text(
+                                                          'انتخاب نوع پکیچ',
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .labelSmall!
+                                                              .copyWith(
+                                                                  fontSize: 8,
+                                                                  color: AppColors
+                                                                      .mainColor),
+                                                        ),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .labelSmall!
+                                                            .copyWith(
+                                                                fontSize: 8),
+                                                        items: dropDownController
+                                                            .dropDownItems
+                                                            .map(
+                                                                (selectedType) {
+                                                          return DropdownMenuItem(
+                                                            alignment: Alignment
+                                                                .centerRight,
+                                                            value: selectedType,
+                                                            child: Text(
+                                                              selectedType,
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .labelSmall!
+                                                                  .copyWith(
+                                                                      color: AppColors
+                                                                          .grayColor),
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                        onChanged: (value) {
+                                                          dropDownController
+                                                              .setSelected(
+                                                                  value!);
+                                                        },
+                                                        value: dropDownController
+                                                                    .dropDownValue
+                                                                    .value ==
+                                                                ""
+                                                            ? null
+                                                            : dropDownController
+                                                                .dropDownValue
+                                                                .value,
+                                                        buttonStyleData:
+                                                            ButtonStyleData(
+                                                          height: 25,
+                                                          width:
+                                                              Get.width / 4.2,
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 5,
+                                                                  left: 0,
+                                                                  top: 0,
+                                                                  bottom: 2),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            border: Border.all(
+                                                              width: 0.5,
+                                                              color: AppColors
+                                                                  .mainColor,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        iconStyleData:
+                                                            const IconStyleData(
+                                                          icon: Icon(
+                                                            Icons
+                                                                .arrow_drop_down_rounded,
+                                                          ),
+                                                          iconEnabledColor:
+                                                              AppColors
+                                                                  .mainColor,
+                                                        ),
+                                                        dropdownStyleData:
+                                                            DropdownStyleData(
+                                                                elevation: 2,
+                                                                width:
+                                                                    Get.width /
+                                                                        4.2,
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .zero,
+                                                                decoration:
+                                                                    const BoxDecoration(
+                                                                  borderRadius: BorderRadius.only(
+                                                                      bottomRight:
+                                                                          Radius.circular(
+                                                                              12),
+                                                                      bottomLeft:
+                                                                          Radius.circular(
+                                                                              12)),
+                                                                ),
+                                                                offset:
+                                                                    const Offset(
+                                                                        0, 0),
+                                                                direction:
+                                                                    DropdownDirection
+                                                                        .textDirection,
+                                                                scrollbarTheme:
+                                                                    ScrollbarThemeData(
+                                                                  radius: const Radius
+                                                                      .circular(40),
+                                                                  thickness:
+                                                                      MaterialStateProperty
+                                                                          .all(
+                                                                              6),
+                                                                  thumbVisibility:
+                                                                      MaterialStateProperty
+                                                                          .all(
+                                                                              true),
+                                                                )),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ))
+                                      ]),
+                                  Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Obx(() => InkWell(
+                                              onTap: () {
+                                                dropDownController.dropDownValue
+                                                                .value ==
+                                                            "" &&
+                                                        index == 0
+                                                    ? null
+                                                    : reservedRoom.value += 1;
+                                              },
+                                              child: Container(
+                                                width: Get.width / 4.2,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: dropDownController
+                                                                  .dropDownValue
+                                                                  .value ==
+                                                              "" &&
+                                                          index == 0
+                                                      ? AppColors.grayColor
+                                                      : AppColors.mainColor,
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(vertical: 6.0),
+                                                  child: Center(
+                                                      child: Text(
+                                                    'رزرو اتاق',
+                                                    style: Theme.of(
+                                                            Get.context!)
+                                                        .textTheme
+                                                        .bodySmall!
+                                                        .copyWith(
+                                                            color: Colors.white,
+                                                            fontSize: 10),
+                                                  )),
+                                                ),
+                                              ),
+                                            )),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 3.0),
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: AppColors.mainColor,
+                                                  width: 0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 6.0),
+                                            child: Center(
+                                                child: Text(
+                                                    '2,000,000 تومان / یک شب',
+                                                    softWrap: true,
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style: Theme.of(
+                                                            Get.context!)
+                                                        .textTheme
+                                                        .bodySmall!
+                                                        .copyWith(
+                                                            fontSize: 8,
+                                                            color: AppColors
+                                                                .mainColor))),
+                                          ),
+                                        ),
+                                      ])
+                                ]),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Container(
+                              width: Get.width / 4.5,
+                              height: Get.width / 4.5,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.broken_image_outlined),
+                              ),
+                            ),
+                          ),
+                        ]));
+              },
+            ),
+          ),
+          Container(
             height: Get.width * 0.33,
+            width: Get.width,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 3),
+            decoration: const BoxDecoration(
+                color: Color(0xffE9E9E9),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(23),
+                  topLeft: Radius.circular(23),
+                )),
             child: Obx(() => ListView.separated(
-
+              physics: const BouncingScrollPhysics(),
                 reverse: true,
                 itemBuilder: (context, index) {
                   return Column(
@@ -832,28 +944,30 @@ class RoomReservationScreen extends StatelessWidget {
                         onTap: () {
                           reservedRoom.value -= 1;
                         },
-                        child: Container(
-                            margin: const EdgeInsets.only(top: 10, bottom: 5),
-                            width: Get.width / 5.5,
-                            height: Get.width / 5.5,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                CachedNetworkImage(
-                                  imageUrl:
-                                  "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) =>
-                                  const Icon(Icons.broken_image_outlined),
-                                ),
-                                const Icon(Icons.close_rounded,
-                                    color: Colors.white, size: 40),
-                              ],
-                            )),
+                        child: Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.only(top: 10, bottom: 5),
+                              width: Get.width / 5.5,
+                              height: Get.width / 5.5,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  CachedNetworkImage(
+                                    imageUrl:
+                                        "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.broken_image_outlined),
+                                  ),
+                                  const Icon(Icons.close_rounded,
+                                      color: Colors.white, size: 40),
+                                ],
+                              )),
+                        ),
                       ),
                       Text('اتاق سه تخته پریخان خانم',
                           style: Theme.of(Get.context!)
@@ -869,10 +983,110 @@ class RoomReservationScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: reservedRoom.value)),
           ),
+        ],
+      ),
+    );
+  }
+
+  removeRoom() {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(23),
+      ),
+      backgroundColor: Colors.transparent,
+      child: Container(
+        height: Get.height / 2.5,
+        width: Get.width,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(20)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+                child: Container(
+                    width: Get.width,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: const BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(18),
+                            topLeft: Radius.circular(18))),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                      fit: BoxFit.fill,
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.broken_image_outlined),
+                    ))),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
+              child: Text('ایا مطمئنید، این اتاق از لیست رزرو شده ها حذف شود؟',
+                  textAlign: TextAlign.center,
+                  textDirection: TextDirection.rtl,
+                  style: Theme.of(Get.context!)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(fontSize: 18, color: AppColors.redColor)),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.grayColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            )),
+                        child: Text('خیر',
+                            style: Theme.of(Get.context!)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(color: Colors.white)),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          reservedRoom.value -= 1;
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.redColor,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
+                            )),
+                        child: Text('بله مطمئنم',
+                            style: Theme.of(Get.context!)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(color: Colors.white)),
+                      ),
+                    ),
+                  ]),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+          ],
         ),
-        ),
-        reserverInformation(),
-      ],
+      ),
     );
   }
 

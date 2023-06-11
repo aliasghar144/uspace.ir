@@ -96,19 +96,20 @@ class ReservationScreen extends StatelessWidget {
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return [
                 SliverAppBar(
+                  pinned: true,
+                  floating: true,
+                  leading: Padding(
+                    padding: const EdgeInsets.only(top: 15,left: 16),
+                    child: IconButton(
+                        splashRadius: 20,
+                        onPressed: () {},
+                        icon: SvgPicture.asset(
+                          'assets/icons/bell_ic.svg',
+                        )),
+                  ),
                   title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: IconButton(
-                            splashRadius: 20,
-                            onPressed: () {},
-                            icon: SvgPicture.asset(
-                              'assets/icons/bell_ic.svg',
-                              color: AppColors.disabledIcon,
-                            )),
-                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 15),
                         child: IconButton(
@@ -1504,7 +1505,7 @@ class ReservationScreen extends StatelessWidget {
                                                         index == 0
                                                     ? null
                                                     : Get.to(
-                                                        RoomReservationScreen());
+                                                        RoomReservationScreen(),arguments: index);
                                               },
                                               child: Container(
                                                 width: Get.width / 4.2,
@@ -1582,12 +1583,15 @@ class ReservationScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: CachedNetworkImage(
-                                imageUrl:
-                                    "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.broken_image_outlined),
+                              child: Hero(
+                                tag:'hero $index',
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.broken_image_outlined),
+                                ),
                               ),
                             ),
                           ),
