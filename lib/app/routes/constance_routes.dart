@@ -1,6 +1,10 @@
 
 class Routes{
 
+  static const intro = '/intro';
+
+  static const login = '/login';
+
   static const home = '/home';
   static const search = '/search';
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
+import 'package:uspace_ir/views/reservation/reservation_screen.dart';
 import 'package:uspace_ir/views/search/filter_screen.dart';
 
 class SearchScreen extends StatelessWidget {
@@ -19,6 +20,7 @@ class SearchScreen extends StatelessWidget {
     'جدیدترین',
     'تخفیف ها',
   ];
+
   PageController secondPageController = PageController();
 
   RxInt itemCount = 5.obs;
@@ -149,12 +151,10 @@ class SearchScreen extends StatelessWidget {
                         ),
                         dropdownStyleData: DropdownStyleData(
                             elevation: 3,
-                            width: 200,
                             padding: EdgeInsets.zero,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(14),
                             ),
-                            offset: const Offset(-20, 0),
                             scrollbarTheme: ScrollbarThemeData(
                               radius: const Radius.circular(40),
                               thickness: MaterialStateProperty.all(6),
@@ -187,171 +187,176 @@ class SearchScreen extends StatelessWidget {
                   shrinkWrap: true,
                   padding: const EdgeInsets.only(bottom: 15, top: 15),
                   itemBuilder: (context, index) {
-                    return Stack(
-                      clipBehavior: Clip.none,
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            clipBehavior: Clip.hardEdge,
-                            decoration:BoxDecoration(
-                                borderRadius:BorderRadius.circular(25),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    offset: const Offset(
-                                      1.0,
-                                      2.0,
+                    return InkWell(
+                      onTap: () {
+                        Get.to(ReservationScreen());
+                      },
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              clipBehavior: Clip.hardEdge,
+                              decoration:BoxDecoration(
+                                  borderRadius:BorderRadius.circular(25),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: const Offset(
+                                        1.0,
+                                        2.0,
+                                      ),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 0.0,
+                                    ), //BoxShadow
+                                    const BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
                                     ),
-                                    blurRadius: 10.0,
-                                    spreadRadius: 0.0,
-                                  ), //BoxShadow
-                                  const BoxShadow(
-                                    color: Colors.white,
-                                    offset: Offset(0.0, 0.0),
-                                    blurRadius: 0.0,
-                                    spreadRadius: 0.0,
-                                  ),
-                                ]
-                            ),
-                            width: MediaQuery.of(context).size.width,
-                            height: 160,
-                            child: CachedNetworkImage(
-                              imageUrl:
-                              "http://via.placeholder.com/320x150&text=image",
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) =>
-                              const Icon(Icons.broken_image_outlined),
+                                  ]
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              height: 160,
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                "https://minas.uspace.ir/spaces/minas/images/main/minas_uspace_1601187518.jpg",
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) =>
+                                const Icon(Icons.broken_image_outlined),
+                              ),
                             ),
                           ),
-                        ),
-                        if (index == 2)
+                          if (index == 2)
+                            Positioned(
+                              right: Get.width * 0.10,
+                              top: 0,
+                              child: Container(
+                                height: 25,
+                                width: 40,
+                                decoration: const BoxDecoration(
+                                    color: Color(0xffEA213B),
+                                    borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(12),
+                                        bottomRight: Radius.circular(12))),
+                                child: Center(
+                                    child: Text('30%',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(color: Colors.white))),
+                              ),
+                            )
+                          else
+                            const SizedBox(),
                           Positioned(
-                            right: Get.width * 0.10,
-                            top: 0,
-                            child: Container(
-                              height: 25,
-                              width: 40,
-                              decoration: const BoxDecoration(
-                                  color: Color(0xffEA213B),
-                                  borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(12),
-                                      bottomRight: Radius.circular(12))),
-                              child: Center(
-                                  child: Text('30%',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .copyWith(color: Colors.white))),
-                            ),
-                          )
-                        else
-                          const SizedBox(),
-                        Positioned(
-                            right: Get.width * 0.05,
-                            bottom: Get.width * 0.13,
-                            child: Text(
-                              "هتل سنتی سهروردی",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium!
-                                  .copyWith(color: Colors.white),
-                            )),
-                        Positioned(
-                            right: 0,
-                            bottom: Get.width * 0.08,
-                            width: Get.width,
-                            child: Container(
-                              margin: EdgeInsets.only(right: Get.width * 0.05,left: Get.width * 0.13),
+                              right: Get.width * 0.05,
+                              bottom: Get.width * 0.13,
+                              child: Text(
+                                "هتل سنتی سهروردی",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(color: Colors.white),
+                              )),
+                          Positioned(
+                              right: 0,
+                              bottom: Get.width * 0.08,
                               width: Get.width,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  SvgPicture.asset(
-                                      'assets/icons/location_small_pin_ic.svg',
+                              child: Container(
+                                margin: EdgeInsets.only(right: Get.width * 0.05,left: Get.width * 0.13),
+                                width: Get.width,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    SvgPicture.asset(
+                                        'assets/icons/location_small_pin_ic.svg',
+                                        color: Colors.white,
+                                        width: 18),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        "استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                          Positioned(
+                            bottom: -Get.width * 0.03,
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: const Offset(
+                                        1.0,
+                                        2.0,
+                                      ),
+                                      blurRadius: 4.0,
+                                      spreadRadius: 0.0,
+                                    ), //BoxShadow
+                                    const BoxShadow(
                                       color: Colors.white,
-                                      width: 18),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: Theme.of(context)
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
+                                    ),
+                                  ],
+                                  borderRadius: BorderRadius.circular(12)),
+                              child: Row(
+                                children: [
+                                  const Spacer(),
+                                  Text('241',
+                                      style: Theme.of(Get.context!)
                                           .textTheme
-                                          .bodySmall!
-                                          .copyWith(color: Colors.white),
+                                          .labelLarge),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
+                                  InkWell(
+                                    onTap:(){},
+                                    child: const Icon(
+                                      Icons.favorite_outline_rounded,
+                                      color: AppColors.mainColor,
+                                      size: 17,
                                     ),
                                   ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text('26',
+                                      style: Theme.of(Get.context!)
+                                          .textTheme
+                                          .labelLarge),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  SvgPicture.asset(
+                                    'assets/icons/comment_count_ic.svg',
+                                    color: AppColors.mainColor,
+                                  ),
+                                  const Spacer(),
                                 ],
                               ),
-                            )),
-                        Positioned(
-                          bottom: -Get.width * 0.03,
-                          child: Container(
-                            height: 40,
-                            width: 100,
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.shade300,
-                                    offset: const Offset(
-                                      1.0,
-                                      2.0,
-                                    ),
-                                    blurRadius: 4.0,
-                                    spreadRadius: 0.0,
-                                  ), //BoxShadow
-                                  const BoxShadow(
-                                    color: Colors.white,
-                                    offset: Offset(0.0, 0.0),
-                                    blurRadius: 0.0,
-                                    spreadRadius: 0.0,
-                                  ),
-                                ],
-                                borderRadius: BorderRadius.circular(12)),
-                            child: Row(
-                              children: [
-                                const Spacer(),
-                                Text('241',
-                                    style: Theme.of(Get.context!)
-                                        .textTheme
-                                        .labelLarge),
-                                const SizedBox(
-                                  width: 2,
-                                ),
-                                InkWell(
-                                  onTap:(){},
-                                  child: const Icon(
-                                    Icons.favorite_outline_rounded,
-                                    color: AppColors.mainColor,
-                                    size: 17,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text('26',
-                                    style: Theme.of(Get.context!)
-                                        .textTheme
-                                        .labelLarge),
-                                const SizedBox(
-                                  width: 3,
-                                ),
-                                SvgPicture.asset(
-                                  'assets/icons/comment_count_ic.svg',
-                                  color: AppColors.mainColor,
-                                ),
-                                const Spacer(),
-                              ],
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     );
                   },
                 )),

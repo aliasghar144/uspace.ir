@@ -21,113 +21,116 @@ class BasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        return FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: Scaffold(
-          body: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                floating: true,
-                pinned: true,
-                snap: false,
-                centerTitle: false,
-                leading: Padding(
-                  padding: const EdgeInsets.only(left: 15,top: 15.0),
-                  child: IconButton(
-                  splashRadius: 20,
-                  icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
-                  onPressed: () {},
-                ),
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 15,top: 15.0),
+    return ScrollConfiguration(
+      behavior: const ScrollBehavior().copyWith(overscroll: false),
+      child: GestureDetector(
+        onTap: () {
+          return FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Scaffold(
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  floating: true,
+                  pinned: true,
+                  snap: false,
+                  centerTitle: false,
+                  leading: Padding(
+                    padding: const EdgeInsets.only(left: 15,top: 15.0),
                     child: IconButton(
-                      onPressed: (){},
-                      splashRadius: 20,
-                      icon: const Icon(Icons.menu,color: Colors.grey,),
-                    ),
+                    splashRadius: 20,
+                    icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
+                    onPressed: () {},
                   ),
-                ],
-                bottom: PreferredSize(
-                  preferredSize: const Size(double.infinity, 70),
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
-                    width: double.infinity,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffF0F2F4),
-                      borderRadius: BorderRadius.circular(26)
+                  ),
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15,top: 15.0),
+                      child: IconButton(
+                        onPressed: (){},
+                        splashRadius: 20,
+                        icon: const Icon(Icons.menu,color: Colors.grey,),
+                      ),
                     ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 20,left: 20.0,top: 3),
-                        child: TextField(
-                          style: Theme.of(context).textTheme.labelLarge,
-                          textDirection: TextDirection.rtl,
-                          decoration: InputDecoration(
-                            hintTextDirection: TextDirection.rtl,
-                            border: InputBorder.none,
-                            suffixIcon: Padding(
-                              padding: const EdgeInsets.only(left: 10.0,right: 10),
-                              child: InkWell(child: SvgPicture.asset('assets/icons/search_ic.svg',),onTap: (){},),
+                  ],
+                  bottom: PreferredSize(
+                    preferredSize: const Size(double.infinity, 70),
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+                      width: double.infinity,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color(0xffF0F2F4),
+                        borderRadius: BorderRadius.circular(26)
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 20,left: 20.0,top: 3),
+                          child: TextField(
+                            style: Theme.of(context).textTheme.labelLarge,
+                            textDirection: TextDirection.rtl,
+                            decoration: InputDecoration(
+                              hintTextDirection: TextDirection.rtl,
+                              border: InputBorder.none,
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.only(left: 10.0,right: 10),
+                                child: InkWell(child: SvgPicture.asset('assets/icons/search_ic.svg',),onTap: (){},),
+                              ),
+                              hintText: "جستجوی نام اقامتگاه،شهر،روستا",
+                              hintStyle: Theme.of(context).textTheme.labelLarge!.copyWith(color: AppColors.disabledIcon)
                             ),
-                            hintText: "جستجوی نام اقامتگاه،شهر،روستا",
-                            hintStyle: Theme.of(context).textTheme.labelLarge!.copyWith(color: AppColors.disabledIcon)
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ), //SliverAppBar
-              SliverToBoxAdapter(
-                child: Obx(
-                  () => page[pageIndex.value],
-                ),
-              )
-            ],
-          ),
-          bottomNavigationBar: Container(
-            height: 80,
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                    top: BorderSide(color: Color(0xffF0F2F4), width: 1.5))),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  myNavigationItem(
-                      picture: 'assets/icons/profile_nav_outline_ic.svg',
-                      pictureSelected:
-                          'assets/icons/profile_nav_fill_ic.svg',
-                      text: "پروفایل",
-                      index: 0),
-                  myNavigationItem(
-                      picture: 'assets/icons/paper_outline_ic.svg',
-                      pictureSelected: 'assets/icons/paper_nav_fill_ic.svg',
-                      text: 'تاریخچه',
-                      index: 1),
-                  myNavigationItem(
-                      picture: 'assets/icons/location_pin_nav_outline_ic.svg',
-                      pictureSelected: 'assets/icons/location_pin_nav_fill_ic.svg',
-                      text: "جست و جو",
-                      index: 2),
-                  myNavigationItem(
-                      picture: 'assets/icons/home_nav_outline_ic.svg',
-                      pictureSelected:
-                          'assets/icons/home_nav_fill_ic.svg',
-                      text: 'صفحه اصلی',
-                      index: 3),
-                ],
-              ),
+                ), //SliverAppBar
+                SliverToBoxAdapter(
+                  child: Obx(
+                    () => page[pageIndex.value],
+                  ),
+                )
+              ],
             ),
-          )),
+            bottomNavigationBar: Container(
+              height: 80,
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  border: Border(
+                      top: BorderSide(color: Color(0xffF0F2F4), width: 1.5))),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    myNavigationItem(
+                        picture: 'assets/icons/profile_nav_outline_ic.svg',
+                        pictureSelected:
+                            'assets/icons/profile_nav_fill_ic.svg',
+                        text: "پروفایل",
+                        index: 0),
+                    myNavigationItem(
+                        picture: 'assets/icons/paper_outline_ic.svg',
+                        pictureSelected: 'assets/icons/paper_nav_fill_ic.svg',
+                        text: 'تاریخچه',
+                        index: 1),
+                    myNavigationItem(
+                        picture: 'assets/icons/location_pin_nav_outline_ic.svg',
+                        pictureSelected: 'assets/icons/location_pin_nav_fill_ic.svg',
+                        text: "جست و جو",
+                        index: 2),
+                    myNavigationItem(
+                        picture: 'assets/icons/home_nav_outline_ic.svg',
+                        pictureSelected:
+                            'assets/icons/home_nav_fill_ic.svg',
+                        text: 'صفحه اصلی',
+                        index: 3),
+                  ],
+                ),
+              ),
+            )),
+      ),
     );
   }
 

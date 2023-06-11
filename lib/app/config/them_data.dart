@@ -29,7 +29,6 @@ class ThemConfig {
             fontWeight: FontWeight.w500,
             letterSpacing: 0),
         labelLarge: TextStyle(
-            color: AppColors.primaryTextColor,
             fontSize: 14,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
@@ -43,6 +42,9 @@ class ThemConfig {
             color: AppColors.primaryTextColor,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
+        titleMedium: TextStyle(
+            fontSize: 15,fontWeight: FontWeight.w300,letterSpacing: 0,
+        ),
         titleSmall: TextStyle(
             height: 2,
             fontSize: 12,fontWeight: FontWeight.w300,letterSpacing: 0,color:AppColors.primaryTextColor
