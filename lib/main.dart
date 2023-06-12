@@ -14,7 +14,7 @@ void main(){
     return GetMaterialApp(
         theme: ThemConfig.createTheme(),
         debugShowCheckedModeBanner: false,
-        initialRoute: Routes.intro,
+        initialRoute: Routes.reservation,
         getPages: Pages().pages
     );
   },));

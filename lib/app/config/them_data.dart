@@ -33,21 +33,24 @@ class ThemConfig {
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
         labelMedium: TextStyle(
-            color: AppColors.primaryTextColor,
             fontSize: 12,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
         labelSmall: TextStyle(
             fontSize: 10,
-            color: AppColors.primaryTextColor,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
-        titleMedium: TextStyle(
+        titleLarge: TextStyle(
             fontSize: 15,fontWeight: FontWeight.w300,letterSpacing: 0,
         ),
-        titleSmall: TextStyle(
+        titleMedium: TextStyle(
             height: 2,
-            fontSize: 12,fontWeight: FontWeight.w300,letterSpacing: 0,color:AppColors.primaryTextColor
+            fontSize: 12,fontWeight: FontWeight.w300,letterSpacing: 0,
+        ),
+        titleSmall:
+        TextStyle(
+          height: 2,
+          fontSize: 12,fontWeight: FontWeight.w200,letterSpacing: 0,
         ),
       ),
     );

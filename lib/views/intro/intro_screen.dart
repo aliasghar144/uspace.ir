@@ -60,7 +60,7 @@ class IntroScreen extends StatelessWidget{
                   SvgPicture.asset('assets/images/intro_shape.svg',fit: BoxFit.cover,color: AppColors.grayColor,),
                   Padding(
                     padding: EdgeInsets.only(top: Get.width*0.06,left: 15,right: 15.0,bottom: Get.width*0.15),
-                    child: Text('یواسپیس، پلتفــرم جـامع اطلاع رسـانی و رزرو آنلاین اقـامتگـاه بـوم گـردی و طبیعت گـردی، هتـل‌ سنتی، بوتیـک هتـل، کلبه بومی، مجموعه آب درمـــانی، سیــاه چـادر و خـانـه بــومی در کشــور می بـاشــد. ',style: Theme.of(context).textTheme.titleMedium!.copyWith(color:Colors.white,fontSize: 12.sp),textAlign: TextAlign.center,textDirection: TextDirection.rtl,overflow: TextOverflow.fade,softWrap: true,),
+                    child: Text('یواسپیس، پلتفــرم جـامع اطلاع رسـانی و رزرو آنلاین اقـامتگـاه بـوم گـردی و طبیعت گـردی، هتـل‌ سنتی، بوتیـک هتـل، کلبه بومی، مجموعه آب درمـــانی، سیــاه چـادر و خـانـه بــومی در کشــور می بـاشــد. ',style: Theme.of(context).textTheme.titleLarge!.copyWith(color:Colors.white,fontSize: 12.sp),textAlign: TextAlign.center,textDirection: TextDirection.rtl,overflow: TextOverflow.fade,softWrap: true,),
                   )
                 ],
               ),

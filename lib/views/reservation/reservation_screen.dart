@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:readmore/readmore.dart';
+import 'package:sizer/sizer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/custom_tab_indicator.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
@@ -21,6 +22,26 @@ class ReservationScreen extends StatelessWidget {
 
   PageController secondPageController = PageController();
   DropDownController dropDownController = Get.put(DropDownController());
+
+  List facilities = [
+    'تخت دبل',
+    'تعداد پله:بدون پله',
+    'تعداد خواب:بدون خواب',
+    'نوع واحد:سنتی',
+    'توالت فرنگی مستقل',
+    'متراژ:20متر',
+    'چشم انداز:حیاط',
+    'حمام مستقل',
+    'توالت فرنگی',
+    'صبحانه',
+    'مینی بار ',
+    'نور گیر',
+    'شوفاژ',
+    'یخچال',
+    'کافی شاپ',
+    'اینترنت رایگان',
+    'صندوق امانات'
+  ].obs;
 
   ///-------details text
   String roomInformation = """
@@ -79,12 +100,13 @@ class ReservationScreen extends StatelessWidget {
   RxBool isDateSelected = false.obs;
   RxBool isDurationSelected = false.obs;
   RxBool isFave = false.obs;
-  final dropDownValue = ''.obs;
 
-  final List<String> dropDownItems = [
-    'هال برد',
-    'فول برد',
-  ];
+  RxList<RxBool> showMore =
+      [false.obs, false.obs, false.obs, false.obs, false.obs].obs;
+
+  RxInt selectedPackageIndex = 100.obs;
+  RxInt selectedPackageId = 100.obs;
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +121,7 @@ class ReservationScreen extends StatelessWidget {
                   pinned: true,
                   floating: true,
                   leading: Padding(
-                    padding: const EdgeInsets.only(top: 15,left: 16),
+                    padding: const EdgeInsets.only(top: 15, left: 16),
                     child: IconButton(
                         splashRadius: 20,
                         onPressed: () {},
@@ -228,16 +250,21 @@ class ReservationScreen extends StatelessWidget {
                             height: 25,
                           ),
                           SizedBox(
-                            width:  Get.width,
+                            width: Get.width,
                             height: 45,
-                            child: ElevatedButton(onPressed: (){},style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.mainColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              )
-                            ), child: Text('ارسال نظر',style:Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(
-                              color: Colors.white
-                            )),),
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.mainColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )),
+                              child: Text('ارسال نظر',
+                                  style: Theme.of(Get.context!)
+                                      .textTheme
+                                      .bodyMedium!
+                                      .copyWith(color: Colors.white)),
+                            ),
                           )
                         ]),
                       ),
@@ -423,6 +450,7 @@ class ReservationScreen extends StatelessWidget {
                                   'اتاق 3 تخته پریخان خانم هتل سنتی شیران_اصفهان',
                                   maxLines: 1,
                                   overflow: TextOverflow.clip,
+                                  textAlign: TextAlign.center,
                                   style:
                                       Theme.of(context).textTheme.labelMedium)),
                         ),
@@ -692,19 +720,19 @@ class ReservationScreen extends StatelessWidget {
                   ReadMoreText(
                     roomInformation,
                     textAlign: TextAlign.justify,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                     trimLines: 4,
                     textDirection: TextDirection.rtl,
                     trimMode: TrimMode.Line,
                     lessStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                     trimCollapsedText: 'نمایش بیشتر',
                     trimExpandedText: 'نمایش کمتر',
                     moreStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                   ),
                   const SizedBox(
@@ -718,19 +746,19 @@ class ReservationScreen extends StatelessWidget {
                   ReadMoreText(
                     roomEquipments,
                     textAlign: TextAlign.justify,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                     trimLines: 4,
                     textDirection: TextDirection.rtl,
                     trimMode: TrimMode.Line,
                     lessStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                     trimCollapsedText: 'نمایش بیشتر',
                     trimExpandedText: 'نمایش کمتر',
                     moreStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                   ),
                   const SizedBox(
@@ -744,19 +772,19 @@ class ReservationScreen extends StatelessWidget {
                   ReadMoreText(
                     roomLocation,
                     textAlign: TextAlign.justify,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                     trimLines: 4,
                     textDirection: TextDirection.rtl,
                     trimMode: TrimMode.Line,
                     lessStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                     trimCollapsedText: 'نمایش بیشتر',
                     trimExpandedText: 'نمایش کمتر',
                     moreStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                   ),
                   const SizedBox(
@@ -771,19 +799,19 @@ class ReservationScreen extends StatelessWidget {
                   ReadMoreText(
                     importantLocationDistance,
                     textAlign: TextAlign.justify,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                     trimLines: 4,
                     textDirection: TextDirection.rtl,
                     trimMode: TrimMode.Line,
                     lessStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                     trimCollapsedText: 'نمایش بیشتر',
                     trimExpandedText: 'نمایش کمتر',
                     moreStyle: Theme.of(Get.context!)
                         .textTheme
-                        .titleSmall!
+                        .titleMedium!
                         .copyWith(fontSize: 10, color: Colors.blue),
                   ),
                   const SizedBox(
@@ -796,7 +824,7 @@ class ReservationScreen extends StatelessWidget {
                   ),
                   Text(
                       'استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم',
-                      style: Theme.of(Get.context!).textTheme.titleSmall),
+                      style: Theme.of(Get.context!).textTheme.titleMedium),
                   const SizedBox(
                     height: 5,
                   ),
@@ -860,7 +888,7 @@ class ReservationScreen extends StatelessWidget {
                   ),
                   Text(facilitiesAndFeatures,
                       textAlign: TextAlign.end,
-                      style: Theme.of(Get.context!).textTheme.titleSmall),
+                      style: Theme.of(Get.context!).textTheme.titleMedium),
                   const SizedBox(
                     height: 25,
                   ),
@@ -873,7 +901,7 @@ class ReservationScreen extends StatelessWidget {
                     'اقامت کودکان کمتر از 5 سال رایگان می باشد.',
                     textAlign: TextAlign.right,
                     textDirection: TextDirection.rtl,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                   ),
                   const SizedBox(
                     height: 10,
@@ -888,7 +916,7 @@ class ReservationScreen extends StatelessWidget {
 همچنین هزینه کنسلینگ سامانه یواسپیس، 10 درصد می باشد که به هزینه کنسلینگ اقامتگاه افزوده می شود.""",
                     textAlign: TextAlign.justify,
                     textDirection: TextDirection.rtl,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                   ),
                   const SizedBox(
                     height: 10,
@@ -902,7 +930,7 @@ class ReservationScreen extends StatelessWidget {
                     """کنسلی در نوروز (۲۰ اسفند تا ۲۰ فروردین)، تعطیلات رسمی و ایام پیک سفر ممکن است با قوانین کنسلی عادی اقامتگاه متفاوت باشد. لطفا قبل از کنسلی برای دریافت شرایط با سایت تماس بگیرید یا از طریق ارسال تیکت در بخش مدیریت سفارشات خود، پیگیر باشید""",
                     textAlign: TextAlign.justify,
                     textDirection: TextDirection.rtl,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                   ),
                   const SizedBox(
                     height: 10,
@@ -920,10 +948,10 @@ class ReservationScreen extends StatelessWidget {
 با توجه به تفاوت نرخ و شرایط پذیرش مهمانان خارجی، قبل از قطعی کردن رزرو با پشتیبانی هماهنگ کنید.""",
                     textAlign: TextAlign.justify,
                     textDirection: TextDirection.rtl,
-                    style: Theme.of(Get.context!).textTheme.titleSmall,
+                    style: Theme.of(Get.context!).textTheme.titleMedium,
                   ),
                   const SizedBox(
-                    height: 35,
+                    height: 25,
                   ),
                 ],
               )),
@@ -960,7 +988,7 @@ class ReservationScreen extends StatelessWidget {
                       'اقامت کودکان کمتر از 5 سال رایگان می باشد.',
                       textAlign: TextAlign.right,
                       textDirection: TextDirection.rtl,
-                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                      style: Theme.of(Get.context!).textTheme.titleMedium,
                     ),
                     const SizedBox(
                       height: 10,
@@ -975,7 +1003,7 @@ class ReservationScreen extends StatelessWidget {
 همچنین هزینه کنسلینگ سامانه یواسپیس، 10 درصد می باشد که به هزینه کنسلینگ اقامتگاه افزوده می شود.""",
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
-                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                      style: Theme.of(Get.context!).textTheme.titleMedium,
                     ),
                     const SizedBox(
                       height: 10,
@@ -989,7 +1017,7 @@ class ReservationScreen extends StatelessWidget {
                       """کنسلی در نوروز (۲۰ اسفند تا ۲۰ فروردین)، تعطیلات رسمی و ایام پیک سفر ممکن است با قوانین کنسلی عادی اقامتگاه متفاوت باشد. لطفا قبل از کنسلی برای دریافت شرایط با سایت تماس بگیرید یا از طریق ارسال تیکت در بخش مدیریت سفارشات خود، پیگیر باشید""",
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
-                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                      style: Theme.of(Get.context!).textTheme.titleMedium,
                     ),
                     const SizedBox(
                       height: 10,
@@ -1007,7 +1035,7 @@ class ReservationScreen extends StatelessWidget {
 با توجه به تفاوت نرخ و شرایط پذیرش مهمانان خارجی، قبل از قطعی کردن رزرو با پشتیبانی هماهنگ کنید.""",
                       textAlign: TextAlign.justify,
                       textDirection: TextDirection.rtl,
-                      style: Theme.of(Get.context!).textTheme.titleSmall,
+                      style: Theme.of(Get.context!).textTheme.titleMedium,
                     ),
                     const SizedBox(
                       height: 20,
@@ -1191,7 +1219,7 @@ class ReservationScreen extends StatelessWidget {
                             );
                           },
                         );
-                        var label = picked?.toDateTime();
+                        picked?.toDateTime();
                         if (picked != null) {
                           isDateSelected.value = true;
                         }
@@ -1245,359 +1273,246 @@ class ReservationScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
-                    height: 110,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                      'اتاق سه تخته پریخان خانم هتل سنتی شیران_اصفهان',
-                                      softWrap: true,
-                                      textDirection: TextDirection.rtl,
-                                      style: Theme.of(Get.context!)
-                                          .textTheme
-                                          .labelSmall),
-                                  Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Row(children: [
-                                                Text('1 تخت دبل',
-                                                    style: Theme.of(
-                                                            Get.context!)
-                                                        .textTheme
-                                                        .labelSmall!
-                                                        .copyWith(
-                                                            color: AppColors
-                                                                .disabledText)),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                const Icon(
-                                                  Icons.done_all_rounded,
-                                                  color: AppColors.disabledIcon,
-                                                  size: 15,
-                                                ),
-                                              ]),
-                                              const SizedBox(height: 8),
-                                              Row(children: [
-                                                Text('صبحانه',
-                                                    style: Theme.of(
-                                                            Get.context!)
-                                                        .textTheme
-                                                        .labelSmall!
-                                                        .copyWith(
-                                                            color: AppColors
-                                                                .disabledText)),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                const Icon(
-                                                    Icons.done_all_rounded,
-                                                    color:
-                                                        AppColors.disabledIcon,
-                                                    size: 15),
-                                              ]),
-                                            ]),
-                                        const SizedBox(width: 15),
-                                        Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Row(children: [
-                                                Text('حمام مستقل',
-                                                    style: Theme.of(
-                                                            Get.context!)
-                                                        .textTheme
-                                                        .labelSmall!
-                                                        .copyWith(
-                                                            color: AppColors
-                                                                .disabledText)),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                const Icon(
-                                                    Icons.done_all_rounded,
-                                                    color:
-                                                        AppColors.disabledIcon,
-                                                    size: 15),
-                                              ]),
-                                              const SizedBox(height: 8),
-                                              Row(children: [
-                                                Text('توالت فرنگی',
-                                                    style: Theme.of(
-                                                            Get.context!)
-                                                        .textTheme
-                                                        .labelSmall!
-                                                        .copyWith(
-                                                            color: AppColors
-                                                                .disabledText)),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                const Icon(
-                                                    Icons.done_all_rounded,
-                                                    color:
-                                                        AppColors.disabledIcon,
-                                                    size: 15),
-                                              ]),
-                                            ]),
-                                        const SizedBox(width: 15),
-                                        index == 0
-                                            ? Obx(() => Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 6.0),
-                                                  child: Directionality(
-                                                    textDirection:
-                                                        TextDirection.rtl,
-                                                    child:
-                                                        DropdownButtonHideUnderline(
-                                                      child: DropdownButton2(
-                                                        isExpanded: true,
-                                                        hint: Text(
-                                                          'انتخاب نوع پکیچ',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                          'اتاق سه تخته پریخان خانم هتل سنتی شیران_اصفهان',
+                                          softWrap: true,
+                                          textDirection: TextDirection.rtl,
+                                          style: Theme.of(Get.context!)
+                                              .textTheme
+                                              .labelSmall),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                Get.dialog(chosePackage());
+                                              },
+                                              borderRadius:
+                                                  BorderRadius.circular(18),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 3.0),
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color:
+                                                            AppColors.mainColor,
+                                                        width: 0.5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            18)),
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      vertical: 6.0,
+                                                      horizontal: 15),
+                                                  child: Center(
+                                                      child: Text(
+                                                          'انتخاب نوع پکیج',
+                                                          softWrap: true,
+                                                          textDirection:
+                                                              TextDirection.rtl,
                                                           style: Theme.of(
-                                                                  context)
+                                                                  Get.context!)
                                                               .textTheme
-                                                              .labelSmall!
+                                                              .bodySmall!
                                                               .copyWith(
                                                                   fontSize: 8,
                                                                   color: AppColors
-                                                                      .mainColor),
-                                                        ),
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .labelSmall!
-                                                            .copyWith(
-                                                                fontSize: 8),
-                                                        items: dropDownController
-                                                            .dropDownItems
-                                                            .map(
-                                                                (selectedType) {
-                                                          return DropdownMenuItem(
-                                                            alignment: Alignment
-                                                                .centerRight,
-                                                            value: selectedType,
-                                                            child: Text(
-                                                              selectedType,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .labelSmall!
-                                                                  .copyWith(
-                                                                      color: AppColors
-                                                                          .grayColor),
-                                                            ),
-                                                          );
-                                                        }).toList(),
-                                                        onChanged: (value) {
-                                                          dropDownController
-                                                              .setSelected(
-                                                                  value!);
-                                                        },
-                                                        value: dropDownController
-                                                                    .dropDownValue
-                                                                    .value ==
-                                                                ""
-                                                            ? null
-                                                            : dropDownController
-                                                                .dropDownValue
-                                                                .value,
-                                                        buttonStyleData:
-                                                            ButtonStyleData(
-                                                          height: 25,
-                                                          width:
-                                                              Get.width / 4.2,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  right: 5,
-                                                                  left: 0,
-                                                                  top: 0,
-                                                                  bottom: 2),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                            border: Border.all(
-                                                              width: 0.5,
-                                                              color: AppColors
-                                                                  .mainColor,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        iconStyleData:
-                                                            const IconStyleData(
-                                                          icon: Icon(
-                                                            Icons
-                                                                .arrow_drop_down_rounded,
-                                                          ),
-                                                          iconEnabledColor:
-                                                              AppColors
-                                                                  .mainColor,
-                                                        ),
-                                                        dropdownStyleData:
-                                                            DropdownStyleData(
-                                                                elevation: 2,
-                                                                width:
-                                                                    Get.width /
-                                                                        4.2,
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                decoration:
-                                                                    const BoxDecoration(
-                                                                  borderRadius: BorderRadius.only(
-                                                                      bottomRight:
-                                                                          Radius.circular(
-                                                                              12),
-                                                                      bottomLeft:
-                                                                          Radius.circular(
-                                                                              12)),
-                                                                ),
-                                                                offset:
-                                                                    const Offset(
-                                                                        0, 0),
-                                                                direction:
-                                                                    DropdownDirection
-                                                                        .textDirection,
-                                                                scrollbarTheme:
-                                                                    ScrollbarThemeData(
-                                                                  radius: const Radius
-                                                                      .circular(40),
-                                                                  thickness:
-                                                                      MaterialStateProperty
-                                                                          .all(
-                                                                              6),
-                                                                  thumbVisibility:
-                                                                      MaterialStateProperty
-                                                                          .all(
-                                                                              true),
-                                                                )),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ))
-                                            : const SizedBox(),
-                                      ]),
-                                  Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Obx(() => InkWell(
-                                              onTap: () {
-                                                dropDownController.dropDownValue
-                                                                .value ==
-                                                            "" &&
-                                                        index == 0
-                                                    ? null
-                                                    : Get.to(
-                                                        RoomReservationScreen(),arguments: index);
-                                              },
-                                              child: Container(
-                                                width: Get.width / 4.2,
-                                                decoration: BoxDecoration(
+                                                                      .mainColor))),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              width: 8,
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 3.0),
+                                              decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color:
+                                                          AppColors.mainColor,
+                                                      width: 0.5),
                                                   borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: dropDownController
+                                                      BorderRadius.circular(8)),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 6.0),
+                                                child: Center(
+                                                    child: Text(
+                                                        '2,000,000 تومان / یک شب',
+                                                        softWrap: true,
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        style: Theme.of(
+                                                                Get.context!)
+                                                            .textTheme
+                                                            .bodySmall!
+                                                            .copyWith(
+                                                                fontSize: 8,
+                                                                color: AppColors
+                                                                    .mainColor))),
+                                              ),
+                                            ),
+                                          ]),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Obx(() => TextButton.icon(
+                                              onPressed: () {
+                                                showMore[index].toggle();
+                                              },
+                                              icon: Icon(
+                                                showMore[index].value
+                                                    ? Icons
+                                                        .keyboard_arrow_up_rounded
+                                                    : Icons
+                                                        .keyboard_arrow_down_rounded,
+                                                size: 15,
+                                              ),
+                                              label: Text(
+                                                  showMore[index].value
+                                                      ? 'کمتر'
+                                                      : 'امکانات بیشتر',
+                                                  style: Theme.of(Get.context!)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                          fontSize: 10)))),
+                                          Obx(() => InkWell(
+                                                onTap: () {
+                                                  dropDownController
                                                                   .dropDownValue
                                                                   .value ==
                                                               "" &&
                                                           index == 0
-                                                      ? AppColors.grayColor
-                                                      : AppColors.mainColor,
+                                                      ? null
+                                                      : Get.to(
+                                                          RoomReservationScreen(),
+                                                          arguments: index);
+                                                },
+                                                child: Container(
+                                                  width: Get.width / 4.2,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                    color: dropDownController
+                                                                    .dropDownValue
+                                                                    .value ==
+                                                                "" &&
+                                                            index == 0
+                                                        ? AppColors.grayColor
+                                                        : AppColors.mainColor,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
+                                                        vertical: 6.0),
+                                                    child: Center(
+                                                        child: Text(
+                                                      'رزرو اتاق',
+                                                      style:
+                                                          Theme.of(Get.context!)
+                                                              .textTheme
+                                                              .bodySmall!
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 10),
+                                                    )),
+                                                  ),
                                                 ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(vertical: 6.0),
-                                                  child: Center(
-                                                      child: Text(
-                                                    'رزرو اتاق',
-                                                    style: Theme.of(
-                                                            Get.context!)
-                                                        .textTheme
-                                                        .bodySmall!
-                                                        .copyWith(
-                                                            color: Colors.white,
-                                                            fontSize: 10),
-                                                  )),
-                                                ),
-                                              ),
-                                            )),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 3.0),
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: AppColors.mainColor,
-                                                  width: 0.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 6.0),
-                                            child: Center(
-                                                child: Text(
-                                                    '2,000,000 تومان / یک شب',
-                                                    softWrap: true,
-                                                    textDirection:
-                                                        TextDirection.rtl,
-                                                    style: Theme.of(
-                                                            Get.context!)
-                                                        .textTheme
-                                                        .bodySmall!
-                                                        .copyWith(
-                                                            fontSize: 8,
-                                                            color: AppColors
-                                                                .mainColor))),
-                                          ),
-                                        ),
-                                      ])
-                                ]),
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Container(
-                              width: Get.width / 4.5,
-                              height: Get.width / 4.5,
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
+                                              )),
+                                        ],
+                                      )
+                                    ]),
                               ),
-                              child: Hero(
-                                tag:'hero $index',
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.broken_image_outlined),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  width: Get.width / 4.5,
+                                  height: Get.width / 4.5,
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Hero(
+                                    tag: 'hero $index',
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                                      fit: BoxFit.cover,
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(
+                                              Icons.broken_image_outlined),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ]));
+                            ]),
+                        Obx(() => Wrap(
+                              direction: Axis.horizontal,
+                              textDirection: TextDirection.rtl,
+                              children: facilitiesList(
+                                      showMore: showMore[index].value,
+                                      facilitiesList: facilities)
+                                  .map((item) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Text(item,
+                                            style: Theme.of(Get.context!)
+                                                .textTheme
+                                                .labelSmall!
+                                                .copyWith(
+                                                    fontSize: 10,
+                                                    color:
+                                                        AppColors.grayColor)),
+                                      ),
+                                      const Icon(Icons.done_all_rounded,
+                                          size: 15, color: AppColors.grayColor)
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                            )),
+                      ],
+                    ));
               },
-            )
+            ),
+            const SizedBox(
+              height: 25,
+            ),
           ])),
     );
   }
@@ -1674,20 +1589,20 @@ class ReservationScreen extends StatelessWidget {
                                 textAlign: TextAlign.justify,
                                 style: Theme.of(Get.context!)
                                     .textTheme
-                                    .titleSmall!
+                                    .titleMedium!
                                     .copyWith(color: AppColors.grayColor),
                                 trimLines: 4,
                                 textDirection: TextDirection.rtl,
                                 trimMode: TrimMode.Line,
                                 lessStyle: Theme.of(Get.context!)
                                     .textTheme
-                                    .titleSmall!
+                                    .titleMedium!
                                     .copyWith(fontSize: 10, color: Colors.blue),
                                 trimCollapsedText: 'نمایش بیشتر',
                                 trimExpandedText: 'نمایش کمتر',
                                 moreStyle: Theme.of(Get.context!)
                                     .textTheme
-                                    .titleSmall!
+                                    .titleMedium!
                                     .copyWith(fontSize: 10, color: Colors.blue),
                               ),
                               Row(
@@ -1697,7 +1612,7 @@ class ReservationScreen extends StatelessWidget {
                                       '14 تیر 1402',
                                       style: Theme.of(Get.context!)
                                           .textTheme
-                                          .titleSmall!
+                                          .titleMedium!
                                           .copyWith(
                                               fontSize: 10,
                                               color: AppColors.grayColor),
@@ -1718,7 +1633,7 @@ class ReservationScreen extends StatelessWidget {
                                           child: Text('پاسخ',
                                               style: Theme.of(Get.context!)
                                                   .textTheme
-                                                  .titleSmall!
+                                                  .titleMedium!
                                                   .copyWith(
                                                       color:
                                                           AppColors.mainColor,
@@ -1736,9 +1651,218 @@ class ReservationScreen extends StatelessWidget {
                   return const SizedBox(height: 20);
                 },
                 itemCount: 6),
+            const SizedBox(
+              height: 25,
+            ),
           ],
         ),
       ),
     );
   }
+
+  Widget chosePackage() {
+    return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 15),
+      backgroundColor: Colors.transparent,
+      child: Container(
+        width: Get.width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
+        ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Text(
+            'اتاق سه تخته پریخان خانم هتل سنتی شیران_اصفهان',
+            style: Theme.of(Get.context!).textTheme.labelMedium,
+            textDirection: TextDirection.rtl,
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Text(
+            'برای رزرو، یکی از این پکیج ها را انتخاب کنید',
+            style: Theme.of(Get.context!).textTheme.labelSmall,
+            textDirection: TextDirection.rtl,
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          ListView.separated(
+              itemBuilder: (context, index) {
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if(selectedPackageIndex.value == index){
+                          selectedPackageIndex.value = 100;
+                        }else{                        selectedPackageIndex.value = index;
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Obx(() => DottedBorder(
+                              color: selectedPackageIndex.value == index
+                                  ? AppColors.mainColor
+                                  : AppColors.grayColor,
+                              strokeWidth: 0.4,
+                              borderType: BorderType.RRect,
+                              strokeCap: StrokeCap.round,
+                              radius: const Radius.circular(10),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                child: Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10.0),
+                                    child: GridView.builder(
+                                      itemCount: facilities.length,
+                                      shrinkWrap: true,
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              childAspectRatio: 4.5),
+                                      itemBuilder: (context, index) {
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.done_all_rounded,
+                                                size: 9.5.sp),
+                                            const SizedBox(
+                                              width: 3,
+                                            ),
+                                            Text(facilities[index],
+                                                style: Theme.of(Get.context!)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(fontSize: 7.sp)),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ),
+                    ),
+                    Positioned(
+                      right: Get.width * 0.07,
+                      top: -Get.height * 0.018,
+                      child: InkWell(
+                        onTap: () {
+                          if(selectedPackageIndex.value == index){
+                            selectedPackageIndex.value = 100;
+                          }else{                        selectedPackageIndex.value = index;
+                          }
+                        },
+                        child: Obx(() => Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 13, vertical: 5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: selectedPackageIndex.value == index
+                                    ? AppColors.mainColor
+                                    : AppColors.grayColor,
+                              ),
+                              child: Text('پکیج ${index + 1}',
+                                  style: Theme.of(Get.context!)
+                                      .textTheme
+                                      .labelSmall!
+                                      .copyWith(color: Colors.white)),
+                            )),
+                      ),
+                    ),
+                    Obx(() => selectedPackageIndex.value == index
+                        ? Positioned(
+                            left: Get.width * 0.07,
+                            top: -Get.height * 0.019,
+                            child: GestureDetector(
+                              onTap: () {
+                                selectedPackageIndex.value = 100;
+                              },
+                              behavior: HitTestBehavior.translucent,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: AppColors.mainColor
+                                            .withOpacity(0.3),
+                                        spreadRadius: 0,
+                                        blurRadius: 4),
+                                    const BoxShadow(
+                                      color: Colors.white,
+                                      offset: Offset(0.0, 0.0),
+                                      blurRadius: 0.0,
+                                      spreadRadius: 0.0,
+                                    ),
+                                  ],
+                                  color: Colors.white,
+                                ),
+                                padding: const EdgeInsets.all(5),
+                                child: const Icon(
+                                  Icons.close_rounded,
+                                  color: AppColors.redColor,
+                                  size: 18,
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox()),
+                  ],
+                );
+              },
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              separatorBuilder: (context, index) => const SizedBox(height: 25),
+              itemCount: 2),
+          const SizedBox(
+            height: 25,
+          ),
+          Obx(() => ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor:  selectedPackageIndex.value != 100 ?  AppColors.mainColor : AppColors.grayColor,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18)
+                )
+              ),
+              onPressed:() {
+                if(selectedPackageIndex.value != 100){
+                  selectedPackageId.value = selectedPackageIndex.value;
+                  Get.back();
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Text('انتخاب',style:Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: Colors.white,)),
+              ))),
+          const SizedBox(
+            height: 15,
+          ),
+        ]),
+      ),
+    );
+  }
+
+  List<dynamic> facilitiesList(
+      {required bool showMore, required List facilitiesList}) {
+    if (showMore) {
+      return facilitiesList;
+    } else {
+      return facilitiesList.getRange(0, 4).toList();
+    }
+  }
+
+
 }
