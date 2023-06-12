@@ -107,7 +107,6 @@ class ReservationScreen extends StatelessWidget {
   RxInt selectedPackageIndex = 100.obs;
   RxInt selectedPackageId = 100.obs;
 
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -1297,115 +1296,160 @@ class ReservationScreen extends StatelessWidget {
                                       Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            InkWell(
-                                              onTap: () {
-                                                Get.dialog(chosePackage());
-                                              },
-                                              borderRadius:
-                                                  BorderRadius.circular(18),
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 3.0),
-                                                decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color:
-                                                            AppColors.mainColor,
-                                                        width: 0.5),
+                                            index == 0
+                                                ? InkWell(
+                                                    onTap: () {
+                                                      Get.dialog(
+                                                          chosePackage());
+                                                    },
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            18)),
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      vertical: 6.0,
-                                                      horizontal: 15),
-                                                  child: Center(
-                                                      child: Text(
-                                                          'انتخاب نوع پکیج',
-                                                          softWrap: true,
-                                                          textDirection:
-                                                              TextDirection.rtl,
-                                                          style: Theme.of(
-                                                                  Get.context!)
-                                                              .textTheme
-                                                              .bodySmall!
-                                                              .copyWith(
-                                                                  fontSize: 8,
-                                                                  color: AppColors
-                                                                      .mainColor))),
-                                                ),
-                                              ),
-                                            ),
+                                                            18),
+                                                    child: Obx(() => Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      3.0),
+                                                          decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                  color: selectedPackageId
+                                                                              .value ==
+                                                                          100
+                                                                      ? AppColors
+                                                                          .mainColor
+                                                                      : AppColors
+                                                                          .grayColor,
+                                                                  width: 0.5),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          18)),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        6.0,
+                                                                    horizontal:
+                                                                        15),
+                                                            child: Center(
+                                                                child: Text(
+                                                                    'انتخاب نوع پکیج',
+                                                                    softWrap:
+                                                                        true,
+                                                                    textDirection:
+                                                                        TextDirection
+                                                                            .rtl,
+                                                                    style: Theme.of(Get
+                                                                            .context!)
+                                                                        .textTheme
+                                                                        .bodySmall!
+                                                                        .copyWith(
+                                                                            fontSize:
+                                                                                8,
+                                                                            color: selectedPackageId.value == 100
+                                                                                ? AppColors.mainColor
+                                                                                : AppColors.grayColor))),
+                                                          ),
+                                                        )),
+                                                  )
+                                                : const SizedBox(),
                                             const SizedBox(
                                               width: 8,
                                             ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
+                                            Obx(() => Container(
+                                                  width: Get.width / 4.2,
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
                                                       horizontal: 3.0),
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          AppColors.mainColor,
-                                                      width: 0.5),
-                                                  borderRadius:
-                                                      BorderRadius.circular(8)),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
+                                                  decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: selectedPackageId
+                                                                          .value ==
+                                                                      100 &&
+                                                                  index == 0
+                                                              ? AppColors
+                                                                  .grayColor
+                                                              : AppColors
+                                                                  .mainColor,
+                                                          width: 0.5),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8)),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
                                                         vertical: 6.0),
-                                                child: Center(
-                                                    child: Text(
-                                                        '2,000,000 تومان / یک شب',
-                                                        softWrap: true,
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        style: Theme.of(
-                                                                Get.context!)
-                                                            .textTheme
-                                                            .bodySmall!
-                                                            .copyWith(
-                                                                fontSize: 8,
-                                                                color: AppColors
-                                                                    .mainColor))),
-                                              ),
-                                            ),
+                                                    child: Center(
+                                                        child: Text(
+                                                            selectedPackageId.value ==
+                                                                        100 &&
+                                                                    index == 0
+                                                                ? 'قیمت هر شب'
+                                                                : '2,000,000 تومان / یک شب',
+                                                            softWrap: true,
+                                                            textDirection:
+                                                                TextDirection
+                                                                    .rtl,
+                                                            style: Theme.of(Get
+                                                                    .context!)
+                                                                .textTheme
+                                                                .bodySmall!
+                                                                .copyWith(
+                                                                    fontSize: 8,
+                                                                    color: selectedPackageId.value == 100 &&
+                                                                            index ==
+                                                                                0
+                                                                        ? AppColors
+                                                                            .grayColor
+                                                                        : AppColors.mainColor))),
+                                                  ),
+                                                )),
                                           ]),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
+                                      Obx(() => SizedBox(
+                                            height: selectedPackageId.value ==
+                                                        100 &&
+                                                    index == 0
+                                                ? 10
+                                                : 5,
+                                          )),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Obx(() => TextButton.icon(
-                                              onPressed: () {
-                                                showMore[index].toggle();
-                                              },
-                                              icon: Icon(
-                                                showMore[index].value
-                                                    ? Icons
-                                                        .keyboard_arrow_up_rounded
-                                                    : Icons
-                                                        .keyboard_arrow_down_rounded,
-                                                size: 15,
-                                              ),
-                                              label: Text(
-                                                  showMore[index].value
-                                                      ? 'کمتر'
-                                                      : 'امکانات بیشتر',
-                                                  style: Theme.of(Get.context!)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                          fontSize: 10)))),
+                                          Obx(() => selectedPackageId.value ==
+                                                      100 &&
+                                                  index == 0
+                                              ? const SizedBox()
+                                              : Obx(() => TextButton.icon(
+                                                  onPressed: () {
+                                                    showMore[index].toggle();
+                                                  },
+                                                  icon: Icon(
+                                                    showMore[index].value
+                                                        ? Icons
+                                                            .keyboard_arrow_up_rounded
+                                                        : Icons
+                                                            .keyboard_arrow_down_rounded,
+                                                    size: 15,
+                                                  ),
+                                                  label: Text(
+                                                      showMore[index].value
+                                                          ? 'کمتر'
+                                                          : 'امکانات بیشتر',
+                                                      style: Theme.of(
+                                                              Get.context!)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .copyWith(
+                                                              color: Colors
+                                                                  .blueAccent,
+                                                              fontSize: 10))))),
                                           Obx(() => InkWell(
                                                 onTap: () {
-                                                  dropDownController
-                                                                  .dropDownValue
-                                                                  .value ==
-                                                              "" &&
+                                                  selectedPackageId.value ==
+                                                              100 &&
                                                           index == 0
                                                       ? null
                                                       : Get.to(
@@ -1418,10 +1462,9 @@ class ReservationScreen extends StatelessWidget {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             8),
-                                                    color: dropDownController
-                                                                    .dropDownValue
+                                                    color: selectedPackageId
                                                                     .value ==
-                                                                "" &&
+                                                                100 &&
                                                             index == 0
                                                         ? AppColors.grayColor
                                                         : AppColors.mainColor,
@@ -1475,37 +1518,40 @@ class ReservationScreen extends StatelessWidget {
                                 ),
                               ),
                             ]),
-                        Obx(() => Wrap(
-                              direction: Axis.horizontal,
-                              textDirection: TextDirection.rtl,
-                              children: facilitiesList(
-                                      showMore: showMore[index].value,
-                                      facilitiesList: facilities)
-                                  .map((item) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(top: 10.0),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 5.0),
-                                        child: Text(item,
-                                            style: Theme.of(Get.context!)
-                                                .textTheme
-                                                .labelSmall!
-                                                .copyWith(
-                                                    fontSize: 10,
-                                                    color:
-                                                        AppColors.grayColor)),
-                                      ),
-                                      const Icon(Icons.done_all_rounded,
-                                          size: 15, color: AppColors.grayColor)
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
-                            )),
+                        Obx(() => selectedPackageId.value == 100 && index == 0
+                            ? const SizedBox()
+                            : Wrap(
+                                direction: Axis.horizontal,
+                                textDirection: TextDirection.rtl,
+                                children: facilitiesList(
+                                        showMore: showMore[index].value,
+                                        facilitiesList: facilities)
+                                    .map((item) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 5.0),
+                                          child: Text(item,
+                                              style: Theme.of(Get.context!)
+                                                  .textTheme
+                                                  .labelSmall!
+                                                  .copyWith(
+                                                      fontSize: 10,
+                                                      color:
+                                                          AppColors.grayColor)),
+                                        ),
+                                        const Icon(Icons.done_all_rounded,
+                                            size: 15,
+                                            color: AppColors.grayColor)
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                              )),
                       ],
                     ));
               },
@@ -1697,9 +1743,10 @@ class ReservationScreen extends StatelessWidget {
                   children: [
                     InkWell(
                       onTap: () {
-                        if(selectedPackageIndex.value == index){
+                        if (selectedPackageIndex.value == index) {
                           selectedPackageIndex.value = 100;
-                        }else{                        selectedPackageIndex.value = index;
+                        } else {
+                          selectedPackageIndex.value = index;
                         }
                       },
                       child: Padding(
@@ -1760,9 +1807,10 @@ class ReservationScreen extends StatelessWidget {
                       top: -Get.height * 0.018,
                       child: InkWell(
                         onTap: () {
-                          if(selectedPackageIndex.value == index){
+                          if (selectedPackageIndex.value == index) {
                             selectedPackageIndex.value = 100;
-                          }else{                        selectedPackageIndex.value = index;
+                          } else {
+                            selectedPackageIndex.value = index;
                           }
                         },
                         child: Obx(() => Container(
@@ -1831,21 +1879,25 @@ class ReservationScreen extends StatelessWidget {
           ),
           Obx(() => ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor:  selectedPackageIndex.value != 100 ?  AppColors.mainColor : AppColors.grayColor,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18)
-                )
-              ),
-              onPressed:() {
-                if(selectedPackageIndex.value != 100){
+                  backgroundColor: selectedPackageIndex.value != 100
+                      ? AppColors.mainColor
+                      : AppColors.grayColor,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18))),
+              onPressed: () {
+                if (selectedPackageIndex.value != 100) {
                   selectedPackageId.value = selectedPackageIndex.value;
                   Get.back();
                 }
               },
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Text('انتخاب',style:Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: Colors.white,)),
+                child: Text('انتخاب',
+                    style:
+                        Theme.of(Get.context!).textTheme.labelSmall!.copyWith(
+                              color: Colors.white,
+                            )),
               ))),
           const SizedBox(
             height: 15,
@@ -1863,6 +1915,4 @@ class ReservationScreen extends StatelessWidget {
       return facilitiesList.getRange(0, 4).toList();
     }
   }
-
-
 }
