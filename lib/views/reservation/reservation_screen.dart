@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -107,6 +108,16 @@ class ReservationScreen extends StatelessWidget {
   RxInt selectedPackageIndex = 100.obs;
   RxInt selectedPackageId = 100.obs;
 
+  final durationDropDownValue = 'به مدت: 1 شب'.obs;
+
+  final List<String> durationDropDownItems = [
+    'به مدت: 1 شب',
+    'به مدت: 2 شب',
+    'به مدت: 3 شب',
+    'به مدت: 5 شب',
+    'به مدت: 6 شب',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -213,6 +224,7 @@ class ReservationScreen extends StatelessWidget {
                                             onPressed: () {
                                               nameController.clear();
                                             },
+                                            splashRadius: 20,
                                             icon: SvgPicture.asset(
                                                 'assets/icons/close_ic.svg'))
                                         : null,
@@ -1161,36 +1173,80 @@ class ReservationScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 35,
-                        width: Get.width / 2 - 75,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              width: 0.7, color: AppColors.borderColor),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Row(children: [
-                            const Icon(Icons.arrow_drop_down_rounded,
-                                color: AppColors.disabledIcon),
-                            const Spacer(),
-                            Obx(() => isDurationSelected.value
-                                ? const SizedBox()
-                                : Text('به مدت',
+                    Obx(() => Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              isExpanded: true,
+                              hint: Row(children: [
+                                SvgPicture.asset(
+                                    'assets/icons/calendar_ic.svg'),
+                                const SizedBox(width: 5,),
+                                Text('به مدت',
                                     style: Theme.of(Get.context!)
                                         .textTheme
-                                        .labelMedium!
-                                        .copyWith(
-                                            color: AppColors.disabledText))),
-                            const SizedBox(width: 5),
-                            SvgPicture.asset('assets/icons/calendar_ic.svg'),
-                          ]),
-                        ),
-                      ),
-                    ),
+                                        .labelSmall!
+                                        .copyWith(color: AppColors.grayColor))
+                              ]),
+                              style: Theme.of(Get.context!)
+                                  .textTheme
+                                  .labelSmall!
+                                  .copyWith(color: AppColors.grayColor),
+                              items: dropDownController.dropDownItems
+                                  .map((selectedType) {
+                                return DropdownMenuItem(
+                                  alignment: Alignment.centerRight,
+                                  value: selectedType,
+                                  child: Text(
+                                    selectedType,
+                                    style: Theme.of(Get.context!)
+                                        .textTheme
+                                        .labelSmall!
+                                        .copyWith(color: AppColors.grayColor),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                dropDownController.setSelected(value!);
+                              },
+                              value:
+                                  dropDownController.dropDownValue.value == ""
+                                      ? null
+                                      : dropDownController.dropDownValue.value,
+                              buttonStyleData: ButtonStyleData(
+                                height: 35,
+                                width: Get.width / 2.8,
+                                padding: const EdgeInsets.only(
+                                    right: 10, left: 8, top: 0, bottom: 2),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(18),
+                                  color: const Color(0xffF8F9FD),
+                                ),
+                              ),
+                              iconStyleData: const IconStyleData(
+                                icon: Icon(
+                                  Icons.arrow_drop_down_rounded,
+                                ),
+                                iconEnabledColor: AppColors.grayColor,
+                              ),
+                              dropdownStyleData: DropdownStyleData(
+                                  elevation: 2,
+                                  padding: EdgeInsets.zero,
+                                  decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(12),
+                                        bottomLeft: Radius.circular(12)),
+                                  ),
+                                  direction: DropdownDirection.textDirection,
+                                  scrollbarTheme: ScrollbarThemeData(
+                                    radius: const Radius.circular(40),
+                                    thickness: MaterialStateProperty.all(6),
+                                    thumbVisibility:
+                                        MaterialStateProperty.all(true),
+                                  )),
+                            ),
+                          ),
+                        )),
                     InkWell(
                       onTap: () async {
                         Jalali? picked = await showPersianDatePicker(
@@ -1227,8 +1283,7 @@ class ReservationScreen extends StatelessWidget {
                           height: 35,
                           width: Get.width / 2 - 50,
                           decoration: BoxDecoration(
-                            border: Border.all(
-                                width: 0.7, color: AppColors.borderColor),
+                            color:const Color(0xffF8F9FD),
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: Padding(
