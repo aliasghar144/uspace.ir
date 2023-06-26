@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
-import 'package:uspace_ir/views/history/history_screen.dart';
-import 'package:uspace_ir/views/home/home_screen.dart';
-import 'package:uspace_ir/views/profile/profile_screen.dart';
-import 'package:uspace_ir/views/search/search_screen.dart';
+import 'package:uspace_ir/controllers/search_controller.dart';
+import 'package:uspace_ir/pages/explore/explore_screen.dart';
+import 'package:uspace_ir/pages/history/history_screen.dart';
+import 'package:uspace_ir/pages/home/home_screen.dart';
+import 'package:uspace_ir/pages/profile/profile_screen.dart';
+import 'package:uspace_ir/app/widgets/search/search_screen.dart';
 
 class BasePage extends StatelessWidget {
   BasePage({Key? key}) : super(key: key);
+
+  SearchController searchController = Get.put(SearchController());
 
   var pageIndex = 3.obs;
 
   final page = [
     ProfileScreen(),
     HistoryScreen(),
-    SearchScreen(),
+    ExploreScreen(),
     HomeScreen(),
   ];
 
@@ -31,45 +35,50 @@ class BasePage extends StatelessWidget {
             body: CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  floating: true,
-                  pinned: true,
-                  snap: false,
-                  centerTitle: false,
-                  leading: Padding(
-                    padding: const EdgeInsets.only(left: 15,top: 15.0),
-                    child: IconButton(
+              floating: true,
+              pinned: true,
+              snap: false,
+              centerTitle: false,
+              leading: Padding(
+                padding: const EdgeInsets.only(left: 15,top: 15.0),
+                child: IconButton(
+                  splashRadius: 20,
+                  icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
+                  onPressed: () {},
+                ),
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 15,top: 15.0),
+                  child: IconButton(
+                    onPressed: (){},
                     splashRadius: 20,
-                    icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
-                    onPressed: () {},
+                    icon: const Icon(Icons.menu,color: Colors.grey,),
                   ),
+                ),
+              ],
+              bottom: PreferredSize(
+                preferredSize: const Size(double.infinity, 70),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      color: const Color(0xffF0F2F4),
+                      borderRadius: BorderRadius.circular(26)
                   ),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.only(right: 15,top: 15.0),
-                      child: IconButton(
-                        onPressed: (){},
-                        splashRadius: 20,
-                        icon: const Icon(Icons.menu,color: Colors.grey,),
-                      ),
-                    ),
-                  ],
-                  bottom: PreferredSize(
-                    preferredSize: const Size(double.infinity, 70),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
-                      width: double.infinity,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: const Color(0xffF0F2F4),
-                        borderRadius: BorderRadius.circular(26)
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 20,left: 20.0,top: 3),
-                          child: TextField(
-                            style: Theme.of(context).textTheme.labelLarge,
-                            textDirection: TextDirection.rtl,
-                            decoration: InputDecoration(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 20,left: 20.0,top: 3),
+                      child: InkWell(
+                        onTap: (){
+                          Get.to(SearchScreen(),transition: Transition.fadeIn);
+                        },
+                        child: TextField(
+                          enabled: false,
+                          style: Theme.of(context).textTheme.labelLarge,
+                          textDirection: TextDirection.rtl,
+                          decoration: InputDecoration(
                               hintTextDirection: TextDirection.rtl,
                               border: InputBorder.none,
                               suffixIcon: Padding(
@@ -78,13 +87,14 @@ class BasePage extends StatelessWidget {
                               ),
                               hintText: "جستجوی نام اقامتگاه،شهر،روستا",
                               hintStyle: Theme.of(context).textTheme.labelLarge!.copyWith(color: AppColors.disabledIcon)
-                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ), //SliverAppBar
+                ),
+              ),
+            ), //SliverAppBar
                 SliverToBoxAdapter(
                   child: Obx(
                     () => page[pageIndex.value],
@@ -106,8 +116,7 @@ class BasePage extends StatelessWidget {
                   children: [
                     myNavigationItem(
                         picture: 'assets/icons/profile_nav_outline_ic.svg',
-                        pictureSelected:
-                            'assets/icons/profile_nav_fill_ic.svg',
+                        pictureSelected: 'assets/icons/profile_nav_fill_ic.svg',
                         text: "پروفایل",
                         index: 0),
                     myNavigationItem(
@@ -117,13 +126,13 @@ class BasePage extends StatelessWidget {
                         index: 1),
                     myNavigationItem(
                         picture: 'assets/icons/location_pin_nav_outline_ic.svg',
-                        pictureSelected: 'assets/icons/location_pin_nav_fill_ic.svg',
+                        pictureSelected:
+                            'assets/icons/location_pin_nav_fill_ic.svg',
                         text: "جست و جو",
                         index: 2),
                     myNavigationItem(
                         picture: 'assets/icons/home_nav_outline_ic.svg',
-                        pictureSelected:
-                            'assets/icons/home_nav_fill_ic.svg',
+                        pictureSelected: 'assets/icons/home_nav_fill_ic.svg',
                         text: 'صفحه اصلی',
                         index: 3),
                   ],
@@ -133,7 +142,6 @@ class BasePage extends StatelessWidget {
       ),
     );
   }
-
 
   myNavigationItem({
     required String picture,
@@ -151,7 +159,8 @@ class BasePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Expanded(child: SizedBox()),
-                pageIndex.value == index ? SvgPicture.asset(pictureSelected)
+                pageIndex.value == index
+                    ? SvgPicture.asset(pictureSelected)
                     : SvgPicture.asset(picture),
                 const SizedBox(
                   height: 3,

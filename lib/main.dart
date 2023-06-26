@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/them_data.dart';
-import 'package:uspace_ir/app/routes/constance_routes.dart';
-import 'package:uspace_ir/app/routes/route.dart';
 import 'package:sizer/sizer.dart';
+import 'package:uspace_ir/routes/constance_routes.dart';
+import 'package:uspace_ir/routes/route.dart';
 
 void main(){
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +14,7 @@ void main(){
     return GetMaterialApp(
         theme: ThemConfig.createTheme(),
         debugShowCheckedModeBanner: false,
-        initialRoute: Routes.reservation,
+        initialRoute: Routes.home,
         getPages: Pages().pages
     );
   },));

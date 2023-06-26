@@ -1,5 +1,5 @@
 
-class Routes{
+class Routes {
 
   static const intro = '/intro';
 
@@ -11,4 +11,5 @@ class Routes{
   static const reservation = '$home/reservation';
   static const reserveRoom = '$reservation/reserveRoom';
 
+  static const test = '/test';
 }
