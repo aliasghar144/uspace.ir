@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 
 class ThemConfig {
