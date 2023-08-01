@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 
 class LoginController extends GetxController{
 
-  TextEditingController phoneNumberController = TextEditingController();
 
-  hideNumber(){
-   return phoneNumberController.text.replaceRange(4, 7, '***');
+  TextEditingController phoneNumberController = TextEditingController();
+  RxBool activeButton = false.obs;
+  RxBool isUserLogin = false.obs;
+  hideNumber(String phoneNum){
+   return phoneNum.replaceRange(4, 7, '***');
   }
 
 }

@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
-import 'package:uspace_ir/views/reservation/reservation_screen.dart';
+import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 
 
 

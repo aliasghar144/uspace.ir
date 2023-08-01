@@ -16,7 +16,7 @@ import 'package:uspace_ir/app/utils/custom_tab_indicator.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uspace_ir/app/widgets/textfield.dart';
 import 'package:uspace_ir/controllers/dropdown_controller.dart';
-import 'package:uspace_ir/views/reservation/reserve_room_screen.dart';
+import 'package:uspace_ir/pages/reservation/reserve_room_screen.dart';
 
 class ReservationScreen extends StatelessWidget {
   ReservationScreen({Key? key}) : super(key: key);
@@ -99,7 +99,6 @@ class ReservationScreen extends StatelessWidget {
 
   var selectedDate = DateTime.now().obs;
   RxBool isDateSelected = false.obs;
-  RxBool isDurationSelected = false.obs;
   RxBool isFave = false.obs;
 
   RxList<RxBool> showMore =
@@ -108,7 +107,6 @@ class ReservationScreen extends StatelessWidget {
   RxInt selectedPackageIndex = 100.obs;
   RxInt selectedPackageId = 100.obs;
 
-  final durationDropDownValue = 'به مدت: 1 شب'.obs;
 
   final List<String> durationDropDownItems = [
     'به مدت: 1 شب',
@@ -1160,7 +1158,8 @@ class ReservationScreen extends StatelessWidget {
       child: SingleChildScrollView(
           physics: const NeverScrollableScrollPhysics(),
           dragStartBehavior: DragStartBehavior.down,
-          child: Column(children: [
+          child: Column(
+              children: [
             Container(
               height: 1,
               width: Get.width,
@@ -1331,7 +1330,7 @@ class ReservationScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
                                 flex: 3,
@@ -1345,9 +1344,13 @@ class ReservationScreen extends StatelessWidget {
                                           style: Theme.of(Get.context!)
                                               .textTheme
                                               .labelSmall),
-                                      const SizedBox(
+                                      index ==2 ? const SizedBox(height: 3,) : const SizedBox(
                                         height: 10,
                                       ),
+                                      index == 2 ? Padding(
+                                        padding: const EdgeInsets.only(right:10.0,bottom:3),
+                                        child: Text('2,000,000 تومان / یک شب',textDirection:TextDirection.rtl,style:Theme.of(Get.context!).textTheme.bodySmall!.copyWith(fontSize:7,color:AppColors.redColor,height: 1,decoration: TextDecoration.lineThrough)),
+                                      ) : const SizedBox(),
                                       Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
@@ -1442,7 +1445,7 @@ class ReservationScreen extends StatelessWidget {
                                                                         100 &&
                                                                     index == 0
                                                                 ? 'قیمت هر شب'
-                                                                : '2,000,000 تومان / یک شب',
+                                                                : index == 2 ? '1,000,000 تومان / یک شب' : '2,000,000 تومان / یک شب',
                                                             softWrap: true,
                                                             textDirection:
                                                                 TextDirection
@@ -1552,24 +1555,47 @@ class ReservationScreen extends StatelessWidget {
                               ),
                               Expanded(
                                 flex: 1,
-                                child: Container(
-                                  width: Get.width / 4.5,
-                                  height: Get.width / 4.5,
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Hero(
-                                    tag: 'hero $index',
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(
-                                              Icons.broken_image_outlined),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: Get.width / 4.5,
+                                      height: Get.width / 4.5,
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Hero(
+                                        tag: 'hero $index',
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638686061.jpg",
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(
+                                                  Icons.broken_image_outlined),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    index == 2 ? Align(
+                                      alignment:Alignment.topCenter,
+                                      child: Container(
+                                        padding:const EdgeInsets.only(right:8,left:8,bottom:1,top:1),
+                                        decoration:const BoxDecoration(
+                                          borderRadius:BorderRadius.only(
+                                            bottomLeft:Radius.circular(10),bottomRight:Radius.circular(10),
+                                          ),
+                                          color:AppColors.redColor,
+                                        ),
+                                        child:Column(
+                                          mainAxisSize:MainAxisSize.min,
+                                          children:[
+                                            Text('30%',style:Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color:Colors.white,fontSize:12,height: 1.35)),
+                                            Text('تخفیف',style:Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color:Colors.white,fontSize:8,height: 0.85,))
+                                          ]
+                                        )
+                                      ),
+                                    ) : const SizedBox(),
+                                  ],
                                 ),
                               ),
                             ]),
