@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:uspace_ir/app/widgets/bottom_sheets.dart';
+import 'package:get/get.dart';
+import 'package:uspace_ir/controllers/home_controller.dart';
 
 class TestScreen extends StatelessWidget {
-  const TestScreen({Key? key}) : super(key: key);
+  TestScreen({Key? key}) : super(key: key);
+
+  HomeController homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -11,8 +14,15 @@ class TestScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+      Text(
+      homeController.mainGallery[0]['caption'],
+        style: Theme.of(context)
+            .textTheme
+            .bodySmall!
+            .copyWith(color: Colors.red),
+      ),
           IconButton(onPressed: (){
-            BottomSheets().loginBottomSheet();
+            homeController.fetchMainGallery();
           }, icon: Icon(Icons.add))
         ],
       ),

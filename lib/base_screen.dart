@@ -71,7 +71,7 @@ class BasePage extends StatelessWidget {
               bottom: PreferredSize(
                 preferredSize: const Size(double.infinity, 70),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
                   width: double.infinity,
                   height: 50,
                   decoration: BoxDecoration(

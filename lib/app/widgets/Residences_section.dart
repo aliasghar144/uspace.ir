@@ -21,7 +21,7 @@ class ResidenceSection extends StatelessWidget {
   final int? discountAmount;
   final bool hasCarouse;
 
-  ResidenceSection(
+   ResidenceSection(
       {Key? key,
       required this.label,
         required this.location,
