@@ -80,7 +80,6 @@ class LoginScreen extends StatelessWidget {
                         textDirection: TextDirection.ltr,
                         style: Theme.of(Get.context!).textTheme.labelLarge!.copyWith(fontSize: 16,color:AppColors.grayColor),
                         decoration: InputDecoration(
-
                           counterText: '',
                           label: const Text('شماره تلفن',textDirection: TextDirection.rtl,),
                           prefixIcon: Padding(
@@ -122,7 +121,10 @@ class LoginScreen extends StatelessWidget {
                         ),
                         child: ElevatedButton(
                             onPressed: (){
-                              activeButton.value ? Get.to(PhoneAuthenticationScreen()) : null;
+                              if(activeButton.value){
+                                loginController.activeButton.value=false;
+                                Get.to(PhoneAuthenticationScreen());
+                              }
                             },
                             style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,elevation: 0,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
                             child: Padding(

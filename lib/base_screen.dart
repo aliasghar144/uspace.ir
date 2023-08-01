@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
+import 'package:uspace_ir/controllers/login_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
 import 'package:uspace_ir/pages/explore/explore_screen.dart';
 import 'package:uspace_ir/pages/history/history_screen.dart';
@@ -9,8 +10,15 @@ import 'package:uspace_ir/pages/home/home_screen.dart';
 import 'package:uspace_ir/pages/profile/profile_screen.dart';
 import 'package:uspace_ir/app/widgets/search/search_screen.dart';
 
+import 'app/widgets/bottom_sheets.dart';
+
 class BasePage extends StatelessWidget {
   BasePage({Key? key}) : super(key: key);
+
+  //test
+  LoginController loginController = Get.put(LoginController());
+
+
 
   SearchController searchController = Get.put(SearchController());
 
@@ -44,7 +52,10 @@ class BasePage extends StatelessWidget {
                 child: IconButton(
                   splashRadius: 20,
                   icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
-                  onPressed: () {},
+                  onPressed: () {
+                    loginController.phoneNumberController.clear();
+                    BottomSheets().loginBottomSheet();
+                  },
                 ),
               ),
               actions: [
@@ -151,8 +162,11 @@ class BasePage extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
+        if(index ==0 && !loginController.isUserLogin.value){
+          BottomSheets().loginBottomSheet();
+        }else{
         pageIndex.value = index;
-      },
+      }},
       child: Obx(() => SizedBox(
             child: Column(
               mainAxisSize: MainAxisSize.max,

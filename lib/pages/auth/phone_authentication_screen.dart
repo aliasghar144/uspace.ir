@@ -6,8 +6,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/base_screen.dart';
 import 'package:uspace_ir/controllers/login_controller.dart';
-import 'package:uspace_ir/pages/auth/login/login_screen.dart';
-import 'package:uspace_ir/pages/home/home_screen.dart';
 
 class PhoneAuthenticationScreen extends StatelessWidget {
   PhoneAuthenticationScreen({Key? key}) : super(key: key);
@@ -73,7 +71,7 @@ class PhoneAuthenticationScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text('کد تایید شش رقمی به شماره ',style:Theme.of(Get.context!).textTheme.labelLarge!.copyWith(color:AppColors.grayColor)),
-                          Text(loginController.hideNumber(),textDirection: TextDirection.ltr,style:Theme.of(Get.context!).textTheme.labelLarge!.copyWith(color:AppColors.grayColor)),
+                          Text(loginController.hideNumber(loginController.phoneNumberController.text),textDirection: TextDirection.ltr,style:Theme.of(Get.context!).textTheme.labelLarge!.copyWith(color:AppColors.grayColor)),
                           Text(' ارسال شد.',style:Theme.of(Get.context!).textTheme.labelLarge!.copyWith(color:AppColors.grayColor)),
                         ]),
                   ),
