@@ -8,9 +8,9 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
-    fetchMainGallery();
-    fetchCategories();
-    fetchSeasonalSuggest();
+    // fetchMainGallery();
+    // fetchCategories();
+    // fetchSeasonalSuggest();
     super.onInit();
   }
 

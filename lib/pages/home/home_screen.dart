@@ -35,6 +35,13 @@ class HomeScreen extends StatelessWidget {
               height: 10,
             ),
             reserveSection(),
+            const SizedBox(
+              height: 10,
+            ),
+            specialResidences(),
+            const SizedBox(
+              height: 20,
+            ),
             bestCities(),
             const SizedBox(
               height: 20,
@@ -175,6 +182,98 @@ class HomeScreen extends StatelessWidget {
                 })),
       ),
     ]);
+  }
+
+  Widget specialResidences(){
+    return Column(
+      children:[
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Row(
+            children: [
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  "مشاهده همه",
+                  style: Theme.of(Get.context!)
+                      .textTheme
+                      .labelMedium!
+                      .copyWith(color: AppColors.secondTextColor),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                "اقامتگاه های خاص",
+                style: Theme.of(Get.context!).textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(Get.context!).size.width,
+          height: 220,
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: ListView.separated(
+              scrollDirection:
+              axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              physics: const BouncingScrollPhysics(),
+              itemCount: homeController.cities.length,
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: 15);
+              },
+              itemBuilder: (context, index) {
+                return                         CachedNetworkImage(
+                  imageUrl: 'https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638685959.jpg',
+                  fit: BoxFit.cover,
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                      clipBehavior: Clip.none,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.shade300,
+                              offset: const Offset(
+                                1.0,
+                                2.0,
+                              ),
+                              blurRadius: 10.0,
+                              spreadRadius: 0.0,
+                            ), //BoxShadow
+                            const BoxShadow(
+                              color: Colors.white,
+                              offset: Offset(0.0, 0.0),
+                              blurRadius: 0.0,
+                              spreadRadius: 0.0,
+                            ),
+                          ],
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),borderRadius: BorderRadius.circular(22)),
+                      width: MediaQuery.of(context).size.width/2.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Text('ویلایی و کنار دریا',maxLines: 1,style: Theme.of(context).textTheme.bodySmall!.copyWith(color:Colors.white),),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) =>
+                  const Icon(Icons.broken_image_outlined),
+                );
+
+              },
+            ),
+          ),
+        ),
+      ]
+    );
   }
 
   Widget reserveSection() {
