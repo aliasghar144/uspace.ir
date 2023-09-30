@@ -50,6 +50,7 @@ dependencies:
   pin_code_fields: ^7.4.0
   percent_indicator: ^4.2.3
   http:
+  shimmer:
 
 dev_dependencies:
   flutter_test:

@@ -1,61 +1,60 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:uspace_ir/models/best_places_model.dart';
+import 'package:uspace_ir/models/ecolodge_model.dart';
+import 'package:uspace_ir/models/test.dart';
 
 class HomeController extends GetxController {
-  String mainUrl = 'https://api.uspace.ir/api/p_u_api/v1';
 
   @override
   void onInit() {
-    // fetchMainGallery();
-    // fetchCategories();
-    // fetchSeasonalSuggest();
+    fetchMainGallery();
+    fetchCategories();
+    fetchNewestEcolodge();
+    fetchBestSellersEcolodge();
+    fetchSessionSuggest();
+    fetchBestOfferEcolodge();
+    fetchBestPlaces();
     super.onInit();
   }
 
+
+  String mainUrl = 'https://api.uspace.ir/api/p_u_api/v1';
+  Map<String, String> requestHeaders = {
+    'Accept': 'application/json',
+  };
+
+  RxBool retry = false.obs;
+
   RxList mainGallery = [].obs;
   RxList categories = [].obs;
-  RxList seasonalSuggestEcolodge = [].obs;
+  List<EcolodgeModel> sessionSuggestList = <EcolodgeModel>[].obs;
+  List<EcolodgeModel> newestEcolodgeList = <EcolodgeModel>[].obs;
+  List<EcolodgeModel> bestSellersEcolodgeList = <EcolodgeModel>[].obs;
+  List<EcolodgeModel> bestOfferEcolodgeList = <EcolodgeModel>[].obs;
+  List<BestPlacesModel> bestPlacesList = <BestPlacesModel>[].obs;
+  final test  = Rxn<TestModel>();
 
-  List categoryname = [
-    {
-      'name': 'اقامتگاه بوم گردی',
-      'img': "https://www.uspace.ir/public/img/ecolodge/categories/cat1.jpg"
-    },
-    {
-      'name': 'بوتیک هتل و هتل ستنی',
-      'img':
-          'https://www.uspace.ir/public/img/ecolodge/categories/cat_hotel2.jpg'
-    },
-    {
-      'name': 'کلبه های جنگلی',
-      'img':
-          'https://www.uspace.ir/public/img/ecolodge/categories/cottages-category.jpg'
-    },
-    {
-      'name': 'اب درمانی',
-      'img':
-          'https://www.uspace.ir/public/img/ecolodge/categories/cat_abdarmani2.jpg'
-    },
-    {
-      'name': 'اقامتگاه بوم گردی',
-      'img': "https://www.uspace.ir/public/img/ecolodge/categories/cat1.jpg"
-    },
-    {
-      'name': 'بوتیک هتل و هتل ستنی',
-      'img':
-      'https://www.uspace.ir/public/img/ecolodge/categories/cat_hotel2.jpg'
-    },
-  ];
-
-  List cities = [
-    'اصفهان',
-    'هرمزگان',
-    'خراسان شمالی',
-    'کهکیلویه و بویر احمد',
-    'فارس',
-  ].obs;
+  fetchTest()async{
+    try{
+      print('try');
+      var url = Uri.parse('$mainUrl/seasonal_suggest_ecolodge');
+      var response = await http.get(url);
+      if(response.statusCode == 200){
+        test.value = testModelFromJson(response.body);
+      }
+      print(test.value?.links.next);
+    }
+    on SocketException {
+      retry.value = true;
+    }
+    catch(e){
+      print(e);
+    }
+  }
 
   fetchMainGallery()async{
     try{
@@ -64,7 +63,12 @@ class HomeController extends GetxController {
       if(response.statusCode == 200){
        mainGallery.value = (jsonDecode(response.body))['data'];
       }
-    }catch(e){
+    }
+    on SocketException {
+      retry.value = true;
+    }
+    catch(e){
+      retry.value = true;
       print(e);
     }
   }
@@ -74,7 +78,6 @@ class HomeController extends GetxController {
       var url = Uri.parse('$mainUrl/categories');
       var response = await http.get(url);
       if(response.statusCode == 200){
-        print(jsonDecode(response.body));
         categories.value = jsonDecode(response.body);
       }
     }catch(e){
@@ -82,16 +85,74 @@ class HomeController extends GetxController {
     }
   }
 
-  fetchSeasonalSuggest()async{
+  fetchNewestEcolodge()async{
     try{
-      var url = Uri.parse('$mainUrl/categories');
-      var response = await http.get(url);
+      var url = Uri.parse('$mainUrl/newest_ecolodge');
+      var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
-        print(jsonDecode(response.body));
-        seasonalSuggestEcolodge.value = (jsonDecode(response.body))['data'];
+        final data = jsonDecode(response.body)['data'];
+        newestEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
       }
     }catch(e){
       print(e);
     }
   }
+
+  fetchSessionSuggest()async{
+    try{
+      var url = Uri.parse('$mainUrl/seasonal_suggest_ecolodge');
+      var response = await http.get(url,headers: requestHeaders);
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body)['data'];
+        sessionSuggestList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+      }
+    }catch (e){
+      print(e);
+        }
+  }
+
+  fetchBestSellersEcolodge()async{
+    try{
+      var url = Uri.parse('$mainUrl/best_sellers_ecolodge');
+      var response = await http.get(url,headers: requestHeaders);
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body)['data'];
+        bestSellersEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+      }
+    }catch (e){
+      print(e);
+    }
+  }
+
+  fetchBestOfferEcolodge()async{
+    try{
+      var url = Uri.parse('$mainUrl/best_offer_ecolodge');
+      var response = await http.get(url,headers: requestHeaders);
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body)['data'];
+        bestOfferEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+      }
+    }catch (e){
+      print(e);
+    }
+  }
+
+  fetchBestPlaces()async{
+    try{
+      var url = Uri.parse('$mainUrl/best_places');
+      var response = await http.get(url,headers: requestHeaders);
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body)['data'];
+        bestPlacesList.addAll(bestPlacesModelFromJson(jsonEncode(data)));
+      }
+    }catch (e){
+      print(e);
+    }
+  }
+
+  retryConnection(){
+    retry.value = false;
+    onInit();
+  }
+
 }

@@ -15,7 +15,6 @@ class PhoneAuthenticationScreen extends StatelessWidget {
 
   RxString pinCode = ''.obs;
 
-  
 
   LoginController loginController = Get.find();
 
@@ -108,7 +107,9 @@ class PhoneAuthenticationScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         InkWell(
-                          onTap: (){},
+                          onTap: (){
+                            Get.back();
+                          },
                           borderRadius: BorderRadius.circular(5),
                           child: Padding(
                             padding: const EdgeInsets.all(3.0),
@@ -156,6 +157,7 @@ class PhoneAuthenticationScreen extends StatelessWidget {
                             onPressed: (){
                               if(activeButton.value && !pinCode.value.contains('.')){
                                 Get.to(BasePage());
+                                loginController.phoneNumberController.clear();
                               }else{
                                 if(!isSnackBarActive.value){
                                   final snackBar = SnackBar(
