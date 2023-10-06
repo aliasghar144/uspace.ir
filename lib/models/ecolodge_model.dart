@@ -47,10 +47,10 @@ class EcolodgeModel {
     village: json["village"],
     address: json["address"],
     url: json["url"],
-    minPrice: json["min_price"],
+    minPrice: json["min_price"]?.toInt(),
     unitPrice: json["unit_price"],
-    maxDiscountPercent: json["max_discount_percent"],
-    maxDiscountPrice: json["max_discount_price"],
+    maxDiscountPercent: json["max_discount_percent"]?.toInt(),
+    maxDiscountPrice: json["max_discount_price"]?.toInt(),
     dollarEquivalent: json["dollar_equivalent"]?.toDouble(),
     currency: json["currency"],
   );

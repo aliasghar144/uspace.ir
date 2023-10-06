@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:uspace_ir/models/best_places_model.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
+import 'package:uspace_ir/models/special_places_model.dart';
 import 'package:uspace_ir/models/test.dart';
 
 class HomeController extends GetxController {
@@ -17,6 +18,7 @@ class HomeController extends GetxController {
     fetchBestSellersEcolodge();
     fetchSessionSuggest();
     fetchBestOfferEcolodge();
+    fetchSpecialPlaces();
     fetchBestPlaces();
     super.onInit();
   }
@@ -36,6 +38,8 @@ class HomeController extends GetxController {
   List<EcolodgeModel> bestSellersEcolodgeList = <EcolodgeModel>[].obs;
   List<EcolodgeModel> bestOfferEcolodgeList = <EcolodgeModel>[].obs;
   List<BestPlacesModel> bestPlacesList = <BestPlacesModel>[].obs;
+  List<SpecialPlacesModel> specialPlacesList = <SpecialPlacesModel>[].obs;
+
   final test  = Rxn<TestModel>();
 
   fetchTest()async{
@@ -144,6 +148,19 @@ class HomeController extends GetxController {
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         bestPlacesList.addAll(bestPlacesModelFromJson(jsonEncode(data)));
+      }
+    }catch (e){
+      print(e);
+    }
+  }
+
+  fetchSpecialPlaces()async{
+    try{
+      var url = Uri.parse('$mainUrl/get_landings?number=12');
+      var response = await http.get(url,headers: requestHeaders);
+      if(response.statusCode == 200){
+        final data = jsonDecode(response.body)['data'];
+        specialPlacesList.addAll(specialPlacesModelFromJson(jsonEncode(data)));
       }
     }catch (e){
       print(e);

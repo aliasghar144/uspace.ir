@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(
               height: 5,
             ),
-            specialResidences(),
+            specialPlaces(),
             const SizedBox(
               height: 20,
             ),
@@ -575,7 +575,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget specialResidences() {
+  Widget specialPlaces() {
     return Column(children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -604,53 +604,71 @@ class HomeScreen extends StatelessWidget {
         height: 220,
         child: Directionality(
           textDirection: TextDirection.rtl,
-          child: ListView.separated(
+          child: Obx(() => ListView.separated(
             scrollDirection:
-                axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+            axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
             padding: const EdgeInsets.symmetric(horizontal: 20),
             physics: const BouncingScrollPhysics(),
-            itemCount: 5,
+            itemCount: homeController.specialPlacesList.isEmpty ? 3 : homeController.specialPlacesList.length,
             separatorBuilder: (context, index) {
               return const SizedBox(width: 15);
             },
             itemBuilder: (context, index) {
-              return CachedNetworkImage(
-                imageUrl:
-                    'https://shiranhotel.uspace.ir/spaces/shiranhotel/images/main/shiranhotel_uspace_1638685959.jpg',
-                fit: BoxFit.cover,
-                imageBuilder: (context, imageProvider) {
-                  return Container(
+              if(homeController.specialPlacesList.isEmpty){
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade300,
+                  highlightColor: Colors.grey.shade100,
+                  child: Container(
                     clipBehavior: Clip.none,
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius: BorderRadius.circular(22)),
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Text(
-                            'ویلایی و کنار دریا',
-                            maxLines: 1,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall!
-                                .copyWith(color: Colors.white),
-                          ),
-                        ),
-                      ],
+                      borderRadius: BorderRadius.circular(22),
+                      color:Colors.white,
                     ),
-                  );
-                },
-                errorWidget: (context, url, error) =>
-                    const Icon(Icons.broken_image_outlined),
-              );
+                    width: MediaQuery.of(context).size.width / 2.4,
+                  ),
+                );
+              }else{
+                return CachedNetworkImage(
+                  imageUrl:
+                  homeController.specialPlacesList[index].verticalImg,
+                  fit: BoxFit.cover,
+                  imageBuilder: (context, imageProvider) {
+                    return Container(
+                      constraints: BoxConstraints(
+                        minWidth: MediaQuery.of(context).size.width / 2.0,
+                      ),
+                      clipBehavior: Clip.none,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(22)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal:12),
+                            child: Text(
+                              homeController.specialPlacesList[index].title,
+                              maxLines: 1,
+                              overflow: TextOverflow.clip,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) =>
+                  const Icon(Icons.broken_image_outlined),
+                );
+              }
             },
-          ),
+          )),
         ),
       ),
     ]);
@@ -693,7 +711,7 @@ class HomeScreen extends StatelessWidget {
           axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
           padding: const EdgeInsets.symmetric(horizontal: 20),
           physics: const BouncingScrollPhysics(),
-          itemCount: homeController.bestPlacesList.isEmpty ? 3 : homeController.bestPlacesList.length,
+          itemCount: homeController.bestPlacesList.isEmpty ? 4 : homeController.bestPlacesList.length,
           separatorBuilder: (context, index) {
             return const SizedBox(width: 15);
           },
