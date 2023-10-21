@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/them_data.dart';
 import 'package:sizer/sizer.dart';
-import 'package:uspace_ir/routes/constance_routes.dart';
+import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/routes/route.dart';
 
 void main(){

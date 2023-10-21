@@ -1,21 +1,21 @@
 // To parse this JSON data, do
 //
-//     final ecolodgeModel = ecolodgeModelFromJson(jsonString);
+//     final liveSearchEcolodgesModel = liveSearchEcolodgesModelFromJson(jsonString);
 
 import 'dart:convert';
 
-List<EcolodgeModel> ecolodgeModelFromJson(String str) => List<EcolodgeModel>.from(json.decode(str).map((x) => EcolodgeModel.fromJson(x)));
+List<LiveSearchEcolodgesModel> liveSearchEcolodgesModelFromJson(String str) => List<LiveSearchEcolodgesModel>.from(json.decode(str).map((x) => LiveSearchEcolodgesModel.fromJson(x)));
 
-String ecolodgeModelToJson(List<EcolodgeModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String liveSearchEcolodgesModelToJson(List<LiveSearchEcolodgesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class EcolodgeModel {
+class LiveSearchEcolodgesModel {
   String title;
   String image;
   String province;
-  String city;
-  String village;
+  String? city;
+  String? village;
   String address;
-  String url;
+  String? url;
   int? minPrice;
   String? unitPrice;
   int? maxDiscountPercent;
@@ -23,23 +23,23 @@ class EcolodgeModel {
   double? dollarEquivalent;
   String? currency;
 
-  EcolodgeModel({
+  LiveSearchEcolodgesModel({
     required this.title,
     required this.image,
     required this.province,
-    required this.city,
-    required this.village,
+    this.city,
+    this.village,
     required this.address,
-    required this.url,
-    required this.minPrice,
-    required this.unitPrice,
-    required this.maxDiscountPercent,
-    required this.maxDiscountPrice,
-    required this.dollarEquivalent,
-    required this.currency,
+    this.url,
+    this.minPrice,
+    this.unitPrice,
+    this.maxDiscountPercent,
+    this.maxDiscountPrice,
+    this.dollarEquivalent,
+    this.currency,
   });
 
-  factory EcolodgeModel.fromJson(Map<String, dynamic> json) => EcolodgeModel(
+  factory LiveSearchEcolodgesModel.fromJson(Map<String, dynamic> json) => LiveSearchEcolodgesModel(
     title: json["title"],
     image: json["image"],
     province: json["province"],
@@ -47,10 +47,10 @@ class EcolodgeModel {
     village: json["village"],
     address: json["address"],
     url: json["url"],
-    minPrice: json["min_price"]?.toInt(),
+    minPrice: json["min_price"],
     unitPrice: json["unit_price"],
-    maxDiscountPercent: json["max_discount_percent"]?.toInt(),
-    maxDiscountPrice: json["max_discount_price"]?.toInt(),
+    maxDiscountPercent: json["max_discount_percent"],
+    maxDiscountPrice: json["max_discount_price"],
     dollarEquivalent: json["dollar_equivalent"]?.toDouble(),
     currency: json["currency"],
   );

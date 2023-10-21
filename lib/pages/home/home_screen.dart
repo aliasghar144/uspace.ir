@@ -511,7 +511,7 @@ class HomeScreen extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 12, vertical: 5),
                                         child: Text(
-                                          formatAmount(homeController.newestEcolodgeList[index].minPrice.toDouble())+('${homeController.newestEcolodgeList[index].currency} / ${homeController.newestEcolodgeList[index].unitPrice}'),
+                                          formatAmount(homeController.newestEcolodgeList[index].minPrice?.toDouble() ?? 0)+('${homeController.newestEcolodgeList[index].currency} / ${homeController.newestEcolodgeList[index].unitPrice}'),
                                           maxLines: 1,
                                           style: Theme.of(context)
                                               .textTheme
@@ -1054,7 +1054,7 @@ class HomeScreen extends StatelessWidget {
                                         width: 2,
                                       ),
                                       Text(
-                                        formatAmount(homeController.sessionSuggestList[index].minPrice.toDouble()),
+                                        formatAmount(homeController.sessionSuggestList[index].minPrice!.toDouble()),
                                         style: Theme.of(Get.context!)
                                             .textTheme
                                             .labelSmall!
@@ -1066,7 +1066,7 @@ class HomeScreen extends StatelessWidget {
                                         width: 2,
                                       ),
                                       Text(
-                                        homeController.sessionSuggestList[index].currency,
+                                        homeController.sessionSuggestList[index].currency ?? '',
                                         style: Theme.of(Get.context!)
                                             .textTheme
                                             .labelSmall!
@@ -1152,117 +1152,262 @@ class HomeScreen extends StatelessWidget {
                     return const SizedBox(width: 18);
                   },
                   itemBuilder: (context, index) {
-                    if(homeController.bestSellersEcolodgeList.isEmpty){
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: SizedBox(
-                          width: 180,
-                          child: Card(
-                            margin: EdgeInsets.zero,
-                            clipBehavior: Clip.hardEdge,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            elevation: 5,
-                            shadowColor: Colors.black26,
-                            color: Colors.white,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade300,
-                                  highlightColor: Colors.grey.shade100,
-                                  child: Container(
-                                      width: 180,
-                                      height: 90,
-                                      color:Colors.white
+                    try{
+                      if(homeController.bestSellersEcolodgeList.isEmpty){
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: SizedBox(
+                            width: 180,
+                            child: Card(
+                              margin: EdgeInsets.zero,
+                              clipBehavior: Clip.hardEdge,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              elevation: 5,
+                              shadowColor: Colors.black26,
+                              color: Colors.white,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade300,
+                                    highlightColor: Colors.grey.shade100,
+                                    child: Container(
+                                        width: 180,
+                                        height: 90,
+                                        color:Colors.white
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Shimmer.fromColors(
-                                          baseColor: Colors.grey.shade300,
-                                          highlightColor: Colors.grey.shade100,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 40.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 12,
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(8),color: Colors.white
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade300,
+                                            highlightColor: Colors.grey.shade100,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(left: 40.0),
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: 12,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(8),color: Colors.white
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            SvgPicture.asset(
-                                              'assets/icons/location_small_pin_ic.svg',
-                                              color: AppColors.disabledIcon,
-                                              width: 13,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor: Colors.grey.shade100,
-                                              child: Container(
-                                                width: 50,
-                                                height: 8,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(8),color: Colors.white
-                                                ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 5,
                                               ),
-                                            )                                    ],
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            SvgPicture.asset(
-                                              'assets/icons/price_ic.svg',
-                                              color: AppColors.disabledIcon,
-                                              width: 13,
-                                            ),
-                                            const SizedBox(
-                                              width: 5,
-                                            ),
-                                            Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor: Colors.grey.shade100,
-                                              child: Container(
-                                                width: 50,
-                                                height: 8,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(8),color: Colors.white
-                                                ),
+                                              SvgPicture.asset(
+                                                'assets/icons/location_small_pin_ic.svg',
+                                                color: AppColors.disabledIcon,
+                                                width: 13,
                                               ),
-                                            )
-                                          ],
-                                        )
-                                      ],
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Shimmer.fromColors(
+                                                baseColor: Colors.grey.shade300,
+                                                highlightColor: Colors.grey.shade100,
+                                                child: Container(
+                                                  width: 50,
+                                                  height: 8,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(8),color: Colors.white
+                                                  ),
+                                                ),
+                                              )                                    ],
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              SvgPicture.asset(
+                                                'assets/icons/price_ic.svg',
+                                                color: AppColors.disabledIcon,
+                                                width: 13,
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Shimmer.fromColors(
+                                                baseColor: Colors.grey.shade300,
+                                                highlightColor: Colors.grey.shade100,
+                                                child: Container(
+                                                  width: 50,
+                                                  height: 8,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(8),color: Colors.white
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }else{
+                        );
+                      }else{
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0),
+                          child: SizedBox(
+                            width: 180,
+                            child: Card(
+                              margin: EdgeInsets.zero,
+                              clipBehavior: Clip.hardEdge,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              elevation: 5,
+                              shadowColor: Colors.black26,
+                              color: Colors.white,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 180,
+                                    height: 92,
+                                    child: ClipRRect(
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                          homeController.bestSellersEcolodgeList[index].image,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                          const Icon(Icons.broken_image_outlined),
+                                        )),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                      const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(homeController.bestSellersEcolodgeList[index].title,
+                                              maxLines: 1,
+                                              style: Theme.of(Get.context!)
+                                                  .textTheme
+                                                  .labelSmall!
+                                                  .copyWith(fontSize: 12)),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              SvgPicture.asset(
+                                                'assets/icons/location_small_pin_ic.svg',
+                                                color: AppColors.disabledIcon,
+                                                width: 13,
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                '${homeController.bestSellersEcolodgeList[index].province}, ${homeController.sessionSuggestList[index].city}',
+                                                style: Theme.of(Get.context!)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                    fontSize: 10,
+                                                    color: AppColors.disabledText),
+                                              )
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              SvgPicture.asset(
+                                                'assets/icons/price_ic.svg',
+                                                color: AppColors.disabledIcon,
+                                                width: 13,
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                "قیمت:",
+                                                style: Theme.of(Get.context!)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                    fontSize: 10,
+                                                    color: AppColors.disabledText),
+                                              ),
+                                              const SizedBox(
+                                                width: 2,
+                                              ),
+                                              Text(
+                                                formatAmount(homeController.sessionSuggestList[index].minPrice!.toDouble()),
+                                                style: Theme.of(Get.context!)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                    fontSize: 10,
+                                                    color: AppColors.mainColor),
+                                              ),
+                                              const SizedBox(
+                                                width: 2,
+                                              ),
+                                              Text(
+                                                homeController.bestSellersEcolodgeList[index].currency ?? '',
+                                                style: Theme.of(Get.context!)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                    fontSize: 10,
+                                                    color: AppColors.mainColor),
+                                              ),
+                                              const Spacer(),
+                                              // Text(
+                                              //   '8.9',
+                                              //   style: Theme.of(Get.context!)
+                                              //       .textTheme
+                                              //       .labelSmall!
+                                              //       .copyWith(
+                                              //       fontSize: 10,
+                                              //       color: AppColors.disabledText),
+                                              // ),
+                                              // const SizedBox(
+                                              //   width: 2,
+                                              // ),
+                                              // SvgPicture.asset(
+                                              //     'assets/icons/star_ic.svg'),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }catch(_){
+                      homeController.fetchBestSellersEcolodge();
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 15.0),
                         child: SizedBox(
@@ -1358,7 +1503,7 @@ class HomeScreen extends StatelessWidget {
                                               width: 2,
                                             ),
                                             Text(
-                                              formatAmount(homeController.sessionSuggestList[index].minPrice.toDouble()),
+                                              formatAmount(homeController.sessionSuggestList[index].minPrice!.toDouble()),
                                               style: Theme.of(Get.context!)
                                                   .textTheme
                                                   .labelSmall!
@@ -1370,7 +1515,7 @@ class HomeScreen extends StatelessWidget {
                                               width: 2,
                                             ),
                                             Text(
-                                              homeController.bestSellersEcolodgeList[index].currency,
+                                              homeController.bestSellersEcolodgeList[index].currency ?? '',
                                               style: Theme.of(Get.context!)
                                                   .textTheme
                                                   .labelSmall!
@@ -1662,7 +1807,7 @@ class HomeScreen extends StatelessWidget {
                                         width: 2,
                                       ),
                                       Text(
-                                        formatAmount(homeController.bestOfferEcolodgeList[index].minPrice.toDouble()),
+                                        formatAmount(homeController.bestOfferEcolodgeList[index].minPrice!.toDouble()),
                                         style: Theme.of(Get.context!)
                                             .textTheme
                                             .labelSmall!
@@ -1674,7 +1819,7 @@ class HomeScreen extends StatelessWidget {
                                         width: 2,
                                       ),
                                       Text(
-                                        homeController.bestOfferEcolodgeList[index].currency,
+                                        homeController.bestOfferEcolodgeList[index].currency ?? '0',
                                         style: Theme.of(Get.context!)
                                             .textTheme
                                             .labelSmall!

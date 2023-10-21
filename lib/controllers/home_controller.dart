@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/models/best_places_model.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
 import 'package:uspace_ir/models/special_places_model.dart';
@@ -24,7 +25,6 @@ class HomeController extends GetxController {
   }
 
 
-  String mainUrl = 'https://api.uspace.ir/api/p_u_api/v1';
   Map<String, String> requestHeaders = {
     'Accept': 'application/json',
   };
@@ -33,6 +33,7 @@ class HomeController extends GetxController {
 
   RxList mainGallery = [].obs;
   RxList categories = [].obs;
+
   List<EcolodgeModel> sessionSuggestList = <EcolodgeModel>[].obs;
   List<EcolodgeModel> newestEcolodgeList = <EcolodgeModel>[].obs;
   List<EcolodgeModel> bestSellersEcolodgeList = <EcolodgeModel>[].obs;
