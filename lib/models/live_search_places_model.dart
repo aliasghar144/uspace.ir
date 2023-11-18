@@ -4,11 +4,11 @@
 
 import 'dart:convert';
 
-List<LiveSearchPlacesModel> liveSearchPlacesModelFromJson(String str) => List<LiveSearchPlacesModel>.from(json.decode(str).map((x) => LiveSearchPlacesModel.fromJson(x)));
+List<SearchPlacesModel> liveSearchPlacesModelFromJson(String str) => List<SearchPlacesModel>.from(json.decode(str).map((x) => SearchPlacesModel.fromJson(x)));
 
-String liveSearchPlacesModelToJson(List<LiveSearchPlacesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String liveSearchPlacesModelToJson(List<SearchPlacesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class LiveSearchPlacesModel {
+class SearchPlacesModel {
   String title;
   String? aliasTitle;
   String image;
@@ -17,7 +17,7 @@ class LiveSearchPlacesModel {
   String? url;
   int? visitNumber;
 
-  LiveSearchPlacesModel({
+  SearchPlacesModel({
     required this.title,
     this.aliasTitle,
     required this.image,
@@ -27,7 +27,7 @@ class LiveSearchPlacesModel {
     this.visitNumber,
   });
 
-  factory LiveSearchPlacesModel.fromJson(Map<String, dynamic> json) => LiveSearchPlacesModel(
+  factory SearchPlacesModel.fromJson(Map<String, dynamic> json) => SearchPlacesModel(
     title: json["title"],
     aliasTitle: json["alias_title"],
     image: json["image"],

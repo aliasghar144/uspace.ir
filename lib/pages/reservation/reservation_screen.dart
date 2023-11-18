@@ -14,9 +14,9 @@ import 'package:sizer/sizer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/custom_tab_indicator.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
-import 'package:uspace_ir/app/widgets/textfield.dart';
 import 'package:uspace_ir/controllers/dropdown_controller.dart';
 import 'package:uspace_ir/pages/reservation/reserve_room_screen.dart';
+import 'package:uspace_ir/widgets/textfield.dart';
 
 class ReservationScreen extends StatelessWidget {
   ReservationScreen({Key? key}) : super(key: key);

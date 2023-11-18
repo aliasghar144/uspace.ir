@@ -4,22 +4,22 @@
 
 import 'dart:convert';
 
-List<LiveSearchLandingPagesModel> liveSearchLandingPagesModelFromJson(String str) => List<LiveSearchLandingPagesModel>.from(json.decode(str).map((x) => LiveSearchLandingPagesModel.fromJson(x)));
+List<SearchLandingPagesModel> liveSearchLandingPagesModelFromJson(String str) => List<SearchLandingPagesModel>.from(json.decode(str).map((x) => SearchLandingPagesModel.fromJson(x)));
 
-String liveSearchLandingPagesModelToJson(List<LiveSearchLandingPagesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String liveSearchLandingPagesModelToJson(List<SearchLandingPagesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class LiveSearchLandingPagesModel {
+class SearchLandingPagesModel {
   String? title;
   String? url;
   String? verticalImg;
 
-  LiveSearchLandingPagesModel({
+  SearchLandingPagesModel({
     this.title,
     this.url,
     this.verticalImg,
   });
 
-  factory LiveSearchLandingPagesModel.fromJson(Map<String, dynamic> json) => LiveSearchLandingPagesModel(
+  factory SearchLandingPagesModel.fromJson(Map<String, dynamic> json) => SearchLandingPagesModel(
     title: json["title"],
     url: json["url"],
     verticalImg: json["vertical_img"],

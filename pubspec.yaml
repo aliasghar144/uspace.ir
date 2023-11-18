@@ -51,6 +51,7 @@ dependencies:
   percent_indicator: ^4.2.3
   http:
   shimmer:
+  persian_number_utility:
 
 dev_dependencies:
   flutter_test:

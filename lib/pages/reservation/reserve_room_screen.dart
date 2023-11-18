@@ -7,12 +7,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
-import 'package:uspace_ir/app/widgets/textfield.dart';
+import 'package:uspace_ir/widgets/textfield.dart';
 import 'package:uspace_ir/controllers/dropdown_controller.dart';
 
 class RoomReservationScreen extends StatelessWidget {
   RoomReservationScreen({Key? key}) : super(key: key);
-  DropDownController dropDownController = Get.find();
+  final DropDownController dropDownController = Get.find();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
