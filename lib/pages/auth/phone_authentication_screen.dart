@@ -156,7 +156,7 @@ class PhoneAuthenticationScreen extends StatelessWidget {
                         child: ElevatedButton(
                             onPressed: (){
                               if(activeButton.value && !pinCode.value.contains('.')){
-                                Get.to(BasePage());
+                                Get.to(BaseScreen());
                                 loginController.phoneNumberController.clear();
                               }else{
                                 if(!isSnackBarActive.value){

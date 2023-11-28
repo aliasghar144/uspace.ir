@@ -52,6 +52,7 @@ dependencies:
   http:
   shimmer:
   persian_number_utility:
+  image_picker: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -102,10 +103,11 @@ flutter:
           weight: 300
         - asset: assets/fonts/IRANSans(FaNum).ttf
           weight: 400
-        - asset: assets/fonts/IRANSans(FaNum)_Bold.ttf
-          weight: 700
         - asset: assets/fonts/IRANSans(FaNum)_Medium.ttf
           weight: 500
+        - asset: assets/fonts/IRANSans(FaNum)_Bold.ttf
+          weight: 700
+
 
   #
   # For details regarding fonts from package dependencies,

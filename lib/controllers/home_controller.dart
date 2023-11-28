@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:uspace_ir/constance/constance.dart';
@@ -11,17 +12,37 @@ import 'package:uspace_ir/models/test.dart';
 
 class HomeController extends GetxController {
 
+  final RxBool loading = false.obs;
+
+  late Timer _timer;
+  RxInt currentPage = 0.obs;
+
+  final PageController mainGalleryController = PageController();
+  final PageController newestEcolodgeController = PageController();
+
   @override
   void onInit() {
     fetchMainGallery();
     fetchCategories();
     fetchNewestEcolodge();
-    fetchBestSellersEcolodge();
-    fetchSessionSuggest();
-    fetchBestOfferEcolodge();
     fetchSpecialPlaces();
     fetchBestPlaces();
+    fetchSessionSuggest();
+    fetchBestSellersEcolodge();
+    fetchBestOfferEcolodge();
     super.onInit();
+    _timer = Timer.periodic( const Duration(seconds: 8), (Timer timer) {
+      if (currentPage.value+1 == mainGallery.length) {
+        currentPage.value = 0;
+      } else {
+        currentPage++;
+      }
+      mainGalleryController.animateToPage(
+        currentPage.value,
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeIn,
+      );
+    });
   }
 
 
@@ -63,108 +84,137 @@ class HomeController extends GetxController {
 
   fetchMainGallery()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/main_gallery');
       var response = await http.get(url);
       if(response.statusCode == 200){
        mainGallery.value = (jsonDecode(response.body))['data'];
+       loading.value = false;
       }
     }
     on SocketException {
       retry.value = true;
+      loading.value = false;
     }
     catch(e){
       retry.value = true;
-      print(e);
+      loading.value = false;
+      print('ERR===== mainGallery =======> $e');
     }
   }
 
   fetchCategories()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/categories');
       var response = await http.get(url);
       if(response.statusCode == 200){
         categories.value = jsonDecode(response.body);
+        loading.value = false;
       }
     }catch(e){
-      print(e);
+      print('ERR=====category=======> $e');
+      loading.value = false;
     }
   }
 
   fetchNewestEcolodge()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/newest_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         newestEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        loading.value = false;
       }
     }catch(e){
-      print(e);
+      print('ERR=====newest ecolodge=======> $e');
+      loading.value = false;
+
     }
   }
 
   fetchSessionSuggest()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/seasonal_suggest_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         sessionSuggestList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        loading.value = false;
       }
     }catch (e){
-      print(e);
-        }
+      loading.value = false;
+      print('ERR=====session suggest =======> $e');
+
+    }
   }
 
   fetchBestSellersEcolodge()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/best_sellers_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         bestSellersEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        loading.value = false;
       }
     }catch (e){
-      print(e);
+      print('ERR=====best seller=======> $e');
+      loading.value = false;
+
     }
   }
 
   fetchBestOfferEcolodge()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/best_offer_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         bestOfferEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        loading.value = false;
       }
     }catch (e){
-      print(e);
+      loading.value = false;
+      print('ERR=====bestOffer=======> $e');
     }
   }
 
   fetchBestPlaces()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/best_places');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         bestPlacesList.addAll(bestPlacesModelFromJson(jsonEncode(data)));
+        loading.value = false;
       }
     }catch (e){
-      print(e);
+      print('ERR=====best Place=======> $e');
+      loading.value = false;
+
     }
   }
 
   fetchSpecialPlaces()async{
     try{
+      loading.value = true;
       var url = Uri.parse('$mainUrl/get_landings?number=12');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         specialPlacesList.addAll(specialPlacesModelFromJson(jsonEncode(data)));
+        loading.value = false;
       }
     }catch (e){
-      print(e);
+      print('ERR=====special Place=======> $e');
+      loading.value = false;
     }
   }
 

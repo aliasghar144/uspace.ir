@@ -9,22 +9,19 @@ import 'package:uspace_ir/controllers/search_controller.dart';
 class FilterScreen extends StatelessWidget {
   FilterScreen({Key? key}) : super(key: key);
 
-  /// how handle chose city
-  ///
-  ///
 
-  RxBool customTileExpanded1 = false.obs;
-  RxBool customTileExpanded2 = false.obs;
-  RxBool customTileExpanded3 = false.obs;
+  final RxBool customTileExpanded1 = false.obs;
+  final RxBool customTileExpanded2 = false.obs;
+  final RxBool customTileExpanded3 = false.obs;
 
-  RxBool showMore1 = false.obs;
-  RxBool showMore2 = false.obs;
-  RxBool cityShowMore = false.obs;
+  final RxBool showMore1 = false.obs;
+  final RxBool showMore2 = false.obs;
+  final RxBool cityShowMore = false.obs;
 
-  RxInt cityShowCount = 5.obs;
+  final RxInt cityShowCount = 5.obs;
 
 
-  SearchController searchController = Get.put(SearchController());
+  final SearchController searchController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +84,9 @@ class FilterScreen extends StatelessWidget {
                                   onTap: () {
                                     searchController.rangeStart.value = 0.0;
                                     searchController.rangeEnd.value = 100.0;
-                                    searchController.categoryFilter.value = '';
-                                    searchController.cityFilter.value = '';
-                                    searchController.specialPlacesFlag.value = false;
+                                    searchController.categoryTitle.value = '';
+                                    searchController.cityTitle.value = '';
+                                    searchController.specialPlaceTitle.value = '';
                                   },
                                   child: Container(padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5), decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(8), border: Border.all(color: AppColors.borderColor, width: 1)), child: Text('پاک کردن همه', style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: AppColors.disabledText))),
                                 ),
@@ -123,7 +120,7 @@ class FilterScreen extends StatelessWidget {
                               Obx(() => RangeSlider(
                                     divisions: 100,
                                     values: RangeValues(searchController.rangeStart.value, searchController.rangeEnd.value),
-                                    labels: RangeLabels('${formatAmount(searchController.rangeStart.value.round() * 500000)}تومان', '${formatAmount(searchController.rangeEnd.value.round() * 500000)}تومان'),
+                                    labels: RangeLabels('${formatAmount(searchController.rangeStart.value.round() * 50000)}تومان', '${formatAmount(searchController.rangeEnd.value.round() * 500000)}تومان'),
                                     onChanged: (value) {
                                       setRange(value.start, value.end);
                                     },
@@ -135,8 +132,8 @@ class FilterScreen extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Obx(() => Text('${formatAmount(searchController.rangeStart.value.round() * 500000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
-                                    Obx(() => Text('${formatAmount(searchController.rangeEnd.value.round() * 500000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
+                                    Obx(() => Text('${formatAmount(searchController.rangeStart.value.round() * 50000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
+                                    Obx(() => Text('${formatAmount(searchController.rangeEnd.value.round() * 50000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
                                   ],
                                 ),
                               ),
@@ -183,7 +180,7 @@ class FilterScreen extends StatelessWidget {
               ),
               Text(
                 "دسته بندی",
-                style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Color(0xff051726)),
+                style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: const Color(0xff051726)),
               ),
             ],
           ),
@@ -219,26 +216,26 @@ class FilterScreen extends StatelessWidget {
                     child: InkWell(
                       onTap: (){
                         searchController.needSearchAgain.value = true;
-                        searchController.specialPlacesFlag.value = false;
-                        if(searchController.categoryFilter.value == searchController.categoryList[index]['name']){
-                          searchController.categoryFilter.value = '';
+                        searchController.specialPlaceTitle.value = '';
+                        if(searchController.categoryTitle.value == searchController.categoryList[index]['name']){
+                          searchController.categoryTitle.value = '';
                         }else{
-                          searchController.categoryFilter.value = searchController.categoryList[index]['name'];
-                          searchController.categoryIdFilter.value = searchController.categoryList[index]['id'];
+                          searchController.categoryTitle.value = searchController.categoryList[index]['name'];
+                          searchController.categoryId.value = searchController.categoryList[index]['id'];
                         }
                       },
                       child: Row(children: [
                         Obx(() => Checkbox(
-                          value: searchController.categoryFilter.value == searchController.categoryList[index]['name'] ? true : false,
+                          value: searchController.categoryTitle.value == searchController.categoryList[index]['name'] ? true : false,
                           shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(4)),
                           onChanged: (value) {
                             searchController.needSearchAgain.value = true;
-                            searchController.specialPlacesFlag.value = false;
-                            if(searchController.categoryFilter.value == searchController.categoryList[index]['name']){
-                              searchController.categoryFilter.value = '';
+                            searchController.specialPlaceTitle.value = '';
+                            if(searchController.categoryTitle.value == searchController.categoryList[index]['name']){
+                              searchController.categoryTitle.value = '';
                             }else{
-                              searchController.categoryFilter.value = searchController.categoryList[index]['name'];
-                              searchController.categoryIdFilter.value = searchController.categoryList[index]['id'];
+                              searchController.categoryTitle.value = searchController.categoryList[index]['name'];
+                              searchController.categoryId.value = searchController.categoryList[index]['id'];
                             }
                           },
                           activeColor: AppColors.mainColor,
@@ -286,7 +283,7 @@ class FilterScreen extends StatelessWidget {
               ),
               Text(
                 "شهر",
-                style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Color(0xff051726)),
+                style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: const Color(0xff051726)),
               ),
             ],
           ),
@@ -341,28 +338,30 @@ class FilterScreen extends StatelessWidget {
                       child: InkWell(
                         onTap:(){
                           searchController.needSearchAgain.value = true;
-                          searchController.specialPlacesFlag.value = false;
-                          if(searchController.cityFilter.value == searchController.cityList.value!.data[index].title){
-                            searchController.cityFilter.value = '';
-                            searchController.cityUrlFilter.value = '';
+                          searchController.specialPlaceTitle.value = '';
+
+                          if(searchController.cityTitle.value == searchController.cityList.value!.data[index].aliasTitle){
+                            searchController.cityTitle.value = '';
+                            searchController.cityUrl.value = '';
                           }else{
-                            searchController.cityFilter.value = searchController.cityList.value!.data[index].title;
-                            searchController.cityUrlFilter.value = searchController.cityList.value!.data[index].url;
+                            searchController.cityTitle.value = searchController.cityList.value!.data[index].aliasTitle;
+                            searchController.cityUrl.value = searchController.cityList.value!.data[index].url;
                           }
                         },
                         child: Row(children: [
                           Obx(() => Checkbox(
-                            value: searchController.cityFilter.value == searchController.cityList.value!.data[index].title ? true : false,
+                            value: searchController.cityTitle.value == searchController.cityList.value!.data[index].aliasTitle ? true : false,
                             shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(4)),
                             onChanged: (value) {
                               searchController.needSearchAgain.value = true;
-                              searchController.specialPlacesFlag.value = false;
-                              if(searchController.cityFilter.value == searchController.cityList.value!.data[index].title){
-                                searchController.cityFilter.value = '';
-                                searchController.cityUrlFilter.value = '';
+                              searchController.specialPlaceTitle.value = '';
+
+                              if(searchController.cityTitle.value == searchController.cityList.value!.data[index].aliasTitle){
+                                searchController.cityTitle.value = '';
+                                searchController.cityUrl.value = '';
                               }else{
-                                searchController.cityFilter.value = searchController.cityList.value!.data[index].title;
-                                searchController.cityUrlFilter.value = searchController.cityList.value!.data[index].url;
+                                searchController.cityTitle.value = searchController.cityList.value!.data[index].aliasTitle;
+                                searchController.cityUrl.value = searchController.cityList.value!.data[index].url;
                               }
                             },
                             activeColor: AppColors.mainColor,

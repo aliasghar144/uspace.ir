@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/constance/constance.dart';
+import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/models/all_places_model.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
 import 'package:uspace_ir/models/live_search_landing_model.dart';
@@ -11,11 +12,12 @@ import 'package:http/http.dart' as http;
 
 class SearchController extends GetxController {
 
+  BaseController baseController = Get.find();
 
   @override
   void onInit() {
     searchScrollController.addListener(() {
-        if (searchScrollController.position.pixels == searchScrollController.position.maxScrollExtent && !loading.value) {
+        if (searchScrollController.position.pixels == searchScrollController.position.maxScrollExtent && !loading.value && baseController.pageIndex.value == 2) {
           loadMoreData();
         }
     },);
@@ -29,7 +31,6 @@ class SearchController extends GetxController {
 
   RxBool loading = false.obs;
   RxBool firstOpen = true.obs;
-  RxBool specialPlacesFlag = false.obs;
   RxBool needSearchAgain = false.obs;
   RxBool searchError = false.obs;
   RxBool loadMore = false.obs;
@@ -38,17 +39,18 @@ class SearchController extends GetxController {
 
 
   RxString nextLink = ''.obs;
-  RxString specialPlace = ''.obs;
 
 
   Rx<double> rangeStart = 0.0.obs;
   Rx<double> rangeEnd = 100.0.obs;
 
 
-  RxString categoryFilter =  ''.obs;
-  RxString categoryIdFilter =  ''.obs;
-  RxString cityFilter = ''.obs;
-  RxString cityUrlFilter = ''.obs;
+  RxString categoryTitle =  ''.obs;
+  RxString categoryId =  ''.obs;
+  RxString cityTitle = ''.obs;
+  RxString cityUrl = ''.obs;
+  RxString specialPlaceTitle = ''.obs;
+  RxString specialPlaceUrl = ''.obs;
 
   Rxn<AllPlacesModel> cityList  = Rxn<AllPlacesModel>();
 
@@ -86,7 +88,7 @@ class SearchController extends GetxController {
     'گران ترین',
   ];
 
-
+  // City List
   fetchAllPlaces() async {
     try {
       if(cityList.value == null){
@@ -111,21 +113,21 @@ class SearchController extends GetxController {
     try {
       Map<String, dynamic> body = <String, dynamic>{
         'q': q,
-        'sortby': sortByToCode(),
+        'sortBy': sortByToCode(),
         'page': 1,
         'num': 12,
         'minPrice': (rangeStart.value * 500000).toInt(),
         'maxPrice': (rangeEnd.value * 500000).toInt(),
-        'cat': categoryIdFilter.value,
+        'cat': categoryId.value,
       }.map((key, value) => MapEntry(key, value.toString()));
       firstOpen.value = false;
       searchError.value = false;
       loading.value = true;
-      if(specialPlacesFlag.value){
-        url = Uri.parse('$mainUrl/landing/${specialPlace.value}/all-ecolodges').replace(queryParameters: body);
+      if(specialPlaceTitle.value!=''){
+        url = Uri.parse('$mainUrl/landing/${specialPlaceUrl.value}/all-ecolodges').replace(queryParameters: body);
       }
-      else if(cityFilter.value != ''){
-        url = Uri.parse('$mainUrl/place/$cityUrlFilter/all-ecolodges').replace(queryParameters: body);
+      else if(cityTitle.value != ''){
+        url = Uri.parse('$mainUrl/place/$cityUrl/all-ecolodges').replace(queryParameters: body);
       }else{
         url = Uri.parse('$mainUrl/all_ecolodges').replace(queryParameters: body);
       }
@@ -200,7 +202,7 @@ class SearchController extends GetxController {
 
   void loadMoreData() async{
     try{
-      print('nextlink $nextLink');
+      print(' here we go nextLink $nextLink');
       if( nextLink.value != 'null'){
         url = Uri.parse(nextLink.value);
         var response = await http.get(url);
@@ -228,19 +230,19 @@ class SearchController extends GetxController {
   sortByToCode() {
     switch (sortByValue.value) {
       case 'پرفروش ترین':
-        return 55;
+        return 'bestSell';
       case 'بیشترین تخفیف':
-        return 56;
+        return 'bestOffer';
       case 'پربازدیدترین':
-        return 50;
+        return 'mostVisited';
       case 'محبوب ترین':
-        return 51;
+        return 'popular';
       case 'جدید ترین':
-        return 52;
+        return 'newest';
       case 'ارزان ترین':
-        return 53;
+        return 'cheapest';
       case 'گران ترین':
-        return 54;
+        return 'expensive';
     }
   }
 

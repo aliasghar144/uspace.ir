@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:math';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,7 +11,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/check_currency.dart';
-import 'package:uspace_ir/app/utils/format_amount.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
@@ -21,8 +19,7 @@ import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
-  final PageController firstPageController = PageController();
-  final PageController reserveSectionPageController = PageController();
+
   final HomeController homeController = Get.find();
   final SearchController searchController = Get.find();
   final BaseController baseController = Get.find();
@@ -30,7 +27,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0),
+      padding: const EdgeInsets.only(top: 15.0,bottom: 25),
       child: SizedBox(
         width: Get.width,
         child: Column(
@@ -50,7 +47,7 @@ class HomeScreen extends StatelessWidget {
             ),
             specialPlaces(),
             const SizedBox(
-              height: 20,
+              height: 40,
             ),
             bestPlaces(),
             const SizedBox(
@@ -98,7 +95,10 @@ class HomeScreen extends StatelessWidget {
                       allowImplicitScrolling: true,
                       physics: const BouncingScrollPhysics(),
                       itemCount: homeController.mainGallery.length,
-                      controller: firstPageController,
+                      controller: homeController.mainGalleryController,
+                      onPageChanged: (value) {
+                        homeController.currentPage.value = value;
+                      },
                       itemBuilder: (context, index) {
                         return Stack(
                           alignment: Alignment.bottomCenter,
@@ -162,12 +162,15 @@ class HomeScreen extends StatelessWidget {
               : Directionality(
                   textDirection: TextDirection.rtl,
                   child: SmoothPageIndicator(
-                    onDotClicked: (index) => firstPageController.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 225),
-                      curve: Curves.easeInOut,
-                    ),
-                    controller: firstPageController,
+                    onDotClicked: (index) {
+                      homeController.mainGalleryController.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 225),
+                        curve: Curves.easeInOut,
+                      );
+                      homeController.currentPage.value = index;
+                    } ,
+                    controller: homeController.mainGalleryController,
                     count: homeController.mainGallery.length,
                     effect: const JumpingDotEffect(dotHeight: 6, dotWidth: 6, dotColor: Color(0xffD9D9D9), activeDotColor: AppColors.mainColor),
                   ),
@@ -237,7 +240,13 @@ class HomeScreen extends StatelessWidget {
                             return SizedBox(
                               width: 85,
                               child: InkWell(
-                                onTap:(){},
+                                onTap:(){
+                                  searchController.categoryId.value = (homeController.categories[index]['url']).split('cat=').last;
+                                  searchController.categoryTitle.value = (homeController.categories[index]['title']);
+                                  searchController.searchWithFilter('');
+                                  baseController.pageIndex.value = 2;
+                                  searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
+                                },
                                 splashColor: Colors.transparent,
                                 highlightColor: Colors.transparent,
                                 child: Column(
@@ -280,13 +289,13 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Row(
             children: [
-              TextButton(
-                onPressed: () {},
-                child: Text(
-                  "مشاهده همه",
-                  style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                ),
-              ),
+              // TextButton(
+              //   onPressed: () {},
+              //   child: Text( 
+              //     "مشاهده همه",
+              //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+              //   ),
+              // ),
               const Spacer(),
               Text(
                 "رزرو اقامتگاه بوم گردی،هتل سنتی و کلبه",
@@ -308,7 +317,7 @@ class HomeScreen extends StatelessWidget {
                   allowImplicitScrolling: true,
                   physics: const BouncingScrollPhysics(),
                   itemCount: homeController.newestEcolodgeList.isEmpty ? 3 : homeController.newestEcolodgeList.length,
-                  controller: reserveSectionPageController,
+                  controller: homeController.newestEcolodgeController,
                   itemBuilder: (context, index) {
                     if (homeController.newestEcolodgeList.isEmpty) {
                       return Padding(
@@ -418,7 +427,7 @@ class HomeScreen extends StatelessWidget {
                                                 splashRadius: 18,
                                                 onPressed: () {
                                                   if (index != homeController.newestEcolodgeList.length) {
-                                                    reserveSectionPageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                    homeController.newestEcolodgeController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                                                   }
                                                 },
                                                 icon: const Icon(
@@ -441,7 +450,7 @@ class HomeScreen extends StatelessWidget {
                                                   splashRadius: 18,
                                                   onPressed: () {
                                                     if (index != 0) {
-                                                      reserveSectionPageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                      homeController.newestEcolodgeController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                                                     }
                                                   },
                                                   alignment: Alignment.center,
@@ -531,13 +540,13 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "مشاهده همه",
-                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {},
+            //   child: Text(
+            //     "مشاهده همه",
+            //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+            //   ),
+            // ),
             const Spacer(),
             Text(
               "اقامتگاه های خاص",
@@ -546,6 +555,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      const SizedBox(height:20),
       SizedBox(
         width: MediaQuery.of(Get.context!).size.width,
         height: 220,
@@ -577,11 +587,11 @@ class HomeScreen extends StatelessWidget {
                     return InkWell(
                       borderRadius: BorderRadius.circular(22),
                       onTap:(){
-                        searchController.specialPlacesFlag.value = true;
-                        searchController.specialPlace.value = homeController.specialPlacesList[index].url;
+                        searchController.specialPlaceUrl.value = homeController.specialPlacesList[index].url;
+                        searchController.specialPlaceTitle.value = homeController.specialPlacesList[index].title;
                         baseController.pageIndex.value = 2;
                         searchController.searchWithFilter('');
-                        searchController.searchScrollController.animateTo(0.0, duration: const Duration(milliseconds: 1), curve: Curves.linear);
+                        searchController.searchScrollController.animateTo(0.0, duration: const Duration(microseconds: 1), curve: Curves.linear);
                       },
                       child: Stack(
                         children: [
@@ -687,13 +697,13 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "مشاهده همه",
-                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {},
+            //   child: Text(
+            //     "مشاهده همه",
+            //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+            //   ),
+            // ),
             const Spacer(),
             Text(
               "بهترین شهر های بوم گردی",
@@ -703,105 +713,105 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       const SizedBox(
-        height: 10,
+        height: 20,
       ),
-      Obx(() => SizedBox(
-            width: MediaQuery.of(Get.context!).size.width,
-            height: 145,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: ListView.separated(
-                scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                physics: const BouncingScrollPhysics(),
-                itemCount: homeController.bestPlacesList.isEmpty ? 4 : homeController.bestPlacesList.length,
-                separatorBuilder: (context, index) {
-                  return const SizedBox(width: 15);
-                },
-                itemBuilder: (context, index) {
-                  if (homeController.bestPlacesList.isEmpty) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-                            width: 110,
-                            height: 115,
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                            width: 55,
-                            height: 8,
-                          ),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return InkWell(
-                      onTap:(){
-                        searchController.cityFilter.value = homeController.bestPlacesList[index].title;
-                        searchController.cityUrlFilter.value = homeController.bestPlacesList[index].url;
-                        searchController.searchWithFilter('');
-                        baseController.pageIndex.value = 2;
-                        searchController.searchScrollController.animateTo(0.0, duration: const Duration(milliseconds: 1), curve: Curves.linear);
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+      SizedBox(
+        width: MediaQuery.of(Get.context!).size.width,
+        height: 145,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Obx(() => ListView.separated(
+            scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            physics: const BouncingScrollPhysics(),
+            itemCount: homeController.bestPlacesList.isEmpty ? 4 : homeController.bestPlacesList.length,
+            separatorBuilder: (context, index) {
+              return const SizedBox(width: 15);
+            },
+            itemBuilder: (context, index) {
+              if (homeController.bestPlacesList.isEmpty) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                        width: 110,
+                        height: 115,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                        width: 55,
+                        height: 8,
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return InkWell(
+                  onTap:(){
+                    searchController.cityTitle.value = homeController.bestPlacesList[index].title;
+                    searchController.cityUrl.value = homeController.bestPlacesList[index].url;
+                    searchController.searchWithFilter('');
+                    baseController.pageIndex.value = 2;
+                    searchController.searchScrollController.animateTo(0.0, duration: const Duration(microseconds: 1), curve: Curves.linear);
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Stack(
+                        alignment: Alignment.topRight,
                         children: [
-                          Stack(
-                            alignment: Alignment.topRight,
-                            children: [
-                              SizedBox(
-                                  height: 110,
-                                  width: 115,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: CachedNetworkImage(
-                                        imageUrl: homeController.bestPlacesList[index].image,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                      ))),
-                              Positioned(
-                                  right: 10,
-                                  child: Container(
-                                    width: 23,
-                                    height: 27,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(8),
-                                        bottomLeft: Radius.circular(8),
-                                      ),
-                                      color: AppColors.mainColor,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3.5),
-                                      child: SvgPicture.asset('assets/icons/medal_ic.svg'),
-                                    ),
-                                  ))
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Expanded(child: Text(homeController.bestPlacesList[index].title, maxLines: 2, style: Theme.of(Get.context!).textTheme.labelMedium))
+                          SizedBox(
+                              height: 110,
+                              width: 115,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: CachedNetworkImage(
+                                    imageUrl: homeController.bestPlacesList[index].image,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                  ))),
+                          Positioned(
+                              right: 10,
+                              child: Container(
+                                width: 23,
+                                height: 27,
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(8),
+                                    bottomLeft: Radius.circular(8),
+                                  ),
+                                  color: AppColors.mainColor,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3.5),
+                                  child: SvgPicture.asset('assets/icons/medal_ic.svg'),
+                                ),
+                              ))
                         ],
                       ),
-                    );
-                  }
-                },
-              ),
-            ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      Expanded(child: Text(homeController.bestPlacesList[index].title, maxLines: 2, style: Theme.of(Get.context!).textTheme.labelMedium))
+                    ],
+                  ),
+                );
+              }
+            },
           )),
+        ),
+      )
     ]);
   }
 
@@ -811,13 +821,13 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "مشاهده همه",
-                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {},
+            //   child: Text(
+            //     "مشاهده همه",
+            //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+            //   ),
+            // ),
             const Spacer(),
             Text(
               "پیشنهاد های فصلی",
@@ -829,24 +839,125 @@ class HomeScreen extends StatelessWidget {
       const SizedBox(
         height: 10,
       ),
-      Obx(() => SizedBox(
-            height: 180,
-            width: MediaQuery.of(Get.context!).size.width,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: ListView.separated(
-                  scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: homeController.sessionSuggestList.isEmpty ? 3 : homeController.sessionSuggestList.length,
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(width: 18);
-                  },
-                  itemBuilder: (context, index) {
-                    if (homeController.sessionSuggestList.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: SizedBox(
+      SizedBox(
+        height: 180,
+        width: MediaQuery.of(Get.context!).size.width,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Obx(() => ListView.separated(
+              scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              physics: const BouncingScrollPhysics(),
+              itemCount: homeController.sessionSuggestList.isEmpty ? 3 : homeController.sessionSuggestList.length,
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: 18);
+              },
+              itemBuilder: (context, index) {
+                if (homeController.sessionSuggestList.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: SizedBox(
+                      width: 180,
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        clipBehavior: Clip.hardEdge,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 5,
+                        shadowColor: Colors.black26,
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(width: 180, height: 90, color: Colors.white),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 40.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 12,
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/icons/location_small_pin_ic.svg',
+                                          color: AppColors.disabledIcon,
+                                          width: 13,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade300,
+                                          highlightColor: Colors.grey.shade100,
+                                          child: Container(
+                                            width: 50,
+                                            height: 8,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/icons/price_ic.svg',
+                                          color: AppColors.disabledIcon,
+                                          width: 13,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade300,
+                                          highlightColor: Colors.grey.shade100,
+                                          child: Container(
+                                            width: 50,
+                                            height: 8,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Stack(
+                      children: [
+                        SizedBox(
                           width: 180,
                           child: Card(
                             margin: EdgeInsets.zero,
@@ -858,10 +969,15 @@ class HomeScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade300,
-                                  highlightColor: Colors.grey.shade100,
-                                  child: Container(width: 180, height: 90, color: Colors.white),
+                                SizedBox(
+                                  width: 180,
+                                  height: 92,
+                                  child: ClipRRect(
+                                      child: CachedNetworkImage(
+                                        imageUrl: homeController.sessionSuggestList[index].image,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                      )),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -870,19 +986,9 @@ class HomeScreen extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Shimmer.fromColors(
-                                          baseColor: Colors.grey.shade300,
-                                          highlightColor: Colors.grey.shade100,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 40.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 12,
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
+                                        Text(homeController.sessionSuggestList[index].title, maxLines: 1, style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 12)),
                                         Row(
+                                          mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             const SizedBox(
@@ -896,14 +1002,9 @@ class HomeScreen extends StatelessWidget {
                                             const SizedBox(
                                               width: 5,
                                             ),
-                                            Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor: Colors.grey.shade100,
-                                              child: Container(
-                                                width: 50,
-                                                height: 8,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                              ),
+                                            Text(
+                                              '${homeController.sessionSuggestList[index].province}, ${homeController.sessionSuggestList[index].city}',
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
                                             )
                                           ],
                                         ),
@@ -922,15 +1023,25 @@ class HomeScreen extends StatelessWidget {
                                             const SizedBox(
                                               width: 5,
                                             ),
-                                            Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor: Colors.grey.shade100,
-                                              child: Container(
-                                                width: 50,
-                                                height: 8,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                              ),
-                                            )
+                                            Text(
+                                              "قیمت:",
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              homeController.sessionSuggestList[index].minPrice == 0 ?'تماس با پشتیبانی':homeController.sessionSuggestList[index].minPrice!.toString().beToman().seRagham(),
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            homeController.sessionSuggestList[index].minPrice == 0 ? const SizedBox() : Text(
+                                              checkCurrency(homeController.sessionSuggestList[index].currency) ?? '',
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
+                                            ),
+                                            const Spacer(),
                                           ],
                                         )
                                       ],
@@ -941,127 +1052,27 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Stack(
-                          children: [
-                            SizedBox(
-                              width: 180,
-                              child: Card(
-                                margin: EdgeInsets.zero,
-                                clipBehavior: Clip.hardEdge,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                elevation: 5,
-                                shadowColor: Colors.black26,
-                                color: Colors.white,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 180,
-                                      height: 92,
-                                      child: ClipRRect(
-                                          child: CachedNetworkImage(
-                                        imageUrl: homeController.sessionSuggestList[index].image,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                      )),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(homeController.sessionSuggestList[index].title, maxLines: 1, style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 12)),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                SvgPicture.asset(
-                                                  'assets/icons/location_small_pin_ic.svg',
-                                                  color: AppColors.disabledIcon,
-                                                  width: 13,
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  '${homeController.sessionSuggestList[index].province}, ${homeController.sessionSuggestList[index].city}',
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                )
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                SvgPicture.asset(
-                                                  'assets/icons/price_ic.svg',
-                                                  color: AppColors.disabledIcon,
-                                                  width: 13,
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  "قیمت:",
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                Text(
-                                                  homeController.newestEcolodgeList[index].minPrice == 0 ?'تماس با پشتیبانی':homeController.sessionSuggestList[index].minPrice!.toString().beToman().seRagham(),
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                homeController.newestEcolodgeList[index].minPrice == 0 ? const SizedBox() : Text(
-                                                  checkCurrency(homeController.sessionSuggestList[index].currency) ?? '',
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                ),
-                                                const Spacer(),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
+                        if (homeController.sessionSuggestList[index].maxDiscountPercent != null && homeController.sessionSuggestList[index].maxDiscountPercent! > 0)
+                          Positioned(
+                            right: Get.width * 0.05,
+                            top: 0,
+                            child: Container(
+                              height: 20,
+                              width: 40,
+                              decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
+                              child: Center(child: Text('${homeController.sessionSuggestList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
                             ),
-                            if (homeController.sessionSuggestList[index].maxDiscountPercent != null && homeController.sessionSuggestList[index].maxDiscountPercent! > 0)
-                              Positioned(
-                                right: Get.width * 0.05,
-                                top: 0,
-                                child: Container(
-                                  height: 20,
-                                  width: 40,
-                                  decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
-                                  child: Center(child: Text('${homeController.sessionSuggestList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
-                                ),
-                              )
-                            else
-                              const SizedBox(),
-                          ],
-                        ),
-                      );
-                    }
-                  }),
-            ),
-          )),
+                          )
+                        else
+                          const SizedBox(),
+                      ],
+                    ),
+                  );
+                }
+
+              })),
+        ),
+      )
     ]);
   }
 
@@ -1072,7 +1083,12 @@ class HomeScreen extends StatelessWidget {
         child: Row(
           children: [
             TextButton(
-              onPressed: () {},
+              onPressed: () {
+                searchController.sortByValue.value = 'پرفروش ترین';
+                searchController.searchWithFilter('');
+                baseController.pageIndex.value =2;
+                searchController.searchScrollController.animateTo(0, duration:const Duration(microseconds: 1), curve: Curves.linear);
+              },
               child: Text(
                 "مشاهده همه",
                 style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
@@ -1089,406 +1105,125 @@ class HomeScreen extends StatelessWidget {
       const SizedBox(
         height: 10,
       ),
-      Obx(() => SizedBox(
-            height: 180,
-            width: MediaQuery.of(Get.context!).size.width,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: ListView.separated(
-                  scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: homeController.bestSellersEcolodgeList.isEmpty ? 3 : homeController.bestSellersEcolodgeList.length,
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(width: 18);
-                  },
-                  itemBuilder: (context, index) {
-                    try {
-                      if (homeController.bestSellersEcolodgeList.isEmpty) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 15.0),
-                          child: SizedBox(
-                            width: 180,
-                            child: Card(
-                              margin: EdgeInsets.zero,
-                              clipBehavior: Clip.hardEdge,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              elevation: 5,
-                              shadowColor: Colors.black26,
-                              color: Colors.white,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Shimmer.fromColors(
-                                    baseColor: Colors.grey.shade300,
-                                    highlightColor: Colors.grey.shade100,
-                                    child: Container(width: 180, height: 90, color: Colors.white),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Shimmer.fromColors(
-                                            baseColor: Colors.grey.shade300,
-                                            highlightColor: Colors.grey.shade100,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(left: 40.0),
-                                              child: Container(
-                                                width: double.infinity,
-                                                height: 12,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              SvgPicture.asset(
-                                                'assets/icons/location_small_pin_ic.svg',
-                                                color: AppColors.disabledIcon,
-                                                width: 13,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Shimmer.fromColors(
-                                                baseColor: Colors.grey.shade300,
-                                                highlightColor: Colors.grey.shade100,
-                                                child: Container(
-                                                  width: 50,
-                                                  height: 8,
-                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                          Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              SvgPicture.asset(
-                                                'assets/icons/price_ic.svg',
-                                                color: AppColors.disabledIcon,
-                                                width: 13,
-                                              ),
-                                              const SizedBox(
-                                                width: 5,
-                                              ),
-                                              Shimmer.fromColors(
-                                                baseColor: Colors.grey.shade300,
-                                                highlightColor: Colors.grey.shade100,
-                                                child: Container(
-                                                  width: 50,
-                                                  height: 8,
-                                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                                ),
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 15.0),
-                          child: Stack(
-                            children: [
-                              SizedBox(
-                                width: 180,
-                                child: Card(
-                                  margin: EdgeInsets.zero,
-                                  clipBehavior: Clip.hardEdge,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                  elevation: 5,
-                                  shadowColor: Colors.black26,
-                                  color: Colors.white,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width: 180,
-                                        height: 92,
-                                        child: ClipRRect(
-                                            child: CachedNetworkImage(
-                                          imageUrl: homeController.bestSellersEcolodgeList[index].image,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                        )),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Text(homeController.bestSellersEcolodgeList[index].title, maxLines: 1, style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 12)),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  const SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  SvgPicture.asset(
-                                                    'assets/icons/location_small_pin_ic.svg',
-                                                    color: AppColors.disabledIcon,
-
-                                                    width: 13,
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                    '${homeController.bestSellersEcolodgeList[index].province}, ${homeController.sessionSuggestList[index].city}',
-                                                    style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisSize: MainAxisSize.max,
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                children: [
-                                                  const SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  SvgPicture.asset(
-                                                    'assets/icons/price_ic.svg',
-                                                    color: AppColors.disabledIcon,
-
-                                                    width: 13,
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                    "قیمت:",
-                                                    style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 2,
-                                                  ),
-                                                  Text(
-                                                    homeController.newestEcolodgeList[index].minPrice == 0 ?'تماس با پشتیبانی': homeController.sessionSuggestList[index].minPrice.toString().beToman().seRagham(),
-                                                    style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 2,
-                                                  ),
-                                                  homeController.newestEcolodgeList[index].minPrice == 0 ? const SizedBox():Text(
-                                                    checkCurrency(homeController.bestSellersEcolodgeList[index].currency) ?? '',
-                                                    style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                  ),
-                                                  const Spacer(),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              if (homeController.bestSellersEcolodgeList[index].maxDiscountPercent != null && homeController.bestSellersEcolodgeList[index].maxDiscountPercent! > 0)
-                                Positioned(
-                                  right: Get.width * 0.05,
-                                  top: 0,
-                                  child: Container(
-                                    height: 20,
-                                    width: 40,
-                                    decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
-                                    child: Center(child: Text('${homeController.bestSellersEcolodgeList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
-                                  ),
-                                )
-                              else
-                                const SizedBox(),
-                            ],
-                          ),
-                        );
-                      }
-                    } catch (_) {
-                      homeController.fetchBestSellersEcolodge();
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Stack(
+      SizedBox(
+        height: 180,
+        width: MediaQuery.of(Get.context!).size.width,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Obx(() => ListView.separated(
+              scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              physics: const BouncingScrollPhysics(),
+              itemCount: homeController.bestSellersEcolodgeList.isEmpty ? 3 : homeController.bestSellersEcolodgeList.length,
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: 18);
+              },
+              itemBuilder: (context, index) {
+                if (homeController.bestSellersEcolodgeList.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: SizedBox(
+                      width: 180,
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        clipBehavior: Clip.hardEdge,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 5,
+                        shadowColor: Colors.black26,
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: 180,
-                              child: Card(
-                                margin: EdgeInsets.zero,
-                                clipBehavior: Clip.hardEdge,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                elevation: 5,
-                                shadowColor: Colors.black26,
-                                color: Colors.white,
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(width: 180, height: 90, color: Colors.white),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(
-                                      width: 180,
-                                      height: 92,
-                                      child: ClipRRect(
-                                          child: CachedNetworkImage(
-                                        imageUrl: homeController.bestSellersEcolodgeList[index].image,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                      )),
-                                    ),
-                                    Expanded(
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(homeController.bestSellersEcolodgeList[index].title, maxLines: 1, style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 12)),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                SvgPicture.asset(
-                                                  'assets/icons/location_small_pin_ic.svg',
-                                                  color: AppColors.disabledIcon,
-
-                                                  width: 13,
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  '${homeController.bestSellersEcolodgeList[index].province}, ${homeController.sessionSuggestList[index].city}',
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                )
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                SvgPicture.asset(
-                                                  'assets/icons/price_ic.svg',
-                                                  width: 13,                                                color: AppColors.disabledIcon,
-
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  "قیمت:",
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                Text(
-                                                  homeController.newestEcolodgeList[index].minPrice == 0 ?'تماس با پشتیبانی':formatAmount(homeController.sessionSuggestList[index].minPrice!.toDouble()),
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                homeController.newestEcolodgeList[index].minPrice == 0 ? const SizedBox():Text(
-                                                  checkCurrency(homeController.bestSellersEcolodgeList[index].currency) ?? '',
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                ),
-                                                const Spacer(),
-                                              ],
-                                            )
-                                          ],
+                                        padding: const EdgeInsets.only(left: 40.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 12,
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
                                         ),
                                       ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/icons/location_small_pin_ic.svg',
+                                          color: AppColors.disabledIcon,
+                                          width: 13,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade300,
+                                          highlightColor: Colors.grey.shade100,
+                                          child: Container(
+                                            width: 50,
+                                            height: 8,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/icons/price_ic.svg',
+                                          color: AppColors.disabledIcon,
+                                          width: 13,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade300,
+                                          highlightColor: Colors.grey.shade100,
+                                          child: Container(
+                                            width: 50,
+                                            height: 8,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+                                          ),
+                                        )
+                                      ],
                                     )
                                   ],
                                 ),
                               ),
-                            ),
-                            if (homeController.bestSellersEcolodgeList[index].maxDiscountPercent != null && homeController.bestSellersEcolodgeList[index].maxDiscountPercent! > 0)
-                              Positioned(
-                                right: Get.width * 0.05,
-                                top: 0,
-                                child: Container(
-                                  height: 20,
-                                  width: 40,
-                                  decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
-                                  child: Center(child: Text('${homeController.bestSellersEcolodgeList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
-                                ),
-                              )
-                            else
-                              const SizedBox(),
+                            )
                           ],
                         ),
-                      );
-                    }
-                  }),
-            ),
-          )),
-    ]);
-  }
-
-  Widget bestOfferEcolodge() {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "مشاهده همه",
-                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-              ),
-            ),
-            const Spacer(),
-            Text(
-              "بیشترین تخفیفات اقامتگاه ها",
-              style: Theme.of(Get.context!).textTheme.bodyMedium,
-            ),
-          ],
-        ),
-      ),
-      const SizedBox(
-        height: 10,
-      ),
-      Obx(() => SizedBox(
-            height: 180,
-            width: MediaQuery.of(Get.context!).size.width,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: ListView.separated(
-                  scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: homeController.bestOfferEcolodgeList.isEmpty ? 3 : homeController.bestOfferEcolodgeList.length,
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(width: 18);
-                  },
-                  itemBuilder: (context, index) {
-                    if (homeController.bestOfferEcolodgeList.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: SizedBox(
+                      ),
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Stack(
+                      children: [
+                        SizedBox(
                           width: 180,
                           child: Card(
                             margin: EdgeInsets.zero,
@@ -1500,10 +1235,15 @@ class HomeScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Shimmer.fromColors(
-                                  baseColor: Colors.grey.shade300,
-                                  highlightColor: Colors.grey.shade100,
-                                  child: Container(width: 180, height: 90, color: Colors.white),
+                                SizedBox(
+                                  width: 180,
+                                  height: 92,
+                                  child: ClipRRect(
+                                      child: CachedNetworkImage(
+                                        imageUrl: homeController.bestSellersEcolodgeList[index].image,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                      )),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -1512,19 +1252,9 @@ class HomeScreen extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                       children: [
-                                        Shimmer.fromColors(
-                                          baseColor: Colors.grey.shade300,
-                                          highlightColor: Colors.grey.shade100,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(left: 40.0),
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: 12,
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
+                                        Text(homeController.bestSellersEcolodgeList[index].title, maxLines: 1, style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 12)),
                                         Row(
+                                          mainAxisSize: MainAxisSize.max,
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             const SizedBox(
@@ -1539,14 +1269,9 @@ class HomeScreen extends StatelessWidget {
                                             const SizedBox(
                                               width: 5,
                                             ),
-                                            Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor: Colors.grey.shade100,
-                                              child: Container(
-                                                width: 50,
-                                                height: 8,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                              ),
+                                            Text(
+                                              '${homeController.bestSellersEcolodgeList[index].province}, ${homeController.bestSellersEcolodgeList[index].city}',
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
                                             )
                                           ],
                                         ),
@@ -1566,15 +1291,25 @@ class HomeScreen extends StatelessWidget {
                                             const SizedBox(
                                               width: 5,
                                             ),
-                                            Shimmer.fromColors(
-                                              baseColor: Colors.grey.shade300,
-                                              highlightColor: Colors.grey.shade100,
-                                              child: Container(
-                                                width: 50,
-                                                height: 8,
-                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
-                                              ),
-                                            )
+                                            Text(
+                                              "قیمت:",
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              homeController.bestSellersEcolodgeList[index].minPrice == 0 ?'تماس با پشتیبانی': homeController.bestSellersEcolodgeList[index].minPrice.toString().beToman().seRagham(),
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            homeController.bestSellersEcolodgeList[index].minPrice == 0 ? const SizedBox():Text(
+                                              checkCurrency(homeController.bestSellersEcolodgeList[index].currency) ?? '',
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
+                                            ),
+                                            const Spacer(),
                                           ],
                                         )
                                       ],
@@ -1585,129 +1320,296 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15.0),
-                        child: Stack(
+                        if (homeController.bestSellersEcolodgeList[index].maxDiscountPercent != null && homeController.bestSellersEcolodgeList[index].maxDiscountPercent! > 0)
+                          Positioned(
+                            right: Get.width * 0.05,
+                            top: 0,
+                            child: Container(
+                              height: 20,
+                              width: 40,
+                              decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
+                              child: Center(child: Text('${homeController.bestSellersEcolodgeList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
+                            ),
+                          )
+                        else
+                          const SizedBox(),
+                      ],
+                    ),
+                  );
+                }
+
+              })),
+        ),
+      )
+    ]);
+  }
+
+  Widget bestOfferEcolodge() {
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Row(
+          children: [
+            TextButton(
+              onPressed: () {
+                searchController.sortByValue.value = 'بیشترین تخفیف';
+                searchController.searchWithFilter('');
+                baseController.pageIndex.value =2;
+                searchController.searchScrollController.animateTo(0, duration:const Duration(microseconds: 1), curve: Curves.linear);
+              },
+              child: Text(
+                "مشاهده همه",
+                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+              ),
+            ),
+            const Spacer(),
+            Text(
+              "بیشترین تخفیفات اقامتگاه ها",
+              style: Theme.of(Get.context!).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(
+        height: 10,
+      ),
+      SizedBox(
+        height: 180,
+        width: MediaQuery.of(Get.context!).size.width,
+        child: Directionality(
+          textDirection: TextDirection.rtl,
+          child: Obx(() => ListView.separated(
+              scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              physics: const BouncingScrollPhysics(),
+              itemCount: homeController.bestOfferEcolodgeList.isEmpty ? 3 : homeController.bestOfferEcolodgeList.length,
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: 18);
+              },
+              itemBuilder: (context, index) {
+                if (homeController.bestOfferEcolodgeList.isEmpty) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: SizedBox(
+                      width: 180,
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        clipBehavior: Clip.hardEdge,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 5,
+                        shadowColor: Colors.black26,
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: 180,
-                              child: Card(
-                                margin: EdgeInsets.zero,
-                                clipBehavior: Clip.hardEdge,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                elevation: 5,
-                                shadowColor: Colors.black26,
-                                color: Colors.white,
+                            Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(width: 180, height: 90, color: Colors.white),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    SizedBox(
-                                      width: 180,
-                                      height: 92,
-                                      child: ClipRRect(
-                                          child: CachedNetworkImage(
-                                        imageUrl: homeController.bestOfferEcolodgeList[index].image,
-                                        fit: BoxFit.cover,
-                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                      )),
-                                    ),
-                                    Expanded(
+                                    Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Text(homeController.bestOfferEcolodgeList[index].title, maxLines: 1, style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 12)),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                SvgPicture.asset(
-                                                  'assets/icons/location_small_pin_ic.svg',
-                                                  color: AppColors.disabledIcon,
-
-                                                  width: 13,
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  '${homeController.bestOfferEcolodgeList[index].province}, ${homeController.bestOfferEcolodgeList[index].city}',
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                )
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisSize: MainAxisSize.max,
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              children: [
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                SvgPicture.asset(
-                                                  'assets/icons/price_ic.svg',
-                                                  color: AppColors.disabledIcon,
-
-                                                  width: 13,
-                                                ),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  "قیمت:",
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
-                                                ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                Text(
-                                                  homeController.newestEcolodgeList[index].minPrice == 0 ?'تماس با پشتیبانی':homeController.bestOfferEcolodgeList[index].minPrice.toString().beToman().seRagham(),
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                ),
-                                                const SizedBox(
-                                                  width: 2,
-                                                ),
-                                                homeController.newestEcolodgeList[index].minPrice == 0 ? const SizedBox():Text(
-                                                  checkCurrency(homeController.bestOfferEcolodgeList[index].currency) ?? '0',
-                                                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
-                                                ),
-                                                const Spacer(),
-                                              ],
-                                            )
-                                          ],
+                                        padding: const EdgeInsets.only(left: 40.0),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 12,
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
                                         ),
                                       ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/icons/location_small_pin_ic.svg',
+                                          color: AppColors.disabledIcon,
+
+                                          width: 13,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade300,
+                                          highlightColor: Colors.grey.shade100,
+                                          child: Container(
+                                            width: 50,
+                                            height: 8,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SvgPicture.asset(
+                                          'assets/icons/price_ic.svg',
+                                          color: AppColors.disabledIcon,
+
+                                          width: 13,
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade300,
+                                          highlightColor: Colors.grey.shade100,
+                                          child: Container(
+                                            width: 50,
+                                            height: 8,
+                                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.white),
+                                          ),
+                                        )
+                                      ],
                                     )
                                   ],
                                 ),
                               ),
-                            ),
-                            if (homeController.bestOfferEcolodgeList[index].maxDiscountPercent != null && homeController.bestOfferEcolodgeList[index].maxDiscountPercent! > 0)
-                              Positioned(
-                                right: Get.width * 0.05,
-                                top: 0,
-                                child: Container(
-                                  height: 20,
-                                  width: 40,
-                                  decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
-                                  child: Center(child: Text('${homeController.bestOfferEcolodgeList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
-                                ),
-                              )
-                            else
-                              const SizedBox(),
+                            )
                           ],
                         ),
-                      );
-                    }
-                  }),
-            ),
-          )),
+                      ),
+                    ),
+                  );
+                } else {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15.0),
+                    child: Stack(
+                      children: [
+                        SizedBox(
+                          width: 180,
+                          child: Card(
+                            margin: EdgeInsets.zero,
+                            clipBehavior: Clip.hardEdge,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 5,
+                            shadowColor: Colors.black26,
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 180,
+                                  height: 92,
+                                  child: ClipRRect(
+                                      child: CachedNetworkImage(
+                                        imageUrl: homeController.bestOfferEcolodgeList[index].image,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                      )),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(homeController.bestOfferEcolodgeList[index].title, maxLines: 1, style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 12)),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            SvgPicture.asset(
+                                              'assets/icons/location_small_pin_ic.svg',
+                                              color: AppColors.disabledIcon,
+
+                                              width: 13,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              '${homeController.bestOfferEcolodgeList[index].province}, ${homeController.bestOfferEcolodgeList[index].city}',
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            SvgPicture.asset(
+                                              'assets/icons/price_ic.svg',
+                                              color: AppColors.disabledIcon,
+
+                                              width: 13,
+                                            ),
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "قیمت:",
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.disabledText),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text(
+                                              homeController.bestOfferEcolodgeList[index].minPrice == 0 ?'تماس با پشتیبانی':homeController.bestOfferEcolodgeList[index].minPrice.toString().beToman().seRagham(),
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
+                                            ),
+                                            const SizedBox(
+                                              width: 2,
+                                            ),
+                                            homeController.bestOfferEcolodgeList[index].minPrice == 0 ? const SizedBox():Text(
+                                              checkCurrency(homeController.bestOfferEcolodgeList[index].currency) ?? '0',
+                                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(fontSize: 10, color: AppColors.mainColor),
+                                            ),
+                                            const Spacer(),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (homeController.bestOfferEcolodgeList[index].maxDiscountPercent != null && homeController.bestOfferEcolodgeList[index].maxDiscountPercent! > 0)
+                          Positioned(
+                            right: Get.width * 0.05,
+                            top: 0,
+                            child: Container(
+                              height: 20,
+                              width: 40,
+                              decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(8), bottomRight: Radius.circular(8))),
+                              child: Center(child: Text('${homeController.bestOfferEcolodgeList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
+                            ),
+                          )
+                        else
+                          const SizedBox(),
+                      ],
+                    ),
+                  );
+                }
+              })),
+        ),
+      )
     ]);
   }
 

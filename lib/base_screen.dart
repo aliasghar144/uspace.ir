@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -15,15 +13,14 @@ import 'package:uspace_ir/pages/search/live_serach_screen.dart';
 import 'package:uspace_ir/pages/search/search_screen.dart';
 import 'package:uspace_ir/widgets/bottom_sheets.dart';
 
-class BasePage extends StatelessWidget {
-  BasePage({Key? key}) : super(key: key);
+class BaseScreen extends StatelessWidget {
+  BaseScreen({Key? key}) : super(key: key);
 
   //test
   final LoginController loginController = Get.put(LoginController());
 
-
-  final SearchController searchController = Get.put(SearchController());
   final BaseController baseController = Get.put(BaseController());
+  final SearchController searchController = Get.put(SearchController());
   final HomeController homeController = Get.put(HomeController());
 
 
@@ -43,7 +40,8 @@ class BasePage extends StatelessWidget {
           return false;
         }
         else{
-          exit(0);
+          print('exit');
+          return false;
         }
       },
       child: ScrollConfiguration(
@@ -206,6 +204,7 @@ class BasePage extends StatelessWidget {
     return InkWell(
       onTap: () {
         searchController.searchTextFieldController.clear();
+        searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
         if(index == 2 && searchController.searchEcolodgesResult.isEmpty){
           searchController.searchWithFilter('');
         }

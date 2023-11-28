@@ -45,6 +45,8 @@ class MyTextField extends StatelessWidget {
         scrollPadding: EdgeInsets.zero,
         validator: validator,
         textDirection: TextDirection.rtl,
+        textAlign: TextAlign.start,
+        textAlignVertical: TextAlignVertical.top,
         maxLines: maxline,
         keyboardType: keyboardType,
         textInputAction: textInputAction,
@@ -55,16 +57,17 @@ class MyTextField extends StatelessWidget {
         style: Theme.of(Get.context!).textTheme.labelLarge,
         decoration: InputDecoration(
           hintText: hintText,
+
           hintStyle: Theme.of(Get.context!)
               .textTheme
-              .labelSmall!
+              .labelMedium!
               .copyWith(color: AppColors.grayColor),
           fillColor: Colors.white,
           filled: true,
           counterText: '',
           labelStyle: Theme.of(Get.context!)
               .textTheme
-              .labelSmall!
+              .labelMedium!
               .copyWith(color: AppColors.grayColor),
           suffixIcon: iconButton,
           labelText: label,

@@ -43,57 +43,85 @@ class SearchScreen extends StatelessWidget {
                               physics: const BouncingScrollPhysics(),
                               shrinkWrap: true,
                               children: [
-                                searchController.categoryFilter.value != '' ? Container(
-                            padding: const EdgeInsets.only(right: 4, left: 6),
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
-                              child: Row(
-                                children: [
-                                  Text(searchController.categoryFilter.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
-                                  const SizedBox(
-                                    width: 3,
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      searchController.categoryFilter.value = '';
-                                      searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                                    },
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 14,
+                                if(searchController.specialPlaceTitle.value !='') ...[
+                                  Container(
+                                    padding: const EdgeInsets.only(right: 4, left: 6),
+                                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                                    decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
+                                    child: Row(
+                                      children: [
+                                        Text(searchController.specialPlaceTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
+                                        const SizedBox(
+                                          width: 3,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            searchController.specialPlaceTitle.value = '';
+                                            searchController.specialPlaceUrl.value = '';
+                                            searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                                          },
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ): const SizedBox(),
-                                searchController.cityFilter.value != '' ? Container(
+                                  )
+                                ]else...[
+                            searchController.categoryTitle.value != '' ? Container(
                             padding: const EdgeInsets.only(right: 4, left: 6),
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
-                              child: Row(
-                                children: [
-                                  Text(searchController.cityFilter.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
-                                  const SizedBox(
-                                    width: 3,
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                            decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
+                            child: Row(
+                              children: [
+                                Text(searchController.categoryTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
+                                const SizedBox(
+                                  width: 3,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    searchController.categoryTitle.value = '';
+                                    searchController.categoryId.value = '';
+                                    searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                                  },
+                                  child: const Icon(
+                                    Icons.close,
+                                    color: Colors.white,
+                                    size: 14,
                                   ),
-                                  InkWell(
-                                    onTap: () {
-                                      searchController.cityFilter.value = '';
-                                      searchController.cityUrlFilter.value = '';
-                                      searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                                    },
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ): const SizedBox(),
+                                ),
                               ],
-                            )),
+                            ),
+                          ): const SizedBox(),
+                      searchController.cityTitle.value != '' ? Container(
+                        padding: const EdgeInsets.only(right: 4, left: 6),
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
+                        child: Row(
+                          children: [
+                            Text(searchController.cityTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
+                            const SizedBox(
+                              width: 3,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                searchController.cityTitle.value = '';
+                                searchController.cityUrl.value = '';
+                                searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                              },
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ): const SizedBox(),
+                                ]
+                              ]                            )),
                           )),
                       Stack(
                         clipBehavior: Clip.none,
@@ -112,7 +140,7 @@ class SearchScreen extends StatelessWidget {
                               });
                             },
                           ),
-                          Obx(() => searchController.cityFilter.value == '' && searchController.categoryFilter.value == ''
+                          Obx(() => searchController.cityTitle.value == '' && searchController.categoryTitle.value == ''
                               ? const SizedBox()
                               : Positioned(
                             left: Get.width * 0.033,

@@ -12,7 +12,7 @@ import 'package:uspace_ir/pages/test.dart';
 class Pages{
 
   final pages = [
-    GetPage(name: Routes.home, page:() =>  BasePage(),/*middlewares: [AuthMiddleware()]*/),
+    GetPage(name: Routes.home, page:() =>  BaseScreen(),/*middlewares: [AuthMiddleware()]*/),
     GetPage(name: Routes.reservation, page:() =>  ReservationScreen(),),
     GetPage(name: Routes.reserveRoom, page:() =>  RoomReservationScreen(),),
     GetPage(name: Routes.intro, page:() =>  IntroScreen(),),
