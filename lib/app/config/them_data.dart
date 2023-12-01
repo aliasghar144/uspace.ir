@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 
 class ThemConfig {
@@ -7,7 +6,10 @@ class ThemConfig {
     return ThemeData(
       fontFamily: 'iransans',
       scaffoldBackgroundColor: Colors.white,
-      appBarTheme: AppBarTheme(
+      bottomSheetTheme: const BottomSheetThemeData(
+        backgroundColor: Colors.transparent,
+      ),
+      appBarTheme: const AppBarTheme(
         elevation: 0,color: Colors.white,centerTitle: false,
       ),
       textTheme: const TextTheme(
@@ -42,7 +44,7 @@ class ThemConfig {
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
         titleLarge: TextStyle(
-            fontSize: 15,fontWeight: FontWeight.w300,letterSpacing: 0,
+            fontSize: 14,fontWeight: FontWeight.w300,letterSpacing: 0,
         ),
         titleMedium: TextStyle(
             height: 2,

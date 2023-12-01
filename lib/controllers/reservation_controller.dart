@@ -5,6 +5,11 @@ import 'package:image_picker/image_picker.dart';
 
 class ReservationController extends GetxController{
 
+  RxBool userImages = false.obs;
+
+
+
+
   //#region  =============== Rooms =========================
 
   Rx<DateTime> entryDate = DateTime.now().obs;
@@ -49,25 +54,7 @@ class ReservationController extends GetxController{
 
   //#endregion =============== Comments =======================
 
-  List facilities = [
-    'تخت دبل',
-    'تعداد پله:بدون پله',
-    'تعداد خواب:بدون خواب',
-    'نوع واحد:سنتی',
-    'توالت فرنگی مستقل',
-    'متراژ:20متر',
-    'چشم انداز:حیاط',
-    'حمام مستقل',
-    'توالت فرنگی',
-    'صبحانه',
-    'مینی بار ',
-    'نور گیر',
-    'شوفاژ',
-    'یخچال',
-    'کافی شاپ',
-    'اینترنت رایگان',
-    'صندوق امانات'
-  ].obs;
+
 
   ///-------details text
   String roomInformation = """
