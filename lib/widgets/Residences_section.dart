@@ -40,7 +40,9 @@ class ResidenceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Get.to(ReservationScreen());
+        Get.to(ReservationScreen(),arguments: {
+          'roomUrl':'miqat'
+        });
       },
       child: Stack(
         clipBehavior: Clip.antiAlias,

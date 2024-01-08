@@ -245,6 +245,8 @@ class HomeScreen extends StatelessWidget {
                                   searchController.categoryTitle.value = (homeController.categories[index]['title']);
                                   searchController.searchWithFilter('');
                                   baseController.pageIndex.value = 2;
+
+                                  //go to first of screen
                                   searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
                                 },
                                 splashColor: Colors.transparent,
@@ -377,7 +379,9 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                Get.to(ReservationScreen());
+                                Get.to(ReservationScreen(),arguments: {
+                                  'roomUrl': homeController.newestEcolodgeList[index].url
+                                });
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(

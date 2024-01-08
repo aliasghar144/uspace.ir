@@ -10,51 +10,75 @@ class SingleImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Center(
-          child: OrientationBuilder(
-            builder: (context, orientation) => Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                CachedNetworkImage(imageUrl: Get.arguments),
-                Positioned(
-                    left: 0,
-                    top: 0,
-                    child: IconButton(
-                      onPressed: () {
-                        if (!horizontalImage.value) {
-                          SystemChrome.setPreferredOrientations([
+    return WillPopScope(
+      onWillPop:  () async {
+        if (!horizontalImage.value) {
+          SystemChrome.setPreferredOrientations([
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+          ]);
+        }
+        Get.back();
+        return false;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: Colors.black,
+          body: Center(
+            child: OrientationBuilder(
+              builder: (context, orientation) => Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  CachedNetworkImage(imageUrl: Get.arguments['image'],imageBuilder: (context, imageProvider) {
+                    return Obx(() => Container(
+                      width: Get.width,
+                      margin: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: horizontalImage.value ? BoxFit.none : BoxFit.fitWidth ,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ));
+                  },),
+                  Positioned(
+                      left: 0,
+                      top: 0,
+                      child: IconButton(
+                        onPressed: () {
+                          if (!horizontalImage.value) {
+                            SystemChrome.setPreferredOrientations([
+                              DeviceOrientation.portraitUp,
+                              DeviceOrientation.portraitDown,
+                            ]);
+                          }
+                          Get.back();
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                        color: Colors.white,
+                      )),
+                  IconButton(
+                      onPressed: () async {
+                        horizontalImage.toggle();
+                        if (horizontalImage.value) {
+                          await SystemChrome.setPreferredOrientations([
                             DeviceOrientation.portraitUp,
                             DeviceOrientation.portraitDown,
                           ]);
+                        } else {
+                          await SystemChrome.setPreferredOrientations([
+                            DeviceOrientation.landscapeLeft,
+                            DeviceOrientation.landscapeRight,
+                          ]);
                         }
-                        Get.back();
                       },
-                      icon: Icon(Icons.arrow_back),
-                      color: Colors.white,
-                    )),
-                IconButton(
-                    onPressed: () async {
-                      horizontalImage.toggle();
-                      if (horizontalImage.value) {
-                        await SystemChrome.setPreferredOrientations([
-                          DeviceOrientation.portraitUp,
-                          DeviceOrientation.portraitDown,
-                        ]);
-                      } else {
-                        await SystemChrome.setPreferredOrientations([
-                          DeviceOrientation.landscapeLeft,
-                          DeviceOrientation.landscapeRight,
-                        ]);
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.screen_rotation_alt,
-                      color: Colors.white,
-                    ))
-              ],
+                      icon: const Icon(
+                        Icons.screen_rotation_alt,
+                        color: Colors.white,
+                      ))
+                ],
+              ),
             ),
           ),
         ),

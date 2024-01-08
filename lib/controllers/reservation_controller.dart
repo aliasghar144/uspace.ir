@@ -2,13 +2,47 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uspace_ir/constance/constance.dart';
+import 'package:http/http.dart' as http;
+import 'package:uspace_ir/models/room_reservation_model.dart';
 
 class ReservationController extends GetxController{
 
+  String url;
+  ReservationController(this.url);
+
+
   RxBool userImages = false.obs;
+  RxBool loading = false.obs;
 
+  final room = Rxn<RoomReservationModel>();
 
+  @override
+  void onInit(){
+    getMainInfo(roomUrl: url);
+    super.onInit();
+  }
 
+  getMainInfo({
+    required String roomUrl,
+  }) async {
+    try{
+      loading.value = true;
+      var url = Uri.parse('$mainUrl/ecolodge/$roomUrl');
+      var response = await http.get(url);
+      if(response.statusCode ==200){
+        room.value = roomReservationModelFromJson(response.body);
+        loading.value = false;
+        print(room.value!.data.title);
+      }}
+    on SocketException {
+      loading.value = false;
+      print('socket');
+    }catch(e){
+      loading.value = false;
+      print(e);
+    }
+  }
 
   //#region  =============== Rooms =========================
 

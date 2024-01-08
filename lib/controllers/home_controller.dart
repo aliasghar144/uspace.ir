@@ -91,8 +91,7 @@ class HomeController extends GetxController {
        mainGallery.value = (jsonDecode(response.body))['data'];
        loading.value = false;
       }
-    }
-    on SocketException {
+    } on SocketException {
       retry.value = true;
       loading.value = false;
     }
