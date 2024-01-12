@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -14,7 +13,6 @@ class HomeController extends GetxController {
 
   final RxBool loading = false.obs;
 
-  late Timer _timer;
   RxInt currentPage = 0.obs;
 
   final PageController mainGalleryController = PageController();
@@ -31,18 +29,6 @@ class HomeController extends GetxController {
     fetchBestSellersEcolodge();
     fetchBestOfferEcolodge();
     super.onInit();
-    _timer = Timer.periodic( const Duration(seconds: 8), (Timer timer) {
-      if (currentPage.value+1 == mainGallery.length) {
-        currentPage.value = 0;
-      } else {
-        currentPage++;
-      }
-      mainGalleryController.animateToPage(
-        currentPage.value,
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeIn,
-      );
-    });
   }
 
 

@@ -22,6 +22,7 @@ import 'package:uspace_ir/pages/reservation/reserve_room_screen.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 import 'package:uspace_ir/widgets/single_image_view.dart';
 import 'package:uspace_ir/widgets/textfield.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class ReservationScreen extends StatelessWidget {
   const ReservationScreen({Key? key}) : super(key: key);
@@ -122,35 +123,37 @@ class ReservationScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        Obx(() => reservationController.loading.value ?
-                                        ListView.separated(
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            padding: EdgeInsets.zero,
-                                            itemBuilder: (context, index) {
-                                              return Shimmer.fromColors(
-                                                baseColor: Colors.grey.shade300,
-                                                highlightColor: Colors.grey.shade100,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(8),
-                                                    color: Colors.white,
-                                                  ),
-                                                  width: Get.width,
-                                                  height: 8,
+                                        Obx(
+                                          () => reservationController.loading.value
+                                              ? ListView.separated(
+                                                  shrinkWrap: true,
+                                                  physics: const NeverScrollableScrollPhysics(),
+                                                  padding: EdgeInsets.zero,
+                                                  itemBuilder: (context, index) {
+                                                    return Shimmer.fromColors(
+                                                      baseColor: Colors.grey.shade300,
+                                                      highlightColor: Colors.grey.shade100,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(8),
+                                                          color: Colors.white,
+                                                        ),
+                                                        width: Get.width,
+                                                        height: 8,
+                                                      ),
+                                                    );
+                                                  },
+                                                  separatorBuilder: (context, index) {
+                                                    return const SizedBox(height: 5);
+                                                  },
+                                                  itemCount: 2)
+                                              : Text(
+                                                  'اقامت کودکان کمتر از 5 سال رایگان می باشد.',
+                                                  textAlign: TextAlign.right,
+                                                  textDirection: TextDirection.rtl,
+                                                  style: Theme.of(Get.context!).textTheme.titleMedium,
                                                 ),
-                                              );
-                                            },
-                                            separatorBuilder: (context, index) {
-                                              return const SizedBox(height: 5);
-                                            },
-                                            itemCount: 2)
-                                            : Text(
-                                          'اقامت کودکان کمتر از 5 سال رایگان می باشد.',
-                                          textAlign: TextAlign.right,
-                                          textDirection: TextDirection.rtl,
-                                          style: Theme.of(Get.context!).textTheme.titleMedium,
-                                        ),),
+                                        ),
                                         const SizedBox(
                                           height: 10,
                                         ),
@@ -158,36 +161,36 @@ class ReservationScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 5,
                                         ),
-                                        reservationController.loading.value ?
-                                        ListView.separated(
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            padding: EdgeInsets.zero,
-                                            itemBuilder: (context, index) {
-                                              return Shimmer.fromColors(
-                                                baseColor: Colors.grey.shade300,
-                                                highlightColor: Colors.grey.shade100,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(8),
-                                                    color: Colors.white,
-                                                  ),
-                                                  width: Get.width,
-                                                  height: 8,
-                                                ),
-                                              );
-                                            },
-                                            separatorBuilder: (context, index) {
-                                              return const SizedBox(height: 5);
-                                            },
-                                            itemCount: 8)
+                                        reservationController.loading.value
+                                            ? ListView.separated(
+                                                shrinkWrap: true,
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                padding: EdgeInsets.zero,
+                                                itemBuilder: (context, index) {
+                                                  return Shimmer.fromColors(
+                                                    baseColor: Colors.grey.shade300,
+                                                    highlightColor: Colors.grey.shade100,
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        color: Colors.white,
+                                                      ),
+                                                      width: Get.width,
+                                                      height: 8,
+                                                    ),
+                                                  );
+                                                },
+                                                separatorBuilder: (context, index) {
+                                                  return const SizedBox(height: 5);
+                                                },
+                                                itemCount: 8)
                                             : Text(
-                                          """در صورت کنسلی تا 48 ساعت قبل از ورود و ایام تعطیلات، هزینه شب اول کسر می‌گردد پس از آن کل هزینه به عنوان جریمه محاسبه خواهد شد. در صورت کنسلی رزرو های تاریخ 25 اسفند تا 13 فروردین به هیچ عنوان هزینه ای عودت داده نخواهد شد.
+                                                """در صورت کنسلی تا 48 ساعت قبل از ورود و ایام تعطیلات، هزینه شب اول کسر می‌گردد پس از آن کل هزینه به عنوان جریمه محاسبه خواهد شد. در صورت کنسلی رزرو های تاریخ 25 اسفند تا 13 فروردین به هیچ عنوان هزینه ای عودت داده نخواهد شد.
 همچنین هزینه کنسلینگ سامانه یواسپیس، 10 درصد می باشد که به هزینه کنسلینگ اقامتگاه افزوده می شود.""",
-                                          textAlign: TextAlign.justify,
-                                          textDirection: TextDirection.rtl,
-                                          style: Theme.of(Get.context!).textTheme.titleMedium,
-                                        ),
+                                                textAlign: TextAlign.justify,
+                                                textDirection: TextDirection.rtl,
+                                                style: Theme.of(Get.context!).textTheme.titleMedium,
+                                              ),
 //                                         const SizedBox(
 //                                           height: 10,
 //                                         ),
@@ -682,178 +685,63 @@ class ReservationScreen extends StatelessWidget {
                   scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
                   allowImplicitScrolling: true,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: reservationController.room.value!.data.imageList.length+1,
+                  itemCount: reservationController.room.value!.data.imageList.length + 1,
                   controller: reservationController.pageController,
                   itemBuilder: (context, index) {
-                    if(index == 0){
+                    if (index == 0) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CachedNetworkImage(
-                              imageUrl: reservationController.room.value!.data.mainImage,
-                              fit: BoxFit.cover,
-                              imageBuilder: (context, imageProvider) {
-                                return Container(
-                                  clipBehavior: Clip.none,
-                                  decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade300,
-                                          offset: const Offset(
-                                            1.0,
-                                            2.0,
-                                          ),
-                                          blurRadius: 10.0,
-                                          spreadRadius: 0.0,
-                                        ), //BoxShadow
-                                        const BoxShadow(
-                                          color: Colors.white,
-                                          offset: Offset(0.0, 0.0),
-                                          blurRadius: 0.0,
-                                          spreadRadius: 0.0,
-                                        ),
-                                      ],
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      borderRadius: BorderRadius.circular(22)),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 180,
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    alignment: Alignment.bottomCenter,
-                                    children: [
-                                      Positioned(
-                                        left: -10,
-                                        top: Get.width * 0.16,
-                                        child: Container(
-                                            width: 30,
-                                            height: 30,
-                                            decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                            child: Center(
-                                                child: IconButton(
-                                                  splashRadius: 18,
-                                                  onPressed: () {
-                                                    if (index != 2) {
-                                                      reservationController.pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                    }
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.arrow_forward_ios_rounded,
-                                                    color: AppColors.mainColor,
-                                                    size: 18,
-                                                  ),
-                                                  padding: EdgeInsets.zero,
-                                                  alignment: Alignment.center,
-                                                ))),
-                                      ),
-                                      Positioned(
-                                        right: -10,
-                                        top: Get.width * 0.16,
-                                        child: Container(
-                                            width: 30,
-                                            height: 30,
-                                            decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                            child: IconButton(
-                                                splashRadius: 18,
-                                                onPressed: () {
-                                                  if (index != 0) {
-                                                    reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                  }
-                                                },
-                                                alignment: Alignment.center,
-                                                padding: EdgeInsets.zero,
-                                                icon: const Icon(
-                                                  Icons.arrow_back_ios_rounded,
-                                                  color: AppColors.mainColor,
-                                                  size: 18,
-                                                ))),
-                                      ),
-                                      Container(
-                                        clipBehavior: Clip.hardEdge,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(25),
-                                            gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
-                                              0.50,
-                                              1
-                                            ], colors: [
-                                              Colors.transparent,
-                                              Colors.black.withOpacity(1),
-                                            ])),
-                                        width: MediaQuery.of(context).size.width,
-                                        height: 110,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                        child: Text(
-                                          'هتل سنتی پریخان خانم هتل سنتی شیران _ اصفهان',
-                                          maxLines: 2,
-                                          textAlign: TextAlign.center,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                            InkWell(
+                              onTap: () {
+                                Get.to(SingleImageView(), arguments: {'image': reservationController.room.value!.data.mainImage});
                               },
-                              errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                            ),
-                          ],
-                        ),
-                      );
-                    }else{                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index-1].fullImage}',
-                            fit: BoxFit.cover,
-                            imageBuilder: (context, imageProvider) {
-                              return Container(
-                                clipBehavior: Clip.none,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: const Offset(
-                                          1.0,
-                                          2.0,
+                              child: CachedNetworkImage(
+                                imageUrl: reservationController.room.value!.data.mainImage,
+                                fit: BoxFit.cover,
+                                imageBuilder: (context, imageProvider) {
+                                  return Container(
+                                    clipBehavior: Clip.none,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              1.0,
+                                              2.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 0.0,
+                                          ), //BoxShadow
+                                          const BoxShadow(
+                                            color: Colors.white,
+                                            offset: Offset(0.0, 0.0),
+                                            blurRadius: 0.0,
+                                            spreadRadius: 0.0,
+                                          ),
+                                        ],
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
                                         ),
-                                        blurRadius: 10.0,
-                                        spreadRadius: 0.0,
-                                      ), //BoxShadow
-                                      const BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(0.0, 0.0),
-                                        blurRadius: 0.0,
-                                        spreadRadius: 0.0,
-                                      ),
-                                    ],
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(22)),
-                                width: MediaQuery.of(context).size.width,
-                                height: 180,
-                                child: Stack(
-                                  clipBehavior: Clip.none,
-                                  alignment: Alignment.bottomCenter,
-                                  children: [
-                                    Positioned(
-                                      left: -10,
-                                      top: Get.width * 0.16,
-                                      child: Container(
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                          child: Center(
-                                              child: IconButton(
+                                        borderRadius: BorderRadius.circular(22)),
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 180,
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        Positioned(
+                                          left: -10,
+                                          top: Get.width * 0.16,
+                                          child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                              child: Center(
+                                                  child: IconButton(
                                                 splashRadius: 18,
                                                 onPressed: () {
                                                   if (index != 2) {
@@ -868,62 +756,188 @@ class ReservationScreen extends StatelessWidget {
                                                 padding: EdgeInsets.zero,
                                                 alignment: Alignment.center,
                                               ))),
+                                        ),
+                                        Positioned(
+                                          right: -10,
+                                          top: Get.width * 0.16,
+                                          child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                              child: IconButton(
+                                                  splashRadius: 18,
+                                                  onPressed: () {
+                                                    if (index != 0) {
+                                                      reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                    }
+                                                  },
+                                                  alignment: Alignment.center,
+                                                  padding: EdgeInsets.zero,
+                                                  icon: const Icon(
+                                                    Icons.arrow_back_ios_rounded,
+                                                    color: AppColors.mainColor,
+                                                    size: 18,
+                                                  ))),
+                                        ),
+                                        Container(
+                                          clipBehavior: Clip.hardEdge,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(25),
+                                              gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                                0.50,
+                                                1
+                                              ], colors: [
+                                                Colors.transparent,
+                                                Colors.black.withOpacity(1),
+                                              ])),
+                                          width: MediaQuery.of(context).size.width,
+                                          height: 110,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                          child: Text(
+                                            reservationController.room.value!.data.title,
+                                            maxLines: 2,
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Positioned(
-                                      right: -10,
-                                      top: Get.width * 0.16,
-                                      child: Container(
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                          child: IconButton(
-                                              splashRadius: 18,
-                                              onPressed: () {
-                                                if (index != 0) {
-                                                  reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                }
-                                              },
-                                              alignment: Alignment.center,
-                                              padding: EdgeInsets.zero,
-                                              icon: const Icon(
-                                                Icons.arrow_back_ios_rounded,
-                                                color: AppColors.mainColor,
-                                                size: 18,
+                                  );
+                                },
+                                errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Get.to(SingleImageView(), arguments: {'image': 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index - 1].fullImage}'});
+                              },
+                              child: CachedNetworkImage(
+                                imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index - 1].fullImage}',
+                                fit: BoxFit.cover,
+                                imageBuilder: (context, imageProvider) {
+                                  return Container(
+                                    clipBehavior: Clip.none,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              1.0,
+                                              2.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 0.0,
+                                          ), //BoxShadow
+                                          const BoxShadow(
+                                            color: Colors.white,
+                                            offset: Offset(0.0, 0.0),
+                                            blurRadius: 0.0,
+                                            spreadRadius: 0.0,
+                                          ),
+                                        ],
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.circular(22)),
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 180,
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        Positioned(
+                                          left: -10,
+                                          top: Get.width * 0.16,
+                                          child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                              child: Center(
+                                                  child: IconButton(
+                                                splashRadius: 18,
+                                                onPressed: () {
+                                                  if (index != reservationController.room.value!.data.imageList.length) {
+                                                    reservationController.pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                  }
+                                                },
+                                                icon: const Icon(
+                                                  Icons.arrow_forward_ios_rounded,
+                                                  color: AppColors.mainColor,
+                                                  size: 18,
+                                                ),
+                                                padding: EdgeInsets.zero,
+                                                alignment: Alignment.center,
                                               ))),
+                                        ),
+                                        Positioned(
+                                          right: -10,
+                                          top: Get.width * 0.16,
+                                          child: Container(
+                                              width: 30,
+                                              height: 30,
+                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                              child: IconButton(
+                                                  splashRadius: 18,
+                                                  onPressed: () {
+                                                    if (index != 0) {
+                                                      reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                    }
+                                                  },
+                                                  alignment: Alignment.center,
+                                                  padding: EdgeInsets.zero,
+                                                  icon: const Icon(
+                                                    Icons.arrow_back_ios_rounded,
+                                                    color: AppColors.mainColor,
+                                                    size: 18,
+                                                  ))),
+                                        ),
+                                        Container(
+                                          clipBehavior: Clip.hardEdge,
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(25),
+                                              gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                                0.50,
+                                                1
+                                              ], colors: [
+                                                Colors.transparent,
+                                                Colors.black.withOpacity(1),
+                                              ])),
+                                          width: MediaQuery.of(context).size.width,
+                                          height: 110,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                          child: Text(
+                                            reservationController.room.value!.data.imageList[index - 1].caption ?? '',
+                                            maxLines: 2,
+                                            textAlign: TextAlign.center,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Container(
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(25),
-                                          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
-                                            0.50,
-                                            1
-                                          ], colors: [
-                                            Colors.transparent,
-                                            Colors.black.withOpacity(1),
-                                          ])),
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 110,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                      child: Text(
-                                        'هتل سنتی پریخان خانم هتل سنتی شیران _ اصفهان',
-                                        maxLines: 2,
-                                        textAlign: TextAlign.center,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                          ),
-                        ],
-                      ),
-                    );
+                                  );
+                                },
+                                errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
                     }
                   }),
             ),
@@ -997,7 +1011,7 @@ class ReservationScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 5),
                 InkWell(
-                  onTap:(){
+                  onTap: () {
                     reservationController.pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
                   },
                   child: CachedNetworkImage(
@@ -1021,7 +1035,7 @@ class ReservationScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 5),
                 InkWell(
-                  onTap:(){
+                  onTap: () {
                     reservationController.pageController.animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
                   },
                   child: CachedNetworkImage(
@@ -1045,7 +1059,7 @@ class ReservationScreen extends StatelessWidget {
                 ),
                 const SizedBox(width: 5),
                 InkWell(
-                  onTap:(){
+                  onTap: () {
                     reservationController.pageController.animateToPage(0, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
                   },
                   child: CachedNetworkImage(
@@ -1097,7 +1111,7 @@ class ReservationScreen extends StatelessWidget {
                       child: SvgPicture.asset('assets/icons/share_line_ic.svg'),
                     )),
                 const Spacer(),
-                Text('هتل سنتی سهرودی_اصفهان', style: Theme.of(Get.context!).textTheme.displayMedium),
+                Text(reservationController.room.value!.data.title, style: Theme.of(Get.context!).textTheme.displayMedium),
               ],
             ),
           ),
@@ -1126,7 +1140,7 @@ class ReservationScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Expanded(
-                  child: Text('استان اصفهان،شهر اصفهان، خیابان میرداماد،انتهای کوچه یازدهم', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelSmall),
+                  child: Text('استان ${reservationController.room.value!.data.province}،شهر ${reservationController.room.value!.data.city}،${reservationController.room.value!.data.address}', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelSmall),
                 ),
                 const SizedBox(
                   width: 5,
@@ -1148,8 +1162,7 @@ class ReservationScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Row(children: [
-                    Text("نفر", textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    Text('15', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                    Text(reservationController.room.value!.data.capacity, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     Text('ظرفیت: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     const SizedBox(width: 5),
                     SvgPicture.asset('assets/icons/capacity_ic.svg', width: 20, color: AppColors.grayColor),
@@ -1157,7 +1170,7 @@ class ReservationScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   Row(children: [
                     Text("واحد", textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    Text('15', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                    Text(reservationController.room.value!.data.roomsNumber.toString(), textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     Text('اتاق ها: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     const SizedBox(width: 5),
                     SvgPicture.asset('assets/icons/rooms_ic.svg', width: 20, color: AppColors.grayColor),
@@ -1171,14 +1184,14 @@ class ReservationScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Row(children: [
-                    Text('14:00', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                    Text(reservationController.room.value!.data.rules.entryTime, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     Text('زمان تحویل: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     const SizedBox(width: 5),
                     SvgPicture.asset('assets/icons/delivery_time_ic.svg', width: 20, color: AppColors.grayColor),
                   ]),
                   const SizedBox(height: 20),
                   Row(children: [
-                    Text('14:00', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                    Text(reservationController.room.value!.data.rules.exitTime, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     Text('زمان تخلیه: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
                     const SizedBox(width: 5),
                     SvgPicture.asset('assets/icons/discharge_time_ic.svg', width: 20, color: AppColors.grayColor),
@@ -1421,12 +1434,10 @@ class ReservationScreen extends StatelessWidget {
             children: reservationController.room.value!.data.imageList
                 .map((e) => InkWell(
                       onTap: () {
-                        Get.to(SingleImageView(), arguments: {
-                          'image': 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${e.thumbImage}'
-                        });
+                        Get.to(SingleImageView(), arguments: {'image': 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${e.fullImage}'});
                       },
                       child: Hero(
-                        tag:'singleImage',
+                        tag: 'singleImage',
                         child: CachedNetworkImage(
                           imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${e.thumbImage}',
                           imageBuilder: (context, imageProvider) {
@@ -2035,99 +2046,102 @@ class ReservationScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('اطلاعات اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        ReadMoreText(
-                          reservationController.roomInformation,
-                          textAlign: TextAlign.justify,
-                          style: Theme.of(Get.context!).textTheme.titleMedium,
-                          trimLines: 4,
-                          textDirection: TextDirection.rtl,
-                          trimMode: TrimMode.Line,
-                          lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                          trimCollapsedText: 'نمایش بیشتر',
-                          trimExpandedText: 'نمایش کمتر',
-                          moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text('امکانات اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        ReadMoreText(
-                          reservationController.roomEquipments,
-                          textAlign: TextAlign.justify,
-                          style: Theme.of(Get.context!).textTheme.titleMedium,
-                          trimLines: 4,
-                          textDirection: TextDirection.rtl,
-                          trimMode: TrimMode.Line,
-                          lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                          trimCollapsedText: 'نمایش بیشتر',
-                          trimExpandedText: 'نمایش کمتر',
-                          moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text('موقعیت جغرافیایی', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        ReadMoreText(
-                          reservationController.roomLocation,
-                          textAlign: TextAlign.justify,
-                          style: Theme.of(Get.context!).textTheme.titleMedium,
-                          trimLines: 4,
-                          textDirection: TextDirection.rtl,
-                          trimMode: TrimMode.Line,
-                          lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                          trimCollapsedText: 'نمایش بیشتر',
-                          trimExpandedText: 'نمایش کمتر',
-                          moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text('فاصله (تقریبی) این هتل سنتی تا جاذبه های گردشگری و مکان های مهم', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        ReadMoreText(
-                          reservationController.importantLocationDistance,
-                          textAlign: TextAlign.justify,
-                          style: Theme.of(Get.context!).textTheme.titleMedium,
-                          trimLines: 4,
-                          textDirection: TextDirection.rtl,
-                          trimMode: TrimMode.Line,
-                          lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                          trimCollapsedText: 'نمایش بیشتر',
-                          trimExpandedText: 'نمایش کمتر',
-                          moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        ),
-                        const SizedBox(
-                          height: 25,
-                        ),
-                        Text('ادرس اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Text('استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم', style: Theme.of(Get.context!).textTheme.titleMedium),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        TextButton(
-                            onPressed: () {},
-                            child: Text(
-                              'جستجو بر روی نقشه',
-                              style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.mainColor),
+                        Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Html(
+                              data: reservationController.room.value!.data.content,
                             )),
-                        const SizedBox(
-                          height: 5,
-                        ),
+                        Directionality(textDirection: TextDirection.rtl, child: Html(data: reservationController.room.value!.data.distance)),
+                        // //TODO: remove if html is oky bellow
+                        // ReadMoreText(
+                        //   reservationController.room.value!.data.content,
+                        //   textAlign: TextAlign.justify,
+                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
+                        //   trimLines: 4,
+                        //   textDirection: TextDirection.rtl,
+                        //   trimMode: TrimMode.Line,
+                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        //   trimCollapsedText: 'نمایش بیشتر',
+                        //   trimExpandedText: 'نمایش کمتر',
+                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        // ),
+                        // const SizedBox(
+                        //   height: 15,
+                        // ),
+                        // Text('امکانات اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall),
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
+                        // ReadMoreText(
+                        //   reservationController.roomEquipments,
+                        //   textAlign: TextAlign.justify,
+                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
+                        //   trimLines: 4,
+                        //   textDirection: TextDirection.rtl,
+                        //   trimMode: TrimMode.Line,
+                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        //   trimCollapsedText: 'نمایش بیشتر',
+                        //   trimExpandedText: 'نمایش کمتر',
+                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        // ),
+                        // const SizedBox(
+                        //   height: 15,
+                        // ),
+                        // Text('موقعیت جغرافیایی', style: Theme.of(Get.context!).textTheme.bodySmall),
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
+                        // ReadMoreText(
+                        //   reservationController.roomLocation,
+                        //   textAlign: TextAlign.justify,
+                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
+                        //   trimLines: 4,
+                        //   textDirection: TextDirection.rtl,
+                        //   trimMode: TrimMode.Line,
+                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        //   trimCollapsedText: 'نمایش بیشتر',
+                        //   trimExpandedText: 'نمایش کمتر',
+                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        // ),
+                        // const SizedBox(
+                        //   height: 15,
+                        // ),
+                        // Text('فاصله (تقریبی) این هتل سنتی تا جاذبه های گردشگری و مکان های مهم', style: Theme.of(Get.context!).textTheme.bodySmall),
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
+                        // ReadMoreText(
+                        //   reservationController.importantLocationDistance,
+                        //   textAlign: TextAlign.justify,
+                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
+                        //   trimLines: 4,
+                        //   textDirection: TextDirection.rtl,
+                        //   trimMode: TrimMode.Line,
+                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        //   trimCollapsedText: 'نمایش بیشتر',
+                        //   trimExpandedText: 'نمایش کمتر',
+                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
+                        // ),
+                        // const SizedBox(
+                        //   height: 25,
+                        // ),
+                        // Text('ادرس اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall),
+                        // const SizedBox(
+                        //   height: 10,
+                        // ),
+                        // Text('استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم', style: Theme.of(Get.context!).textTheme.titleMedium),
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
+                        // TextButton(
+                        //     onPressed: () {},
+                        //     child: Text(
+                        //       'جستجو بر روی نقشه',
+                        //       style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.mainColor),
+                        //     )),
+                        // const SizedBox(
+                        //   height: 5,
+                        // ),
                         Container(
                           height: 165,
                           width: Get.width,
@@ -2137,24 +2151,28 @@ class ReservationScreen extends StatelessWidget {
                           ),
                           child: FlutterMap(
                             options: MapOptions(
-                              center: LatLng(33.86834369769126, 57.428369220286626),
+
+                              center: LatLng( reservationController.room.value!.data.mapLong,reservationController.room.value!.data.mapLat),
                               minZoom: 3,
-                              maxZoom: 20,
+                              maxZoom: 17,
                             ),
                             children: [
                               TileLayer(
                                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                                 userAgentPackageName: 'dev.fleaflet.flutter_map.example',
                               ),
-                              MarkerLayer(markers: [
+                              MarkerLayer(
+
+                                  markers: [
                                 Marker(
                                   rotate: true,
                                   width: 80,
                                   height: 80,
-                                  point: LatLng(33.86834369769126, 57.428369220286626),
+                                  rotateAlignment: Alignment.center,
+                                  point: LatLng(reservationController.room.value!.data.mapLong,reservationController.room.value!.data.mapLat),
                                   builder: (ctx) => const Icon(
                                     Icons.location_on,
-                                    size: 35,
+                                    size: 28,
                                     color: Colors.red,
                                   ),
                                   anchorPos: AnchorPos.align(AnchorAlign.center),
@@ -2167,10 +2185,18 @@ class ReservationScreen extends StatelessWidget {
                           height: 20,
                         ),
                         Text('امکانات و ویژگی ها', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        const SizedBox(
-                          height: 10,
+                        const SizedBox(height: 5),
+                        ListView.separated(
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Text(reservationController.room.value!.data.features[index].feature.title, textAlign: TextAlign.right, style: Theme.of(Get.context!).textTheme.titleMedium);
+                          },
+                          separatorBuilder: (context, index) => const SizedBox(height: 5),
+                          itemCount: reservationController.room.value!.data.features.length,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
                         ),
-                        Text(reservationController.facilitiesAndFeatures, textAlign: TextAlign.end, style: Theme.of(Get.context!).textTheme.titleMedium),
                         const SizedBox(
                           height: 60,
                         ),
@@ -2210,27 +2236,25 @@ class ReservationScreen extends StatelessWidget {
                                   Shimmer.fromColors(
                                     baseColor: Colors.grey.shade300,
                                     highlightColor: Colors.grey.shade100,
-                                    child:Container(
-                                      width:Get.width/3.2,
-                                      height:15,
-                                      decoration:BoxDecoration(
-                                        borderRadius : BorderRadius.circular(8),
-                                        color:Colors.white,
-                                      )
-                                    ),
+                                    child: Container(
+                                        width: Get.width / 3.2,
+                                        height: 15,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8),
+                                          color: Colors.white,
+                                        )),
                                   ),
                                   const Spacer(),
                                   Shimmer.fromColors(
                                     baseColor: Colors.grey.shade300,
                                     highlightColor: Colors.grey.shade100,
-                                    child:Container(
-                                        width:Get.width/4.5,
-                                        height:8,
-                                        decoration:BoxDecoration(
-                                          borderRadius : BorderRadius.circular(8),
-                                          color:Colors.white,
-                                        )
-                                    ),
+                                    child: Container(
+                                        width: Get.width / 4.5,
+                                        height: 8,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8),
+                                          color: Colors.white,
+                                        )),
                                   ),
                                   const SizedBox(
                                     width: 10,
@@ -2238,13 +2262,11 @@ class ReservationScreen extends StatelessWidget {
                                   Shimmer.fromColors(
                                     baseColor: Colors.grey.shade300,
                                     highlightColor: Colors.grey.shade100,
-                                    child:Container(
+                                    child: Container(
                                       clipBehavior: Clip.hardEdge,
                                       width: 35,
                                       height: 35,
-                                      decoration: const BoxDecoration(
-                                          color:Colors.white,
-                                          shape: BoxShape.circle),
+                                      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                                     ),
                                   ),
                                 ],

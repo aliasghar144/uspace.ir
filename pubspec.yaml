@@ -53,6 +53,7 @@ dependencies:
   shimmer:
   persian_number_utility:
   image_picker: ^1.0.4
+  flutter_html: ^2.2.1
 
 dev_dependencies:
   flutter_test:
