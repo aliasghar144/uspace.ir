@@ -379,9 +379,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                Get.to(ReservationScreen(),arguments: {
-                                  'roomUrl': homeController.newestEcolodgeList[index].url
-                                });
+                                Get.to(ReservationScreen(),arguments: {'url':homeController.newestEcolodgeList[index].url});
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(

@@ -237,7 +237,7 @@ class RegisterReservationScreen extends StatelessWidget {
                     InkWell(
                       borderRadius: BorderRadius.circular(30),
                       onTap:(){
-                        Get.dialog(facilityDialog(title: 'هتل سه تخته پریخان خانم هتل سنتی شیران_اصفهان',hasBrakeFast: false, hasDinner: true, hasLunch: false));
+                        Get.dialog(facilityDialog(title: 'هتل سه تخته پریخان خانم هتل سنتی شیران_اصفهان',hasBrakeFast: 0, hasDinner: 0, hasLunch: 0));
                       },
                       child: Container(
                           decoration: BoxDecoration(

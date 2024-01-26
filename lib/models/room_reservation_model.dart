@@ -33,8 +33,8 @@ class Data {
   String url;
   int minPrice;
   String unitPrice;
-  int maxDiscountPercent;
-  int maxDiscountPrice;
+  int? maxDiscountPercent;
+  int? maxDiscountPrice;
   double dollarEquivalent;
   String currency;
   String capacity;
@@ -111,33 +111,33 @@ class Data {
 
 }
 
-class Comment {
+class Comment{
   String name;
   String date;
-  String durationReserve;
-  String option1;
-  String? option2;
-  String? option3;
-  String? option4;
-  String? option5;
+    String? durationReserve;
+    dynamic option1;
+    dynamic option2;
+    dynamic option3;
+    dynamic option4;
+    dynamic option5;
   String? comment;
   String show;
-  String status;
+    String? status;
   String type;
   List<Reply> replies;
 
   Comment({
     required this.name,
     required this.date,
-    required this.durationReserve,
-    required this.option1,
-    required this.option2,
-    required this.option3,
-    required this.option4,
-    required this.option5,
+        this.durationReserve,
+        this.option1,
+        this.option2,
+        this.option3,
+        this.option4,
+        this.option5,
     required this.comment,
     required this.show,
-    required this.status,
+        this.status,
     required this.type,
     required this.replies,
   });
@@ -489,7 +489,7 @@ class Day {
 class PriceInfo {
   int paidNumber;
   int additionalNumber;
-  int durationDay;
+  dynamic durationDay;
   String unit;
   int totalAvailable;
   int idSalesPackage;

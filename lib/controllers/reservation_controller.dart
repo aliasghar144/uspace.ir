@@ -1,21 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:http/http.dart' as http;
 import 'package:uspace_ir/models/room_reservation_model.dart';
 
-class ReservationController extends GetxController{
+import '../app/utils/string_to_icon.dart';
 
+class ReservationController extends GetxController {
   String url;
+
   ReservationController(this.url);
-
-
-  RxBool userImages = false.obs;
-  RxBool loading = false.obs;
-
-  final room = Rxn<RoomReservationModel>();
 
   @override
   void onInit(){
@@ -23,135 +21,139 @@ class ReservationController extends GetxController{
     super.onInit();
   }
 
+  ScrollController screenScrollController = ScrollController();
+
+  RxBool userImages = false.obs;
+  RxBool loading = true.obs;
+  RxBool loadingRoom = false.obs;
+
+  final room = Rxn<RoomReservationModel>();
+
   getMainInfo({
     required String roomUrl,
   }) async {
-    try{
+    print(url);
+    try {
       loading.value = true;
       var url = Uri.parse('$mainUrl/ecolodge/$roomUrl');
       var response = await http.get(url);
-      if(response.statusCode ==200){
+      if (response.statusCode == 200) {
         room.value = roomReservationModelFromJson(response.body);
         loading.value = false;
-        print(room.value!.data.title);
-      }}
-    on SocketException {
+        print(room.value!.data.url);
+      }
+    } on SocketException {
       loading.value = false;
       print('socket');
-    }catch(e){
+    } catch (e) {
       loading.value = false;
       print(e);
     }
   }
 
+  choseEntryDate() async {
+    try {
+      loadingRoom.value = true;
+      String uri = '$mainUrl/ecolodge/$url/rooms?';
+      if(isDateSelected.value != false) {
+        uri += 'start_date=${entryDate.value.year.toString()}-${dateEdit(entryDate.value.month)}-${dateEdit(entryDate.value.day)}&pick_date=1&duration=${durationValue.value.toString()}';
+      }else{
+        uri += 'duration=${durationValue.value.toString()}';
+      }
+      var localUrl = Uri.parse(uri.toString());
+      print(uri.runtimeType);
+      print(localUrl.path);
+      var response = await http.get(localUrl);
+      if(response.statusCode == 200){
+        room.value!.data.rooms.clear();
+        print(jsonDecode(response.body)['data']);
+        room.value!.data.rooms = List<Room>.from(jsonDecode(response.body)['data'].map((x) => Room.fromJson(x)));
+        loadingRoom.value = false;
+      }
+    } catch (e) {
+      loadingRoom.value = false;
+      print('ERR======>$e');
+    }
+  }
+
+
+  iconMaker(String? icon){
+    print('its empty name $icon');
+    if(icon == null){}else{
+      icon = icon[0].toUpperCase() + icon.substring(1).toLowerCase();
+      if(icon.startsWith('Fa')){
+        icon = icon.replaceAll('-', '');
+        print('without - is $icon');
+        icon = icon.substring(2);
+        print('without fa is $icon');
+        icon = icon[0].toLowerCase() + icon.substring(1);
+        print('last func is $icon');
+      }
+      return stringToIcons[icon];
+    }
+  }
+
+  Map<String,IconData> icons = {
+    'fa-toilet': FontAwesomeIcons.toilet
+  };
+
+  // IconData icon = FontAwesomeIcons();
+
+  String dateEdit(int date){
+    if( date > 10){
+      return date.toString();
+    }else{
+      return '0$date';
+    }
+  }
+
   //#region  =============== Rooms =========================
+
+  ScrollController roomSugestionController = ScrollController();
 
   Rx<DateTime> entryDate = DateTime.now().obs;
   RxBool isDateSelected = false.obs;
 
-  final durationValue = ''.obs;
+  final RxInt durationValue = 1.obs;
 
-  final List<String> durationDropDownItems = [
-    '1 شب',
-    '2 شب',
-    '3 شب',
-    '5 شب',
-    '6 شب',
+  final List<int> durationDropDownItems = [
+    1,
+    2,
+    3,
+    5,
+    6,
   ];
 
-  void setSelectedDuration(String value){
+  void setSelectedDuration(int value) {
     durationValue.value = value;
   }
 
   //#endregion  =============== Rooms =========================
 
-
-
   //#region =============== Details =======================
 
   RxInt tabIndex = 0.obs;
 
-
-
-
-
   //#endregion =============== Details =======================
-
-
 
   //#region =============== Comments =======================
 
   final List<File> selectedImages = <File>[].obs;
   final picker = ImagePicker();
 
-
-
-  //#endregion =============== Comments =======================
-
-
-
-  ///-------details text
-  String roomInformation = """
-  هتل سنتی شیران در شهر زیبای اصفهان، مربوط به دوره قاجار واقع شده است. خانه تاریخی محمد قلی شیران به عنوان یکی از آثار ملی ایران به ثبت رسیده است و پس از مرمت و احیا اکـنـون با نام هتل سنتی شیران آماده پذیرایی از مهمـانـان و گـردشگران داخـلی و خـارجی می باشد.
-هتل سنتی شیران دارای 5 اتاق با طراحی داخلی متفاوت می باشد. این اتاق ها با نام های ناصرالدین شاه، فتحعلی شاه (شاه نشین)، مظفرالدین شاه، پریخان خانم و عباس میرزا نـام گذاری شده است. تمامی اتـاق ها دارای تخت هستند و حداکثر ظرفیت پذیرش 17 مهمـان را دارد. سرویس بهداشتی تمـام اتـاق ها اختصاصی است. سیستم سرمایش اتـاق های این هتل سنتی اسپلیت و سیستم گرمایش آن شوفاژ می باشد.""";
-
-  String roomEquipments =
-  """از جمله امکانات و خدماتی که هتل سنتی شیران اصفهان برای رفاه مهمانان گرامی در نـظـر گرفته می توان به جای پارک خودرو در مقابل هتل، پرسنل مسلط به زبـان انگلیسی و کـافی شاپ اشاره نمود. مهمـانـان این هتل سنتی می توانند در فضـای سنتی و دلنشین محوطـه و کـافی شـاپ لحظات خوشی را تجربه کنند.تخت هستند و حـداکـثـر ظرفـیت پـذیـرش 17 مهمان را دارد. سرویس بهداشتی تمام اتاق ها اختصاصی است. سیستم سرمـایش اتـاق های این هتل سنتی اسپلیت و سیستم گرمایش آن شوفاژ می باشد.""";
-
-  String roomLocation =
-  """هتل سنتی شیران اصفهان به دلیل آئینه کاری های کم نظیر در معماری داخلی خود، همچون الـمـاس می درخشد و می تواند بـه عـنـوان یـک جاذبه گردشگری منحصر بفرد مورد توجه گـردشگـران داخلی و خـارجی قرار گیرد. شهر اصفهان با بناهای تاریخی به جا مانده از دوران قاجار، عباسیان و صفوی همه ساله گردشگران داخلی و خارجی زیادی را به خود جلب می کند. از جمله آثار باستانی اصفهان می توان به میدان نقش جهان و مساجد و بازار آن، مسجد امام، کلیسای وانـک و مـحـله جـلـفـا، سی وسه پل، پل خواجو، کاخ عالی قـاپـو، کـاخ چهلستون، کاخ هشت بهشت، منار جنبان، آتشگاه، مدرسه چهار باغ اشاره کرد. اصفهان دارای جاذبه های طبیعی و تفریحی مانند باغ پرندگان، باغ گلها، آکواریوم، کوه صفه و پـارک جنگلی نـاژوان نیز می باشد.""";
-
-  String importantLocationDistance =
-  """فاصله تا فرودگاه بین المللی شهید بهشتی اصفهان --> 24.4 کیلومتر (28 دقیقه)
-فاصله تا ایستگاه راه آهن اصفهان --> 24.5 کیلومتر (31 دقیقه)
-فاصله تا پایانه مسافربری کاوه اصفهان --> 3.8 کیلومتر (9 دقیقه)
-فاصله تا پایانه مسافربری صفه اصفهان --> 20.5 کیلومتر (28 دقیقه)
-فاصله تا میدان نقش جهان و مسجد شیخ لطف الله --> 3.4 کیلومتر (9 دقیقه)
-فاصله تا مسجد امام اصفهان --> 3.1 کیلومتر (9 دقیقه)
-فاصله تا کاخ چهل ستون --> 2.7 کیلومتر (7 دقیقه)
-فاصله تا مدرسه چهار باغ --> 3.5 کیلومتر (11 دقیقه)
-فاصله تا پل خواجو --> 5.7 کیلومتر (16 دقیقه)
-فاصله تا سی و سی پل --> 4 کیلومتر (10 دقیقه)
-فاصله تا کاخ هشت بهشت --> 5.1 کیلومتر (14دقیقه)
-فاصله تا باغ گلهای اصفهان --> 8.4 کیلومتر (18 دقیقه)
-فاصله تا باغ پرندگان --> 11.4 کیلومتر (22 دقیقه)
-فاصله تا اکواریوم اصفهان --> 10.8 کیلومتر (20 دقیقه)
-فاصله تا منارجنبان --> 9.1 کیلومتر (22 دقیقه)
-فاصله تا نزدیک ترین ایستگاه مترو --> 650 متر (9 دقیقه به صورت پیاده)""";
-
-  String facilitiesAndFeatures = """
-  اسپلیت
-  ایوان
-  پرسنل مسلط به انگلیسی
-  حمام مستقل
-  شوفاژ
-  سرویس بهداشتی""";
-
-  ///---------------------------------------
-
-  ///--------create comment
-  ///
   RxBool isTextFieldSelected = false.obs;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController commentController = TextEditingController();
 
-  ///---------------------------------------
 
-  ////////////////////
-  ////-------> comment text
-  String commentText =
-  """سلام من در تاريخ ١٠و١١فروردين ١٤٠٢ به همراه خانواده ام اقامت داشتم ،و چهار اتاق رزرو كرده بوديم كه يكي از يكي قشنگتر بود ما كه خييلي لذت برديم از سكوت و آرامش و تميزي وصبحانه عالي و پرسنل محترم از هر لحاظ عالي بود و ما دلمون نميخواست حتي به مكانهاي ديدني بريم انقدر عالي بود من در اتاق پريخان خانوم اقامت داشتم واقعا زيبا بود""";
+  //#endregion =============== Comments =======================
+
 
   RxBool isFave = false.obs;
-
-  RxList<RxBool> showMore =
-      [false.obs, false.obs, false.obs, false.obs, false.obs].obs;
 
   RxInt selectedPackageIndex = 100.obs;
   RxInt selectedPackageId = 100.obs;
 
   final PageController pageController = PageController();
-
-
 }

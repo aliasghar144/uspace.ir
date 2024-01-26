@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:photo_view/photo_view.dart';
 
 class SingleImageView extends StatelessWidget {
   SingleImageView({Key? key}) : super(key: key);
@@ -32,15 +33,10 @@ class SingleImageView extends StatelessWidget {
                   builder: (context, orientation) => CachedNetworkImage(imageUrl: Get.arguments['image'],imageBuilder: (context, imageProvider) {
                     return AspectRatio(
                       aspectRatio: 16/9,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 15,horizontal: 15),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.fill ,
-                          ),
-                          borderRadius: BorderRadius.circular(0),
-                        ),
+                      child: PhotoView(
+                        imageProvider: imageProvider,
+                        minScale: PhotoViewComputedScale.contained,
+                        maxScale: PhotoViewComputedScale.covered * 2,
                       ),
                     );
                   },),

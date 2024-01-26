@@ -439,7 +439,7 @@ class FactorsExpansionTile extends StatelessWidget {
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   InkWell(
                     onTap: () {
-                      Get.dialog(facilityDialog(title: 'هتل سه تخته پریخان خانم هتل سنتی شیران_اصفهان', hasBrakeFast: false, hasDinner: true, hasLunch: false));
+                      Get.dialog(facilityDialog(title: 'هتل سه تخته پریخان خانم هتل سنتی شیران_اصفهان', hasBrakeFast: 0, hasDinner: 0, hasLunch: 0));
                     },
                     child: Text('امکانات',
                         style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(

@@ -314,10 +314,7 @@ class SearchScreen extends StatelessWidget {
                             if(!searchController.loadMore.value && index<searchController.searchEcolodgesResult.length){
                               return InkWell(
                                 onTap: () {
-                                  Get.to(ReservationScreen(),arguments: {
-                                    'roomUrl':searchController.searchEcolodgesResult[index].url
-                                  });
-                                },
+                                  Get.to(ReservationScreen(),arguments: {'url':searchController.searchEcolodgesResult[index].url});},
                                 borderRadius: BorderRadius.circular(25),
                                 child: Stack(
                                   clipBehavior: Clip.none,

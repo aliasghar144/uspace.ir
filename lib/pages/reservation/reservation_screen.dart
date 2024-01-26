@@ -1,5 +1,5 @@
-// ignore_for_file: deprecated_member_use
 import 'dart:io';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,7 +8,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
@@ -19,6 +18,7 @@ import 'package:uspace_ir/app/utils/custom_tab_indicator.dart';
 import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uspace_ir/controllers/reservation_controller.dart';
 import 'package:uspace_ir/pages/reservation/reserve_room_screen.dart';
+import 'package:uspace_ir/widgets/comment_rate_bar.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 import 'package:uspace_ir/widgets/single_image_view.dart';
 import 'package:uspace_ir/widgets/textfield.dart';
@@ -29,12 +29,13 @@ class ReservationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ReservationController reservationController = Get.put(ReservationController(Get.arguments['roomUrl']));
+    ReservationController reservationController = Get.put(ReservationController(Get.arguments['url']));
     return DefaultTabController(
       length: 3,
       initialIndex: 2,
       child: Scaffold(
         body: NestedScrollView(
+            controller: reservationController.screenScrollController,
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return [
                 SliverAppBar(
@@ -68,7 +69,7 @@ class ReservationScreen extends StatelessWidget {
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Obx(() => _buildBody(reservationController)),
+                  child: _buildBody(reservationController),
                 )
               ];
             },
@@ -262,1123 +263,1132 @@ class ReservationScreen extends StatelessWidget {
   }
 
   _buildBody(ReservationController reservationController) {
-    if (reservationController.loading.value) {
-      return Column(
-        children: [
-          Shimmer.fromColors(
-            baseColor: Colors.grey.shade300,
-            highlightColor: Colors.grey.shade100,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: Colors.white),
-              width: MediaQuery.of(Get.context!).size.width,
-              height: 170,
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: SizedBox(
-              height: Get.width / 6.5,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Expanded(
-                      child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                        decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    )),
-                  )),
-                  const SizedBox(width: 8),
-                  Expanded(
-                      child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                        decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    )),
-                  )),
-                  const SizedBox(width: 8),
-                  Expanded(
-                      child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                        decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    )),
-                  )),
-                  const SizedBox(width: 8),
-                  Expanded(
-                      child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                        decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    )),
-                  )),
-                  const SizedBox(width: 8),
-                  Expanded(
-                      child: Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                        decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    )),
-                  )),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            child: Row(
-              children: [
-                InkWell(
-                    onTap: () {
-                      reservationController.isFave.toggle();
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Obx(() => Icon(reservationController.isFave.value ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: reservationController.isFave.value ? Colors.red : null, size: 23)),
-                    )),
-                const SizedBox(
-                  width: 10,
+    return Obx(() => reservationController.loading.value
+        ? Column(
+            children: [
+              Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: Colors.white),
+                  width: MediaQuery.of(Get.context!).size.width,
+                  height: 170,
                 ),
-                InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: SvgPicture.asset('assets/icons/share_line_ic.svg'),
-                    )),
-                const SizedBox(width: 15),
-                Expanded(
-                  child: Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
-                        height: 10,
-                      )),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
-                      width: Get.width / 4.5,
-                      height: 8,
-                    )),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Shimmer.fromColors(
-                    baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
-                      width: Get.width / 3,
-                      height: 8,
-                    )),
-                const SizedBox(
-                  width: 5,
-                ),
-                SvgPicture.asset(
-                  'assets/icons/location_pin_nav_outline_ic.svg',
-                  width: 15,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(children: [
-                    Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.grey.shade100,
-                        child: Container(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
-                          width: Get.width / 4.5,
-                          height: 8,
-                        )),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/capacity_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                  const SizedBox(height: 20),
-                  Row(children: [
-                    Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.grey.shade100,
-                        child: Container(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
-                          width: Get.width / 4.5,
-                          height: 8,
-                        )),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/rooms_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                ],
               ),
               const SizedBox(
-                width: 25,
+                height: 10,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(children: [
-                    Shimmer.fromColors(
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: SizedBox(
+                  height: Get.width / 6.5,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Expanded(
+                          child: Shimmer.fromColors(
                         baseColor: Colors.grey.shade300,
                         highlightColor: Colors.grey.shade100,
                         child: Container(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
-                          width: Get.width / 4.5,
-                          height: 8,
+                            decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
                         )),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/delivery_time_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                  const SizedBox(height: 20),
-                  Row(children: [
-                    Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.grey.shade100,
-                        child: Container(
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
-                          width: Get.width / 4.5,
-                          height: 8,
-                        )),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/discharge_time_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                ],
-              ),
-            ]),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Container(
-              width: Get.width,
-              height: 50,
-              color: AppColors.mainColor.withOpacity(0.08),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Obx(() => Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2(
-                            isExpanded: true,
-                            hint: Row(children: [
-                              Text(
-                                'به مدت: ',
-                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                textDirection: TextDirection.rtl,
-                              )
-                            ]),
-                            style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                            items: reservationController.durationDropDownItems.map((selectedType) {
-                              return DropdownMenuItem(
-                                value: selectedType,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    RichText(
-                                        textDirection: TextDirection.rtl,
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                            text: 'به مدت: ',
-                                            style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                          ),
-                                          TextSpan(
-                                            text: selectedType,
-                                            style: Theme.of(Get.context!).textTheme.labelMedium,
-                                          )
-                                        ])),
-                                  ],
-                                ),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              reservationController.setSelectedDuration(value!);
-                            },
-                            value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
-                            buttonStyleData: ButtonStyleData(
-                              height: 35,
-                              width: Get.width / 2.8,
-                              padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_rounded,
-                              ),
-                              iconEnabledColor: AppColors.grayColor,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                                elevation: 2,
-                                padding: EdgeInsets.zero,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                                ),
-                                direction: DropdownDirection.textDirection,
-                                scrollbarTheme: ScrollbarThemeData(
-                                  radius: const Radius.circular(40),
-                                  thickness: MaterialStateProperty.all(6),
-                                  thumbVisibility: MaterialStateProperty.all(true),
-                                )),
-                          ),
-                        ),
                       )),
-                  InkWell(
-                    onTap: () async {
-                      Jalali? picked = await showPersianDatePicker(
-                        context: Get.context!,
-                        helpText: '',
-                        initialEntryMode: PDatePickerEntryMode.calendarOnly,
-                        initialDate: reservationController.entryDate.value.toJalali() != Jalali.now() ? reservationController.entryDate.value.toJalali() : Jalali.now(),
-                        firstDate: Jalali.now(),
-                        lastDate: Jalali(1404, 1),
-                        builder: (context, child) {
-                          return Theme(
-                            data: ThemeData(
-                              fontFamily: 'iransans',
-                              primaryTextTheme: Typography.blackRedwoodCity,
-                              dialogTheme: const DialogTheme(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                                ),
-                              ),
-                            ),
-                            child: child!,
-                          );
-                        },
-                      );
-                      picked?.toDateTime();
-                      if (picked != null) {
-                        reservationController.isDateSelected.value = true;
-                        reservationController.entryDate.value = picked.toDateTime();
-                      }
-                    },
-                    child: Container(
-                        height: 35,
-                        width: Get.width / 2 - 50,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          border: Border.all(color: AppColors.grayColor, width: 0.3),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Row(children: [
-                            const Icon(Icons.arrow_drop_down_rounded, color: AppColors.disabledIcon),
-                            const Spacer(),
-                            Obx(
-                              () => reservationController.isDateSelected.value
-                                  ? Row(
-                                      children: [
-                                        Text('${reservationController.entryDate.value.toJalali().year}/${reservationController.entryDate.value.toJalali().month}/${reservationController.entryDate.value.toJalali().day}  ', style: Theme.of(Get.context!).textTheme.labelMedium),
-                                        Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
-                                      ],
-                                    )
-                                  : Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
-                            ),
-                          ]),
+                      const SizedBox(width: 8),
+                      Expanded(
+                          child: Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                            decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
                         )),
+                      )),
+                      const SizedBox(width: 8),
+                      Expanded(
+                          child: Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                            decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        )),
+                      )),
+                      const SizedBox(width: 8),
+                      Expanded(
+                          child: Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                            decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        )),
+                      )),
+                      const SizedBox(width: 8),
+                      Expanded(
+                          child: Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                            decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Colors.white,
+                        )),
+                      )),
+                    ],
                   ),
-                ],
-              )),
-          const SizedBox(
-            height: 5,
-          ),
-          TabBar(
-              labelColor: AppColors.primaryTextColor,
-              unselectedLabelColor: AppColors.disabledText,
-              labelPadding: EdgeInsets.zero,
-              onTap: (value) {
-                reservationController.tabIndex.value = value;
-              },
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              indicator: const CustomTabIndicator(
-                color: AppColors.mainColor,
-                indicatorHeight: 3,
-                radius: 4,
-              ),
-              tabs: [
-                Tab(
-                    child: Center(
-                  child: Text(
-                    "نظرات",
-                    style: Theme.of(Get.context!).textTheme.labelLarge,
-                  ),
-                )),
-                Tab(
-                    child: Center(
-                  child: Text(
-                    "توضیحات",
-                    style: Theme.of(Get.context!).textTheme.labelLarge,
-                  ),
-                )),
-                Tab(
-                    child: Center(
-                  child: Text(
-                    "اتاق ها",
-                    style: Theme.of(Get.context!).textTheme.labelLarge,
-                  ),
-                )),
-              ])
-        ],
-      );
-    } else {
-      return Column(
-        children: [
-          SizedBox(
-            width: MediaQuery.of(Get.context!).size.width,
-            height: 200,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: PageView.builder(
-                  scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
-                  allowImplicitScrolling: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: reservationController.room.value!.data.imageList.length + 1,
-                  controller: reservationController.pageController,
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.to(SingleImageView(), arguments: {'image': reservationController.room.value!.data.mainImage});
-                              },
-                              child: CachedNetworkImage(
-                                imageUrl: reservationController.room.value!.data.mainImage,
-                                fit: BoxFit.cover,
-                                imageBuilder: (context, imageProvider) {
-                                  return Container(
-                                    clipBehavior: Clip.none,
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: const Offset(
-                                              1.0,
-                                              2.0,
-                                            ),
-                                            blurRadius: 10.0,
-                                            spreadRadius: 0.0,
-                                          ), //BoxShadow
-                                          const BoxShadow(
-                                            color: Colors.white,
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 0.0,
-                                            spreadRadius: 0.0,
-                                          ),
-                                        ],
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius: BorderRadius.circular(22)),
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 180,
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      alignment: Alignment.bottomCenter,
-                                      children: [
-                                        Positioned(
-                                          left: -10,
-                                          top: Get.width * 0.16,
-                                          child: Container(
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                              child: Center(
-                                                  child: IconButton(
-                                                splashRadius: 18,
-                                                onPressed: () {
-                                                  if (index != 2) {
-                                                    reservationController.pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                  }
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_forward_ios_rounded,
-                                                  color: AppColors.mainColor,
-                                                  size: 18,
-                                                ),
-                                                padding: EdgeInsets.zero,
-                                                alignment: Alignment.center,
-                                              ))),
-                                        ),
-                                        Positioned(
-                                          right: -10,
-                                          top: Get.width * 0.16,
-                                          child: Container(
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                              child: IconButton(
-                                                  splashRadius: 18,
-                                                  onPressed: () {
-                                                    if (index != 0) {
-                                                      reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                    }
-                                                  },
-                                                  alignment: Alignment.center,
-                                                  padding: EdgeInsets.zero,
-                                                  icon: const Icon(
-                                                    Icons.arrow_back_ios_rounded,
-                                                    color: AppColors.mainColor,
-                                                    size: 18,
-                                                  ))),
-                                        ),
-                                        Container(
-                                          clipBehavior: Clip.hardEdge,
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(25),
-                                              gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
-                                                0.50,
-                                                1
-                                              ], colors: [
-                                                Colors.transparent,
-                                                Colors.black.withOpacity(1),
-                                              ])),
-                                          width: MediaQuery.of(context).size.width,
-                                          height: 110,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                          child: Text(
-                                            reservationController.room.value!.data.title,
-                                            maxLines: 2,
-                                            textAlign: TextAlign.center,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.to(SingleImageView(), arguments: {'image': 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index - 1].fullImage}'});
-                              },
-                              child: CachedNetworkImage(
-                                imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index - 1].fullImage}',
-                                fit: BoxFit.cover,
-                                imageBuilder: (context, imageProvider) {
-                                  return Container(
-                                    clipBehavior: Clip.none,
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: const Offset(
-                                              1.0,
-                                              2.0,
-                                            ),
-                                            blurRadius: 10.0,
-                                            spreadRadius: 0.0,
-                                          ), //BoxShadow
-                                          const BoxShadow(
-                                            color: Colors.white,
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 0.0,
-                                            spreadRadius: 0.0,
-                                          ),
-                                        ],
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius: BorderRadius.circular(22)),
-                                    width: MediaQuery.of(context).size.width,
-                                    height: 180,
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      alignment: Alignment.bottomCenter,
-                                      children: [
-                                        Positioned(
-                                          left: -10,
-                                          top: Get.width * 0.16,
-                                          child: Container(
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                              child: Center(
-                                                  child: IconButton(
-                                                splashRadius: 18,
-                                                onPressed: () {
-                                                  if (index != reservationController.room.value!.data.imageList.length) {
-                                                    reservationController.pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                  }
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_forward_ios_rounded,
-                                                  color: AppColors.mainColor,
-                                                  size: 18,
-                                                ),
-                                                padding: EdgeInsets.zero,
-                                                alignment: Alignment.center,
-                                              ))),
-                                        ),
-                                        Positioned(
-                                          right: -10,
-                                          top: Get.width * 0.16,
-                                          child: Container(
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                              child: IconButton(
-                                                  splashRadius: 18,
-                                                  onPressed: () {
-                                                    if (index != 0) {
-                                                      reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                    }
-                                                  },
-                                                  alignment: Alignment.center,
-                                                  padding: EdgeInsets.zero,
-                                                  icon: const Icon(
-                                                    Icons.arrow_back_ios_rounded,
-                                                    color: AppColors.mainColor,
-                                                    size: 18,
-                                                  ))),
-                                        ),
-                                        Container(
-                                          clipBehavior: Clip.hardEdge,
-                                          decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(25),
-                                              gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
-                                                0.50,
-                                                1
-                                              ], colors: [
-                                                Colors.transparent,
-                                                Colors.black.withOpacity(1),
-                                              ])),
-                                          width: MediaQuery.of(context).size.width,
-                                          height: 110,
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                          child: Text(
-                                            reservationController.room.value!.data.imageList[index - 1].caption ?? '',
-                                            maxLines: 2,
-                                            textAlign: TextAlign.center,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  }),
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CachedNetworkImage(
-                  imageUrl: reservationController.room.value!.data.mainImageThumb,
-                  fit: BoxFit.cover,
-                  imageBuilder: (context, imageProvider) {
-                    return InkWell(
-                      onTap: () {
-                        imagesView(reservationController);
-                      },
-                      child: Container(
-                          clipBehavior: Clip.none,
-                          width: Get.width / 3.8,
-                          height: Get.width / 6.5,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              opacity: 0.3,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                            Text('تصاویر ارسالی کاربران', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 11)),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            SvgPicture.asset('assets/icons/photo_ic.svg'),
-                          ])),
-                    );
-                  },
                 ),
-                const SizedBox(width: 5),
-                CachedNetworkImage(
-                  imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[2].thumbImage}',
-                  fit: BoxFit.cover,
-                  imageBuilder: (context, imageProvider) {
-                    return InkWell(
-                      onTap: () {
-                        imagesView(reservationController);
-                      },
-                      child: Container(
-                          clipBehavior: Clip.none,
-                          width: Get.width / 7,
-                          height: Get.width / 6.5,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              opacity: 0.3,
-                              fit: BoxFit.cover,
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            '...',
-                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 25),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          reservationController.isFave.toggle();
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Obx(() => Icon(reservationController.isFave.value ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: reservationController.isFave.value ? Colors.red : null, size: 23)),
+                        )),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    InkWell(
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: SvgPicture.asset('assets/icons/share_line_ic.svg'),
+                        )),
+                    const SizedBox(width: 15),
+                    Expanded(
+                      child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                            height: 10,
                           )),
-                    );
-                  },
+                    )
+                  ],
                 ),
-                const SizedBox(width: 5),
-                InkWell(
-                  onTap: () {
-                    reservationController.pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
-                  },
-                  child: CachedNetworkImage(
-                    imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[1].thumbImage}',
-                    fit: BoxFit.cover,
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        clipBehavior: Clip.none,
-                        width: Get.width / 7,
-                        height: Get.width / 6.5,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 5),
-                InkWell(
-                  onTap: () {
-                    reservationController.pageController.animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
-                  },
-                  child: CachedNetworkImage(
-                    imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[0].thumbImage}',
-                    fit: BoxFit.cover,
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        clipBehavior: Clip.none,
-                        width: Get.width / 7,
-                        height: Get.width / 6.5,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 5),
-                InkWell(
-                  onTap: () {
-                    reservationController.pageController.animateToPage(0, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
-                  },
-                  child: CachedNetworkImage(
-                    imageUrl: reservationController.room.value!.data.mainImageThumb,
-                    fit: BoxFit.cover,
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        clipBehavior: Clip.none,
-                        width: Get.width / 7,
-                        height: Get.width / 6.5,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              children: [
-                InkWell(
-                    onTap: () {
-                      reservationController.isFave.toggle();
-                    },
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Obx(() => Icon(reservationController.isFave.value ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: reservationController.isFave.value ? Colors.red : null, size: 23)),
-                    )),
-                const SizedBox(
-                  width: 10,
-                ),
-                InkWell(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: SvgPicture.asset('assets/icons/share_line_ic.svg'),
-                    )),
-                const Spacer(),
-                Text(reservationController.room.value!.data.title, style: Theme.of(Get.context!).textTheme.displayMedium),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text('9.4/10', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text('(39.852 بازدید کننده)', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Text('استان ${reservationController.room.value!.data.province}،شهر ${reservationController.room.value!.data.city}،${reservationController.room.value!.data.address}', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelSmall),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                SvgPicture.asset(
-                  'assets/icons/location_pin_nav_outline_ic.svg',
-                  width: 15,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(children: [
-                    Text(reservationController.room.value!.data.capacity, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    Text('ظرفیت: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/capacity_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                  const SizedBox(height: 20),
-                  Row(children: [
-                    Text("واحد", textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    Text(reservationController.room.value!.data.roomsNumber.toString(), textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    Text('اتاق ها: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/rooms_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                ],
               ),
               const SizedBox(
-                width: 25,
+                height: 10,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(children: [
-                    Text(reservationController.room.value!.data.rules.entryTime, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    Text('زمان تحویل: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/delivery_time_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                  const SizedBox(height: 20),
-                  Row(children: [
-                    Text(reservationController.room.value!.data.rules.exitTime, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    Text('زمان تخلیه: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
-                    const SizedBox(width: 5),
-                    SvgPicture.asset('assets/icons/discharge_time_ic.svg', width: 20, color: AppColors.grayColor),
-                  ]),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                          width: Get.width / 4.5,
+                          height: 8,
+                        )),
+                  ],
+                ),
               ),
-            ]),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          Container(
-              width: Get.width,
-              height: 50,
-              color: AppColors.mainColor.withOpacity(0.08),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Obx(() => Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2(
-                            isExpanded: true,
-                            hint: Row(children: [
-                              Text(
-                                'به مدت: ',
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.grey.shade100,
+                        child: Container(
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                          width: Get.width / 3,
+                          height: 8,
+                        )),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    SvgPicture.asset(
+                      'assets/icons/location_pin_nav_outline_ic.svg',
+                      width: 15,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(children: [
+                        Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                              width: Get.width / 4.5,
+                              height: 8,
+                            )),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/capacity_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                      const SizedBox(height: 20),
+                      Row(children: [
+                        Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                              width: Get.width / 4.5,
+                              height: 8,
+                            )),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/rooms_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(children: [
+                        Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                              width: Get.width / 4.5,
+                              height: 8,
+                            )),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/delivery_time_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                      const SizedBox(height: 20),
+                      Row(children: [
+                        Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.white),
+                              width: Get.width / 4.5,
+                              height: 8,
+                            )),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/discharge_time_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                    ],
+                  ),
+                ]),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Container(
+                  width: Get.width,
+                  height: 50,
+                  color: AppColors.mainColor.withOpacity(0.08),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Obx(() => Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                isExpanded: true,
+                                hint: Row(children: [
+                                  Text(
+                                    'به مدت: ',
+                                    style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                    textDirection: TextDirection.rtl,
+                                  )
+                                ]),
                                 style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                textDirection: TextDirection.rtl,
-                              )
-                            ]),
-                            style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                            items: reservationController.durationDropDownItems.map((selectedType) {
-                              return DropdownMenuItem(
-                                value: selectedType,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    RichText(
-                                        textDirection: TextDirection.rtl,
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                            text: 'به مدت: ',
-                                            style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                          ),
-                                          TextSpan(
-                                            text: selectedType,
-                                            style: Theme.of(Get.context!).textTheme.labelMedium,
-                                          )
-                                        ])),
-                                  ],
+                                items: reservationController.durationDropDownItems.map((selectedType) {
+                                  return DropdownMenuItem(
+                                    value: selectedType,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                            textDirection: TextDirection.rtl,
+                                            text: TextSpan(children: [
+                                              TextSpan(
+                                                text: 'به مدت: ',
+                                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                              ),
+                                              TextSpan(
+                                                text: selectedType.toString(),
+                                                style: Theme.of(Get.context!).textTheme.labelMedium,
+                                              ),
+                                              TextSpan(
+                                                text: ' شب',
+                                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                              ),
+                                            ])),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  reservationController.setSelectedDuration(value!);
+                                },
+                                value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
+                                buttonStyleData: ButtonStyleData(
+                                  height: 35,
+                                  width: Get.width / 2.8,
+                                  padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
                                 ),
+                                iconStyleData: const IconStyleData(
+                                  icon: Icon(
+                                    Icons.arrow_drop_down_rounded,
+                                  ),
+                                  iconEnabledColor: AppColors.grayColor,
+                                ),
+                                dropdownStyleData: DropdownStyleData(
+                                    elevation: 2,
+                                    padding: EdgeInsets.zero,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                                    ),
+                                    direction: DropdownDirection.textDirection,
+                                    scrollbarTheme: ScrollbarThemeData(
+                                      radius: const Radius.circular(40),
+                                      thickness: MaterialStateProperty.all(6),
+                                      thumbVisibility: MaterialStateProperty.all(true),
+                                    )),
+                              ),
+                            ),
+                          )),
+                      InkWell(
+                        onTap: () async {
+                          Jalali? picked = await showPersianDatePicker(
+                            context: Get.context!,
+                            helpText: '',
+                            initialEntryMode: PDatePickerEntryMode.calendarOnly,
+                            initialDate: reservationController.entryDate.value.toJalali() != Jalali.now() ? reservationController.entryDate.value.toJalali() : Jalali.now(),
+                            firstDate: Jalali.now(),
+                            lastDate: Jalali(1404, 1),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData(
+                                  fontFamily: 'iransans',
+                                  primaryTextTheme: Typography.blackRedwoodCity,
+                                  dialogTheme: const DialogTheme(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
                               );
-                            }).toList(),
-                            onChanged: (value) {
-                              reservationController.setSelectedDuration(value!);
                             },
-                            value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
-                            buttonStyleData: ButtonStyleData(
-                              height: 35,
-                              width: Get.width / 2.8,
-                              padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
+                          );
+                          picked?.toDateTime();
+                          if (picked != null) {
+                            reservationController.isDateSelected.value = true;
+                            reservationController.entryDate.value = picked.toDateTime();
+                          }
+                        },
+                        child: Container(
+                            height: 35,
+                            width: Get.width / 2 - 50,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: AppColors.grayColor, width: 0.3),
+                              borderRadius: BorderRadius.circular(25),
                             ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.arrow_drop_down_rounded,
-                              ),
-                              iconEnabledColor: AppColors.grayColor,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                                elevation: 2,
-                                padding: EdgeInsets.zero,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(children: [
+                                const Icon(Icons.arrow_drop_down_rounded, color: AppColors.disabledIcon),
+                                const Spacer(),
+                                Obx(
+                                  () => reservationController.isDateSelected.value
+                                      ? Row(
+                                          children: [
+                                            Text('${reservationController.entryDate.value.toJalali().year}/${reservationController.entryDate.value.toJalali().month}/${reservationController.entryDate.value.toJalali().day}  ', style: Theme.of(Get.context!).textTheme.labelMedium),
+                                            Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
+                                          ],
+                                        )
+                                      : Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
                                 ),
-                                direction: DropdownDirection.textDirection,
-                                scrollbarTheme: ScrollbarThemeData(
-                                  radius: const Radius.circular(40),
-                                  thickness: MaterialStateProperty.all(6),
-                                  thumbVisibility: MaterialStateProperty.all(true),
-                                )),
-                          ),
-                        ),
-                      )),
-                  InkWell(
-                    onTap: () async {
-                      Jalali? picked = await showPersianDatePicker(
-                        context: Get.context!,
-                        helpText: '',
-                        initialEntryMode: PDatePickerEntryMode.calendarOnly,
-                        initialDate: reservationController.entryDate.value.toJalali() != Jalali.now() ? reservationController.entryDate.value.toJalali() : Jalali.now(),
-                        firstDate: Jalali.now(),
-                        lastDate: Jalali(1404, 1),
-                        builder: (context, child) {
-                          return Theme(
-                            data: ThemeData(
-                              fontFamily: 'iransans',
-                              primaryTextTheme: Typography.blackRedwoodCity,
-                              dialogTheme: const DialogTheme(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                              ]),
+                            )),
+                      ),
+                    ],
+                  )),
+              const SizedBox(
+                height: 5,
+              ),
+              TabBar(
+                  labelColor: AppColors.primaryTextColor,
+                  unselectedLabelColor: AppColors.disabledText,
+                  labelPadding: EdgeInsets.zero,
+                  onTap: (value) {
+                    reservationController.tabIndex.value = value;
+                  },
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  indicator: const CustomTabIndicator(
+                    color: AppColors.mainColor,
+                    indicatorHeight: 3,
+                    radius: 4,
+                  ),
+                  tabs: [
+                    Tab(
+                        child: Center(
+                      child: Text(
+                        "نظرات",
+                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      ),
+                    )),
+                    Tab(
+                        child: Center(
+                      child: Text(
+                        "توضیحات",
+                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      ),
+                    )),
+                    Tab(
+                        child: Center(
+                      child: Text(
+                        "اتاق ها",
+                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      ),
+                    )),
+                  ])
+            ],
+          )
+        : Column(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(Get.context!).size.width,
+                height: 200,
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: PageView.builder(
+                      scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+                      allowImplicitScrolling: true,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: reservationController.room.value!.data.imageList.length + 1,
+                      controller: reservationController.pageController,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Get.to(SingleImageView(), arguments: {'image': reservationController.room.value!.data.mainImage});
+                                  },
+                                  child: CachedNetworkImage(
+                                    imageUrl: reservationController.room.value!.data.mainImage,
+                                    fit: BoxFit.cover,
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        clipBehavior: Clip.none,
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset: const Offset(
+                                                  1.0,
+                                                  2.0,
+                                                ),
+                                                blurRadius: 10.0,
+                                                spreadRadius: 0.0,
+                                              ), //BoxShadow
+                                              const BoxShadow(
+                                                color: Colors.white,
+                                                offset: Offset(0.0, 0.0),
+                                                blurRadius: 0.0,
+                                                spreadRadius: 0.0,
+                                              ),
+                                            ],
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius: BorderRadius.circular(22)),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 180,
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+                                            Positioned(
+                                              left: -10,
+                                              top: Get.width * 0.16,
+                                              child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                                  child: Center(
+                                                      child: IconButton(
+                                                    splashRadius: 18,
+                                                    onPressed: () {
+                                                      if (index != 2) {
+                                                        reservationController.pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.arrow_forward_ios_rounded,
+                                                      color: AppColors.mainColor,
+                                                      size: 18,
+                                                    ),
+                                                    padding: EdgeInsets.zero,
+                                                    alignment: Alignment.center,
+                                                  ))),
+                                            ),
+                                            Positioned(
+                                              right: -10,
+                                              top: Get.width * 0.16,
+                                              child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                                  child: IconButton(
+                                                      splashRadius: 18,
+                                                      onPressed: () {
+                                                        if (index != 0) {
+                                                          reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                        }
+                                                      },
+                                                      alignment: Alignment.center,
+                                                      padding: EdgeInsets.zero,
+                                                      icon: const Icon(
+                                                        Icons.arrow_back_ios_rounded,
+                                                        color: AppColors.mainColor,
+                                                        size: 18,
+                                                      ))),
+                                            ),
+                                            Container(
+                                              clipBehavior: Clip.hardEdge,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                                    0.50,
+                                                    1
+                                                  ], colors: [
+                                                    Colors.transparent,
+                                                    Colors.black.withOpacity(1),
+                                                  ])),
+                                              width: MediaQuery.of(context).size.width,
+                                              height: 110,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                              child: Text(
+                                                reservationController.room.value!.data.title,
+                                                maxLines: 2,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                  ),
                                 ),
-                              ),
+                              ],
                             ),
-                            child: child!,
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Get.to(SingleImageView(), arguments: {'image': 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index - 1].fullImage}'});
+                                  },
+                                  child: CachedNetworkImage(
+                                    imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index - 1].fullImage}',
+                                    fit: BoxFit.cover,
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        clipBehavior: Clip.none,
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset: const Offset(
+                                                  1.0,
+                                                  2.0,
+                                                ),
+                                                blurRadius: 10.0,
+                                                spreadRadius: 0.0,
+                                              ), //BoxShadow
+                                              const BoxShadow(
+                                                color: Colors.white,
+                                                offset: Offset(0.0, 0.0),
+                                                blurRadius: 0.0,
+                                                spreadRadius: 0.0,
+                                              ),
+                                            ],
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius: BorderRadius.circular(22)),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 180,
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+                                            Positioned(
+                                              left: -10,
+                                              top: Get.width * 0.16,
+                                              child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                                  child: Center(
+                                                      child: IconButton(
+                                                    splashRadius: 18,
+                                                    onPressed: () {
+                                                      if (index != reservationController.room.value!.data.imageList.length) {
+                                                        reservationController.pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                      }
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.arrow_forward_ios_rounded,
+                                                      color: AppColors.mainColor,
+                                                      size: 18,
+                                                    ),
+                                                    padding: EdgeInsets.zero,
+                                                    alignment: Alignment.center,
+                                                  ))),
+                                            ),
+                                            Positioned(
+                                              right: -10,
+                                              top: Get.width * 0.16,
+                                              child: Container(
+                                                  width: 30,
+                                                  height: 30,
+                                                  decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                                                  child: IconButton(
+                                                      splashRadius: 18,
+                                                      onPressed: () {
+                                                        if (index != 0) {
+                                                          reservationController.pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                                                        }
+                                                      },
+                                                      alignment: Alignment.center,
+                                                      padding: EdgeInsets.zero,
+                                                      icon: const Icon(
+                                                        Icons.arrow_back_ios_rounded,
+                                                        color: AppColors.mainColor,
+                                                        size: 18,
+                                                      ))),
+                                            ),
+                                            Container(
+                                              clipBehavior: Clip.hardEdge,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(25),
+                                                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                                    0.50,
+                                                    1
+                                                  ], colors: [
+                                                    Colors.transparent,
+                                                    Colors.black.withOpacity(1),
+                                                  ])),
+                                              width: MediaQuery.of(context).size.width,
+                                              height: 110,
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                              child: Text(
+                                                reservationController.room.value!.data.imageList[index - 1].caption ?? '',
+                                                maxLines: 2,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white, fontSize: 12),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      }),
+                ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: reservationController.room.value!.data.mainImageThumb,
+                      fit: BoxFit.cover,
+                      imageBuilder: (context, imageProvider) {
+                        return InkWell(
+                          onTap: () {
+                            imagesView(reservationController);
+                          },
+                          child: Container(
+                              clipBehavior: Clip.none,
+                              width: Get.width / 3.8,
+                              height: Get.width / 6.5,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  opacity: 0.3,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                Text('تصاویر ارسالی کاربران', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 11)),
+                                const SizedBox(
+                                  width: 2,
+                                ),
+                                SvgPicture.asset('assets/icons/photo_ic.svg'),
+                              ])),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 5),
+                    CachedNetworkImage(
+                      imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[2].thumbImage}',
+                      fit: BoxFit.cover,
+                      imageBuilder: (context, imageProvider) {
+                        return InkWell(
+                          onTap: () {
+                            imagesView(reservationController);
+                          },
+                          child: Container(
+                              clipBehavior: Clip.none,
+                              width: Get.width / 7,
+                              height: Get.width / 6.5,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: imageProvider,
+                                  opacity: 0.3,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                '...',
+                                style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 25),
+                              )),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 5),
+                    InkWell(
+                      onTap: () {
+                        reservationController.pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+                      },
+                      child: CachedNetworkImage(
+                        imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[1].thumbImage}',
+                        fit: BoxFit.cover,
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            clipBehavior: Clip.none,
+                            width: Get.width / 7,
+                            height: Get.width / 6.5,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
                           );
                         },
-                      );
-                      picked?.toDateTime();
-                      if (picked != null) {
-                        reservationController.isDateSelected.value = true;
-                        reservationController.entryDate.value = picked.toDateTime();
-                      }
-                    },
-                    child: Container(
-                        height: 35,
-                        width: Get.width / 2 - 50,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          border: Border.all(color: AppColors.grayColor, width: 0.3),
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Row(children: [
-                            const Icon(Icons.arrow_drop_down_rounded, color: AppColors.disabledIcon),
-                            const Spacer(),
-                            Obx(
-                              () => reservationController.isDateSelected.value
-                                  ? Row(
-                                      children: [
-                                        Text('${reservationController.entryDate.value.toJalali().year}/${reservationController.entryDate.value.toJalali().month}/${reservationController.entryDate.value.toJalali().day}  ', style: Theme.of(Get.context!).textTheme.labelMedium),
-                                        Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
-                                      ],
-                                    )
-                                  : Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    InkWell(
+                      onTap: () {
+                        reservationController.pageController.animateToPage(1, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+                      },
+                      child: CachedNetworkImage(
+                        imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[0].thumbImage}',
+                        fit: BoxFit.cover,
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            clipBehavior: Clip.none,
+                            width: Get.width / 7,
+                            height: Get.width / 6.5,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                          ]),
-                        )),
-                  ),
-                ],
-              )),
-          const SizedBox(
-            height: 5,
-          ),
-          TabBar(
-              labelColor: AppColors.primaryTextColor,
-              unselectedLabelColor: AppColors.disabledText,
-              labelPadding: EdgeInsets.zero,
-              onTap: (value) {
-                reservationController.tabIndex.value = value;
-              },
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              indicator: const CustomTabIndicator(
-                color: AppColors.mainColor,
-                indicatorHeight: 3,
-                radius: 4,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    InkWell(
+                      onTap: () {
+                        reservationController.pageController.animateToPage(0, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+                      },
+                      child: CachedNetworkImage(
+                        imageUrl: reservationController.room.value!.data.mainImageThumb,
+                        fit: BoxFit.cover,
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            clipBehavior: Clip.none,
+                            width: Get.width / 7,
+                            height: Get.width / 6.5,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              tabs: [
-                Tab(
-                    child: Center(
-                  child: Text(
-                    "نظرات",
-                    style: Theme.of(Get.context!).textTheme.labelLarge,
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          reservationController.isFave.toggle();
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Obx(() => Icon(reservationController.isFave.value ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: reservationController.isFave.value ? Colors.red : null, size: 23)),
+                        )),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    InkWell(
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: SvgPicture.asset('assets/icons/share_line_ic.svg'),
+                        )),
+                    const Spacer(),
+                    Text(reservationController.room.value!.data.title, style: Theme.of(Get.context!).textTheme.displayMedium),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text('9.4/10', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text('(39.852 بازدید کننده)', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: Text('استان ${reservationController.room.value!.data.province}،شهر ${reservationController.room.value!.data.city}،${reservationController.room.value!.data.address}', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelSmall),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    SvgPicture.asset(
+                      'assets/icons/location_pin_nav_outline_ic.svg',
+                      width: 15,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(children: [
+                        Text(reservationController.room.value!.data.capacity, textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        Text('ظرفیت: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/capacity_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                      const SizedBox(height: 20),
+                      Row(children: [
+                        Text("واحد", textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        Text(reservationController.room.value!.data.roomsNumber.toString(), textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        Text('اتاق ها: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/rooms_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                    ],
                   ),
-                )),
-                Tab(
-                    child: Center(
-                  child: Text(
-                    "توضیحات",
-                    style: Theme.of(Get.context!).textTheme.labelLarge,
+                  const SizedBox(
+                    width: 25,
                   ),
-                )),
-                Tab(
-                    child: Center(
-                  child: Text(
-                    "اتاق ها",
-                    style: Theme.of(Get.context!).textTheme.labelLarge,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(children: [
+                        Text('${reservationController.room.value!.data.rules.entryTime}:00', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        Text('زمان تحویل: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/delivery_time_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                      const SizedBox(height: 20),
+                      Row(children: [
+                        Text('${reservationController.room.value!.data.rules.exitTime}:00', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        Text('زمان تخلیه: ', textDirection: TextDirection.rtl, style: Theme.of(Get.context!).textTheme.labelMedium),
+                        const SizedBox(width: 5),
+                        SvgPicture.asset('assets/icons/discharge_time_ic.svg', width: 20, color: AppColors.grayColor),
+                      ]),
+                    ],
                   ),
-                )),
-              ])
-        ],
-      );
-    }
+                ]),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Container(
+                  width: Get.width,
+                  height: 50,
+                  color: AppColors.mainColor.withOpacity(0.08),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Obx(() => Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                isExpanded: true,
+                                hint: Row(children: [
+                                  Text(
+                                    'به مدت: ',
+                                    style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                    textDirection: TextDirection.rtl,
+                                  )
+                                ]),
+                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                items: reservationController.durationDropDownItems.map((selectedType) {
+                                  return DropdownMenuItem(
+                                    value: selectedType,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        RichText(
+                                            textDirection: TextDirection.rtl,
+                                            text: TextSpan(children: [
+                                              TextSpan(
+                                                text: 'به مدت: ',
+                                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                              ),
+                                              TextSpan(
+                                                text: selectedType.toString(),
+                                                style: Theme.of(Get.context!).textTheme.labelMedium,
+                                              ),
+                                              TextSpan(
+                                                text: ' شب',
+                                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                              ),
+                                            ])),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  reservationController.setSelectedDuration(value!);
+                                  reservationController.choseEntryDate();
+                                },
+                                value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
+                                buttonStyleData: ButtonStyleData(
+                                  height: 35,
+                                  width: Get.width / 2.8,
+                                  padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
+                                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
+                                ),
+                                iconStyleData: const IconStyleData(
+                                  icon: Icon(
+                                    Icons.arrow_drop_down_rounded,
+                                  ),
+                                  iconEnabledColor: AppColors.grayColor,
+                                ),
+                                dropdownStyleData: DropdownStyleData(
+                                    elevation: 2,
+                                    padding: EdgeInsets.zero,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                                    ),
+                                    direction: DropdownDirection.textDirection,
+                                    scrollbarTheme: ScrollbarThemeData(
+                                      radius: const Radius.circular(40),
+                                      thickness: MaterialStateProperty.all(6),
+                                      thumbVisibility: MaterialStateProperty.all(true),
+                                    )),
+                              ),
+                            ),
+                          )),
+                      InkWell(
+                        onTap: () async {
+                          Jalali? picked = await showPersianDatePicker(
+                            context: Get.context!,
+                            helpText: '',
+                            initialEntryMode: PDatePickerEntryMode.calendarOnly,
+                            initialDate: reservationController.entryDate.value.toJalali() != Jalali.now() ? reservationController.entryDate.value.toJalali() : Jalali.now(),
+                            firstDate: Jalali.now(),
+                            lastDate: Jalali(1404, 1),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData(
+                                  fontFamily: 'iransans',
+                                  primaryTextTheme: Typography.blackRedwoodCity,
+                                  dialogTheme: const DialogTheme(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+                          picked?.toDateTime();
+                          if (picked != null) {
+                            reservationController.isDateSelected.value = true;
+                            reservationController.entryDate.value = picked.toDateTime();
+                          }
+                          reservationController.choseEntryDate();
+                        },
+                        child: Container(
+                            height: 35,
+                            width: Get.width / 2 - 50,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: AppColors.grayColor, width: 0.3),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(children: [
+                                const Icon(Icons.arrow_drop_down_rounded, color: AppColors.disabledIcon),
+                                const Spacer(),
+                                Obx(
+                                  () => reservationController.isDateSelected.value
+                                      ? Row(
+                                          children: [
+                                            Text('${reservationController.entryDate.value.toJalali().year}/${reservationController.entryDate.value.toJalali().month}/${reservationController.entryDate.value.toJalali().day}  ', style: Theme.of(Get.context!).textTheme.labelMedium),
+                                            Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
+                                          ],
+                                        )
+                                      : Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
+                                ),
+                              ]),
+                            )),
+                      ),
+                    ],
+                  )),
+              const SizedBox(
+                height: 5,
+              ),
+              TabBar(
+                  labelColor: AppColors.primaryTextColor,
+                  unselectedLabelColor: AppColors.disabledText,
+                  labelPadding: EdgeInsets.zero,
+                  onTap: (value) {
+                    reservationController.tabIndex.value = value;
+                  },
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  indicator: const CustomTabIndicator(
+                    color: AppColors.mainColor,
+                    indicatorHeight: 3,
+                    radius: 4,
+                  ),
+                  tabs: [
+                    Tab(
+                        child: Center(
+                      child: Text(
+                        "نظرات",
+                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      ),
+                    )),
+                    Tab(
+                        child: Center(
+                      child: Text(
+                        "توضیحات",
+                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      ),
+                    )),
+                    Tab(
+                        child: Center(
+                      child: Text(
+                        "اتاق ها",
+                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      ),
+                    )),
+                  ])
+            ],
+          ));
   }
 
   imagesView(ReservationController reservationController) {
+    reservationController.iconMaker(reservationController.room.value!.data.features[2].feature.image);
     return Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(
@@ -1426,39 +1436,43 @@ class ReservationScreen extends StatelessWidget {
           const SizedBox(
             height: 20,
           ),
-          Flexible(
-              child: Wrap(
-            spacing: 5,
-            runSpacing: 5,
-            alignment: WrapAlignment.start,
-            children: reservationController.room.value!.data.imageList
-                .map((e) => InkWell(
-                      onTap: () {
-                        Get.to(SingleImageView(), arguments: {'image': 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${e.fullImage}'});
-                      },
-                      child: Hero(
-                        tag: 'singleImage',
-                        child: CachedNetworkImage(
-                          imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${e.thumbImage}',
-                          imageBuilder: (context, imageProvider) {
-                            return Container(
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              width: Get.width / 4.5,
-                              height: Get.width / 4.5,
-                            );
-                          },
+          Container(
+            width: Get.width,
+            constraints: BoxConstraints(
+              minHeight:Get.height/2.5,
+              maxHeight:Get.height/1.75,
+            ),
+            child: GridView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              itemCount: reservationController.room.value!.data.imageList.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3), itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Get.to(SingleImageView(), arguments: {'image': 'https://www.uspace.ir/spaces/${reservationController.url}/images/main/${reservationController.room.value!.data.imageList[index].fullImage}'});
+                },
+                child: Hero(
+                  tag: 'singleImage',
+                  child: CachedNetworkImage(
+                    imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[index].thumbImage}',
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        margin: const EdgeInsets.all(3),
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-                    ))
-                .toList(),
-          )),
+                        height: Get.width / 4.5,
+                      );
+                    },
+                  ),
+                ),
+              );
+            },)
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -1468,7 +1482,7 @@ class ReservationScreen extends StatelessWidget {
   }
 
   rooms(ReservationController reservationController) {
-    return Obx(() => reservationController.loading.value
+    return Obx(() => reservationController.loading.value || reservationController.loadingRoom.value
         ? ScrollConfiguration(
             behavior: const ScrollBehavior().copyWith(overscroll: false),
             child: SingleChildScrollView(
@@ -1560,7 +1574,7 @@ class ReservationScreen extends StatelessWidget {
                     color: Colors.black.withOpacity(0.1),
                   ),
                   ListView.separated(
-                    itemCount: 3,
+                    itemCount: reservationController.room.value!.data.rooms.length,
                     scrollDirection: Axis.vertical,
                     physics: const BouncingScrollPhysics(),
                     shrinkWrap: true,
@@ -1572,14 +1586,13 @@ class ReservationScreen extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(horizontal: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: AppColors.mainColor.withOpacity(0.05),
-                          ),
+                            color: AppColors.roomsBackground,),
                           child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                             const SizedBox(height: 10),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15),
                               child: Text(
-                                'اتاق سه تخت پریخان خانم هتل سنتی شیران اصفهان',
+                                reservationController.room.value!.data.rooms[index].title,
                                 style: Theme.of(Get.context!).textTheme.bodyMedium,
                                 textAlign: TextAlign.end,
                                 maxLines: 2,
@@ -1601,7 +1614,13 @@ class ReservationScreen extends StatelessWidget {
                                     children: [
                                       InkWell(
                                         onTap: () {
-                                          Get.dialog(facilityDialog(title: 'هتل سه تخته پریخان خانم هتل سنتی شیران_اصفهان', hasBrakeFast: false, hasDinner: true, hasLunch: false));
+                                          Get.dialog(facilityDialog(
+                                              feature:reservationController.room.value!.data.rooms[index].features,
+                                              title: reservationController.room.value!.data.rooms[index].title,
+                                              hasBrakeFast: reservationController.room.value!.data.rooms[index].roomPackages[0].features[0].value,
+                                              hasDinner: reservationController.room.value!.data.rooms[index].roomPackages[0].features[1].value,
+                                              hasLunch: reservationController.room.value!.data.rooms[index].roomPackages[0].features[2].value
+                                          ));
                                         },
                                         borderRadius: BorderRadius.circular(30),
                                         child: Container(
@@ -1626,16 +1645,27 @@ class ReservationScreen extends StatelessWidget {
                                         textDirection: TextDirection.rtl,
                                       ),
                                       Text('دارای تشک برای 3 نفر', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: Colors.grey)),
-                                      const SizedBox(height: 5),
+                                      reservationController.durationValue.value != 1 ?
                                       RichText(
                                         textDirection: TextDirection.rtl,
                                         text: TextSpan(children: [
-                                          TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey, decoration: index == 0 ? TextDecoration.lineThrough : null)),
-                                          TextSpan(text: '20000000'.beToman().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: index == 0 ? TextDecoration.lineThrough : null)),
-                                          TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: index == 0 ? TextDecoration.lineThrough : null)),
+                                          TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                          TextSpan(text: (reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalOriginalPrice ~/ reservationController.durationValue.value).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
+                                          TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
                                         ]),
-                                      ),
-                                      index == 0
+                      ):const SizedBox(),
+                                      const SizedBox(height: 5),
+                                      reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
+                                          ? RichText(
+                                              textDirection: TextDirection.rtl,
+                                              text: TextSpan(children: [
+                                                TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey, decoration: index == 0 ? TextDecoration.lineThrough : null)),
+                                                TextSpan(text: reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalOriginalPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0 ? TextDecoration.lineThrough : null)),
+                                                TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: index == 0 ? TextDecoration.lineThrough : null)),
+                                              ]),
+                                            )
+                                          : const SizedBox(),
+                                      reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
                                           ? Container(
                                               margin: const EdgeInsets.only(top: 5, bottom: 5),
                                               decoration: BoxDecoration(
@@ -1646,7 +1676,7 @@ class ReservationScreen extends StatelessWidget {
                                               child: RichText(
                                                 textDirection: TextDirection.rtl,
                                                 text: TextSpan(children: [
-                                                  TextSpan(text: '1150000'.beToman().seRagham(), style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
+                                                  TextSpan(text: (reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalOriginalPrice - reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalCustomerPrice).toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
                                                   TextSpan(text: 'تومان تخفیف', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
                                                 ]),
                                               ),
@@ -1662,11 +1692,11 @@ class ReservationScreen extends StatelessWidget {
                                         child: RichText(
                                           textDirection: TextDirection.rtl,
                                           text: TextSpan(children: [
-                                            TextSpan(text: '20000000'.beToman().seRagham(), style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
+                                            TextSpan(text: reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
                                             TextSpan(text: ' تومان ', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
-                                            TextSpan(text: 'برای', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
-                                            TextSpan(text: ' 2 ', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Colors.grey)),
-                                            TextSpan(text: 'شب', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                            TextSpan(text: 'برای ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                            TextSpan(text: reservationController.room.value!.data.rooms[index].roomPackages[0].finance.priceInfo.durationDay.toString(), style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Colors.grey)),
+                                            TextSpan(text: ' شب', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
                                           ]),
                                         ),
                                       )
@@ -1680,7 +1710,15 @@ class ReservationScreen extends StatelessWidget {
                                     child: CachedNetworkImage(
                                       height: Get.width / 3.5,
                                       width: Get.width / 3.5,
-                                      imageUrl: "https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg",
+                                      progressIndicatorBuilder: (context, url, progress) {
+                                        return const Align(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 1,
+                                            color: AppColors.mainColor,
+                                          ),
+                                        );
+                                      },
+                                      imageUrl: reservationController.room.value!.data.rooms[index].thumbImage,
                                       fit: BoxFit.cover,
                                       imageBuilder: (context, imageProvider) {
                                         return Container(
@@ -1712,7 +1750,7 @@ class ReservationScreen extends StatelessWidget {
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                                       Flexible(
                                         flex: 3,
                                         child: InkWell(
@@ -1729,48 +1767,51 @@ class ReservationScreen extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                      const SizedBox(width: 5),
                                       Flexible(
                                         flex: 2,
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(6),
-                                            border: Border.all(width: 0.1),
+                                            border: Border.all(width: 0.1, color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[2].value == 1 ? AppColors.mainColor : Colors.grey),
                                           ),
-                                          child: Row(children: [
-                                            Text('صبحانه دارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor)),
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                            Text(reservationController.room.value!.data.rooms[index].roomPackages[0].features[2].value == 1 ? 'شام دارد' : 'شام ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[2].value == 1 ? AppColors.mainColor : Colors.grey)),
                                             const SizedBox(width: 2),
-                                            SvgPicture.asset('assets/icons/lunch_ic.svg'),
+                                            SvgPicture.asset('assets/icons/lunch_ic.svg', color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[2].value == 1 ? AppColors.mainColor : Colors.grey),
                                           ]),
                                         ),
                                       ),
+                                      const SizedBox(width: 5),
                                       Flexible(
                                         flex: 2,
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(6),
-                                            border: Border.all(width: 0.1),
+                                            border: Border.all(width: 0.1, color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[1].value == 1 ? AppColors.mainColor : Colors.grey),
                                           ),
-                                          child: Row(children: [
-                                            Text('صبحانه دارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor)),
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                            Text(reservationController.room.value!.data.rooms[index].roomPackages[0].features[1].value == 1 ? 'نهار دارد' : 'نهار ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[1].value == 1 ? AppColors.mainColor : Colors.grey)),
                                             const SizedBox(width: 2),
-                                            SvgPicture.asset('assets/icons/dinner_ic.svg'),
+                                            SvgPicture.asset('assets/icons/dinner_ic.svg', color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[1].value == 1 ? AppColors.mainColor : Colors.grey),
                                           ]),
                                         ),
                                       ),
+                                      const SizedBox(width: 5),
                                       Flexible(
                                         flex: 2,
                                         child: Container(
                                           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(6),
-                                            border: Border.all(width: 0.1),
+                                            border: Border.all(width: 0.1, color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[0].value == 1 ? AppColors.mainColor : Colors.grey),
                                           ),
-                                          child: Row(children: [
-                                            Text('صبحانه دارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor)),
+                                          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                            Text(reservationController.room.value!.data.rooms[index].roomPackages[0].features[0].value == 1 ? 'صبحانه دارد' : 'صبحانه ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[0].value == 1 ? AppColors.mainColor : Colors.grey)),
                                             const SizedBox(width: 2),
-                                            SvgPicture.asset('assets/icons/breakfast_ic.svg'),
+                                            SvgPicture.asset('assets/icons/breakfast_ic.svg', color: reservationController.room.value!.data.rooms[index].roomPackages[0].features[0].value == 1 ? AppColors.mainColor : Colors.grey),
                                           ]),
                                         ),
                                       ),
@@ -1778,24 +1819,24 @@ class ReservationScreen extends StatelessWidget {
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    ListView.separated(
-                                      itemCount: 3,
-                                      shrinkWrap: true,
-                                      physics: const NeverScrollableScrollPhysics(),
-                                      separatorBuilder: (context, index) {
-                                        return const SizedBox(height: 5);
-                                      },
-                                      itemBuilder: (context, index) {
-                                        return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                                          Text('امکان پیاده روی در اطراف اقامتگاه را دارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor)),
-                                          const SizedBox(width: 5),
-                                          Container(padding: const EdgeInsets.all(3), decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.mainColor), child: const Icon(Icons.done, color: Colors.white, size: 10)),
-                                        ]);
-                                      },
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
+                                    // ListView.separated(
+                                    //   itemCount: 3,
+                                    //   shrinkWrap: true,
+                                    //   physics: const NeverScrollableScrollPhysics(),
+                                    //   separatorBuilder: (context, index) {
+                                    //     return const SizedBox(height: 5);
+                                    //   },
+                                    //   itemBuilder: (context, index) {
+                                    //     return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                                    //       Text('امکان پیاده روی در اطراف اقامتگاه را دارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor)),
+                                    //       const SizedBox(width: 5),
+                                    //       Container(padding: const EdgeInsets.all(3), decoration: const BoxDecoration(shape: BoxShape.circle, color: AppColors.mainColor), child: const Icon(Icons.done, color: Colors.white, size: 10)),
+                                    //     ]);
+                                    //   },
+                                    // ),
+                                    // const SizedBox(
+                                    //   height: 10,
+                                    // ),
                                   ],
                                 )),
                           ]));
@@ -1815,7 +1856,7 @@ class ReservationScreen extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  Text('لیست اقامت های بوم گردی اصفهان', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: AppColors.mainColor)),
+                  Text('لیست اقامت های بوم گردی ${reservationController.room.value!.data.province}', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: AppColors.mainColor)),
                   const SizedBox(
                     height: 25,
                   ),
@@ -1828,18 +1869,23 @@ class ReservationScreen extends StatelessWidget {
                         scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         physics: const BouncingScrollPhysics(),
-                        itemCount: 3,
+                        controller: reservationController.roomSugestionController,
+                        itemCount: reservationController.room.value!.data.ecolodgeSuggestions.length,
                         separatorBuilder: (context, index) {
                           return const SizedBox(width: 15);
                         },
                         itemBuilder: (context, index) {
                           return InkWell(
                             borderRadius: BorderRadius.circular(22),
-                            onTap: () {},
+                            onTap: () {
+                              reservationController.screenScrollController.jumpTo(0.0);
+                              reservationController.url = reservationController.room.value!.data.ecolodgeSuggestions[index].url;
+                              reservationController.getMainInfo(roomUrl: reservationController.room.value!.data.ecolodgeSuggestions[index].url);
+                            },
                             child: Stack(
                               children: [
                                 CachedNetworkImage(
-                                  imageUrl: 'https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg',
+                                  imageUrl: reservationController.room.value!.data.ecolodgeSuggestions[index].image,
                                   fit: BoxFit.cover,
                                   imageBuilder: (context, imageProvider) {
                                     return Container(
@@ -1864,7 +1910,7 @@ class ReservationScreen extends StatelessWidget {
                                           Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                                             child: Text(
-                                              'هتل سنتی سهروردی - اصفهان',
+                                              reservationController.room.value!.data.ecolodgeSuggestions[index].title,
                                               maxLines: 1,
                                               overflow: TextOverflow.clip,
                                               style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
@@ -1877,7 +1923,7 @@ class ReservationScreen extends StatelessWidget {
                                   errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                                 ),
                                 CachedNetworkImage(
-                                  imageUrl: 'https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg',
+                                  imageUrl: reservationController.room.value!.data.ecolodgeSuggestions[index].image,
                                   fit: BoxFit.cover,
                                   imageBuilder: (context, imageProvider) {
                                     return Container(
@@ -1903,7 +1949,7 @@ class ReservationScreen extends StatelessWidget {
                                           Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                                             child: Text(
-                                              'هتل سنتی سهروردی - اصفهان',
+                                              reservationController.room.value!.data.ecolodgeSuggestions[index].title,
                                               maxLines: 1,
                                               overflow: TextOverflow.clip,
                                               style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
@@ -2151,8 +2197,7 @@ class ReservationScreen extends StatelessWidget {
                           ),
                           child: FlutterMap(
                             options: MapOptions(
-
-                              center: LatLng( reservationController.room.value!.data.mapLong,reservationController.room.value!.data.mapLat),
+                              center: LatLng(reservationController.room.value!.data.mapLong, reservationController.room.value!.data.mapLat),
                               minZoom: 3,
                               maxZoom: 17,
                             ),
@@ -2161,15 +2206,13 @@ class ReservationScreen extends StatelessWidget {
                                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                                 userAgentPackageName: 'dev.fleaflet.flutter_map.example',
                               ),
-                              MarkerLayer(
-
-                                  markers: [
+                              MarkerLayer(markers: [
                                 Marker(
                                   rotate: true,
                                   width: 80,
                                   height: 80,
                                   rotateAlignment: Alignment.center,
-                                  point: LatLng(reservationController.room.value!.data.mapLong,reservationController.room.value!.data.mapLat),
+                                  point: LatLng(reservationController.room.value!.data.mapLong, reservationController.room.value!.data.mapLat),
                                   builder: (ctx) => const Icon(
                                     Icons.location_on,
                                     size: 28,
@@ -2316,336 +2359,360 @@ class ReservationScreen extends StatelessWidget {
               ),
             ),
           )
-        : ScrollConfiguration(
-            behavior: const ScrollBehavior().copyWith(overscroll: false),
-            child: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  Container(
-                    height: 1,
-                    width: Get.width,
-                    color: Colors.black.withOpacity(0.1),
+        : reservationController.room.value!.data.comments.isEmpty
+            ? ScrollConfiguration(
+                behavior: const ScrollBehavior().copyWith(overscroll: false),
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 1,
+                        width: Get.width,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                      const SizedBox(
+                        height: 35,
+                      ),
+                      Text('تا کنون نظری ثبت نشده است', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 20)),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                    ],
                   ),
-                  ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: Get.width,
-                          margin: const EdgeInsets.symmetric(horizontal: 25),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                ),
+              )
+            : ScrollConfiguration(
+                behavior: const ScrollBehavior().copyWith(overscroll: false),
+                child: SingleChildScrollView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 1,
+                        width: Get.width,
+                        color: Colors.black.withOpacity(0.1),
+                      ),
+                      ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              width: Get.width,
+                              margin: const EdgeInsets.symmetric(horizontal: 25),
+                              child: Column(
                                 children: [
-                                  RatingBarIndicator(
-                                    rating: 4.0,
-                                    itemCount: 5,
-                                    itemSize: 17.0,
-                                    physics: const BouncingScrollPhysics(),
-                                    unratedColor: AppColors.grayColor,
-                                    itemPadding: const EdgeInsets.symmetric(horizontal: 0),
-                                    textDirection: TextDirection.rtl,
-                                    itemBuilder: (context, _) => const Icon(
-                                      Icons.star_rounded,
-                                      color: Color(0xffFFC700),
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text('علی اصغر قاسمی کفاش', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.black.withOpacity(0.6))),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Container(
-                                    clipBehavior: Clip.hardEdge,
-                                    width: 35,
-                                    height: 35,
-                                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                                    child: CachedNetworkImage(
-                                      imageUrl: "http://via.placeholder.com/320x150&text=image",
-                                      fit: BoxFit.cover,
-                                      errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 48.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    ReadMoreText(
-                                      reservationController.commentText,
-                                      textAlign: TextAlign.justify,
-                                      style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor),
-                                      trimLines: 4,
-                                      textDirection: TextDirection.rtl,
-                                      trimMode: TrimMode.Line,
-                                      lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor),
-                                      trimCollapsedText: ' نمایش بیشتر',
-                                      trimExpandedText: ' نمایش کمتر',
-                                      moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    if (index == 1)
-                                      SizedBox(
-                                        height: Get.width / 3.25,
-                                        child: ListView.separated(
-                                            padding: const EdgeInsets.symmetric(vertical: 5),
-                                            itemCount: 4,
-                                            shrinkWrap: true,
-                                            scrollDirection: Axis.horizontal,
-                                            physics: const BouncingScrollPhysics(),
-                                            separatorBuilder: (BuildContext context, index) {
-                                              return const SizedBox(width: 5);
-                                            },
-                                            itemBuilder: (BuildContext context, index) {
-                                              return CachedNetworkImage(
-                                                imageUrl: "https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg",
-                                                fit: BoxFit.cover,
-                                                imageBuilder: (context, imageProvider) {
-                                                  return Container(
-                                                    clipBehavior: Clip.none,
-                                                    width: Get.width / 4.5,
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: imageProvider,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                      borderRadius: BorderRadius.circular(8),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }),
-                                      )
-                                    else
-                                      const SizedBox(),
-                                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-                                      Text(
-                                        '14 تیر 1402',
-                                        style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor),
-                                        textDirection: TextDirection.rtl,
-                                      ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      reservationController.room.value!.data.comments[index].type == 'feedback' ? Row(
+                                        children: [
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option1['point'],title:reservationController.room.value!.data.comments[index].option1['title']),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option2['point'],title:reservationController.room.value!.data.comments[index].option2['title']),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option3['point'],title:reservationController.room.value!.data.comments[index].option3['title']),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option4['point'],title:reservationController.room.value!.data.comments[index].option4['title']),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option5['point'],title:reservationController.room.value!.data.comments[index].option5['title']),
+                                        ],
+                                      ) : const SizedBox(),
                                       const Spacer(),
-                                      InkWell(
-                                        borderRadius: BorderRadius.circular(8),
-                                        onTap: () {
-                                          Get.bottomSheet(
-                                              isScrollControlled: true,
-                                              SingleChildScrollView(
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-                                                  child: Column(children: [
-                                                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                                                      IconButton(
-                                                          onPressed: () {
-                                                            Get.back();
-                                                          },
-                                                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                                                          icon: const Icon(
-                                                            Icons.cancel_rounded,
-                                                            color: AppColors.grayColor,
-                                                          )),
-                                                      Text('ثبت نظر برای هتل سنتی شیران _ اصفهان', style: Theme.of(Get.context!).textTheme.labelLarge),
-                                                    ]),
-                                                    const SizedBox(
-                                                      height: 15,
-                                                    ),
-                                                    FocusScope(
-                                                      child: Focus(
-                                                        onFocusChange: (value) {
-                                                          reservationController.isTextFieldSelected.value = value;
-                                                        },
-                                                        child: Obx(() => MyTextField(
-                                                              label: 'نام',
-                                                              textEditingController: reservationController.nameController,
-                                                              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[ا-ی ئ و ]'))],
-                                                              maxline: 1,
-                                                              onEditingComplete: () {
-                                                                reservationController.isTextFieldSelected.value = false;
-                                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                              },
-                                                              keyboardType: TextInputType.name,
-                                                              iconButton: reservationController.isTextFieldSelected.value
-                                                                  ? IconButton(
-                                                                      onPressed: () {
-                                                                        reservationController.nameController.clear();
-                                                                      },
-                                                                      splashRadius: 20,
-                                                                      icon: SvgPicture.asset('assets/icons/close_ic.svg'))
-                                                                  : null,
-                                                              textInputAction: TextInputAction.next,
-                                                            )),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 25,
-                                                    ),
-                                                    MyTextField(
-                                                      label: 'پست الکترونیکی',
-                                                      hintText: 'پست الکترونیکی (اختیاری)',
-                                                      inputFormatters: [
-                                                        FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9@_]')),
-                                                      ],
-                                                      textEditingController: reservationController.emailController,
-                                                      maxline: 1,
-                                                      keyboardType: TextInputType.emailAddress,
-                                                      textInputAction: TextInputAction.done,
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 25,
-                                                    ),
-                                                    MyTextField(
-                                                      label: 'نظر شما',
-                                                      textEditingController: reservationController.commentController,
-                                                      verticalScrollPadding: 15,
-                                                      maxline: 6,
-                                                      keyboardType: TextInputType.multiline,
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Align(
-                                                        alignment: Alignment.topRight,
-                                                        child: Text(
-                                                          'تصاویر و ویدیو های خود را بارگذاری کنید.',
-                                                          style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.grayColor),
-                                                          textAlign: TextAlign.right,
-                                                        )),
-                                                    const SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    Obx(
-                                                      () => reservationController.selectedImages.isEmpty
-                                                          ? InkWell(
-                                                              borderRadius: BorderRadius.circular(50),
-                                                              onTap: () async {
-                                                                final pickedFile = await reservationController.picker.pickMultiImage(imageQuality: 50);
-                                                                List<XFile> xFilePick = pickedFile;
-                                                                if (xFilePick.isNotEmpty) {
-                                                                  for (var i = 0; i < xFilePick.length; i++) {
-                                                                    reservationController.selectedImages.add(File(xFilePick[i].path));
-                                                                  }
-                                                                }
-                                                              },
-                                                              child: Container(width: Get.width / 4.5, height: Get.width / 4.5, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xffF6FAFF), border: Border.all(color: const Color(0xffE8EEF3))), child: Column(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.center, children: [SvgPicture.asset('assets/icons/upload_ic.svg'), const SizedBox(height: 5), Text('بارگذاری', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.grayColor))])),
-                                                            )
-                                                          : Row(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
-                                                              Flexible(
-                                                                  child: Wrap(
-                                                                spacing: 5,
-                                                                runSpacing: 5,
-                                                                alignment: WrapAlignment.start,
-                                                                children: reservationController.selectedImages
-                                                                    .map((e) => Stack(
-                                                                          alignment: Alignment.center,
-                                                                          fit: StackFit.loose,
-                                                                          children: [
-                                                                            Container(
-                                                                              clipBehavior: Clip.hardEdge,
-                                                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-                                                                              width: Get.width / 5,
-                                                                              height: Get.width / 4,
-                                                                              child: Image.file(
-                                                                                e,
-                                                                                fit: BoxFit.cover,
-                                                                                frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-                                                                                  if (wasSynchronouslyLoaded) return child;
-                                                                                  return AnimatedOpacity(
-                                                                                    opacity: frame == null ? 0 : 1,
-                                                                                    duration: const Duration(seconds: 2),
-                                                                                    curve: Curves.easeOut,
-                                                                                    child: child,
-                                                                                  );
-                                                                                },
-                                                                              ),
-                                                                            ),
-                                                                            IconButton(
-                                                                                icon: const Icon(Icons.close, color: Colors.white),
-                                                                                onPressed: () {
-                                                                                  reservationController.selectedImages.removeWhere(
-                                                                                    (element) => element.path == e.path,
-                                                                                  );
-                                                                                }),
-                                                                          ],
-                                                                        ))
-                                                                    .toList(),
-                                                              )),
-                                                              const SizedBox(width: 20),
-                                                              Padding(
-                                                                padding: const EdgeInsets.only(right: 10.0),
-                                                                child: InkWell(
-                                                                  onTap: () async {
-                                                                    final pickedFile = await reservationController.picker.pickMultiImage(imageQuality: 50);
-                                                                    List<XFile> xFilePick = pickedFile;
-                                                                    if (xFilePick.isNotEmpty) {
-                                                                      for (var i = 0; i < xFilePick.length; i++) {
-                                                                        reservationController.selectedImages.add(File(xFilePick[i].path));
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                  child: Column(children: [Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xffF6FAFF), border: Border.all(color: const Color(0xffE8EEF3))), child: SvgPicture.asset('assets/icons/upload_ic.svg')), const SizedBox(height: 8), Text('بارگذاری', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.grayColor))]),
-                                                                ),
-                                                              ),
-                                                            ]),
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 30,
-                                                    ),
-                                                    SizedBox(
-                                                      width: Get.width,
-                                                      height: 45,
-                                                      child: ElevatedButton(
-                                                        onPressed: () {},
-                                                        style: ElevatedButton.styleFrom(
-                                                            backgroundColor: AppColors.mainColor,
-                                                            shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(8),
-                                                            )),
-                                                        child: Text('ارسال نظر', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Colors.white)),
-                                                      ),
-                                                    )
-                                                  ]),
-                                                ),
-                                              ),
-                                              backgroundColor: Colors.white,
-                                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(28), topLeft: Radius.circular(28))));
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2.0),
-                                          child: Row(
-                                            children: [
-                                              SvgPicture.asset('assets/icons/reply_ic.svg'),
-                                              Padding(
-                                                padding: const EdgeInsets.only(left: 6, top: 5.0),
-                                                child: Text('پاسخ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor)),
-                                              ),
-                                            ],
-                                          ),
+                                      Text(reservationController.room.value!.data.comments[index].name, style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.black.withOpacity(0.6))),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Container(
+                                        clipBehavior: Clip.hardEdge,
+                                        width: 35,
+                                        height: 35,
+                                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                                        child: CachedNetworkImage(
+                                          imageUrl: "http://via.placeholder.com/320x150&text=image",
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
                                         ),
                                       ),
-                                    ])
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(height: 20);
-                      },
-                      itemCount: 6),
-                  const SizedBox(
-                    height: 25,
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 48.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        reservationController.room.value!.data.comments[index].comment == null
+                                            ? const SizedBox()
+                                            : ReadMoreText(
+                                                reservationController.room.value!.data.comments[index].comment ?? '',
+                                                textAlign: TextAlign.justify,
+                                                style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor),
+                                                trimLines: 4,
+                                                textDirection: TextDirection.rtl,
+                                                trimMode: TrimMode.Line,
+                                                lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor),
+                                                trimCollapsedText: ' نمایش بیشتر',
+                                                trimExpandedText: ' نمایش کمتر',
+                                                moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor),
+                                              ),
+                                        const SizedBox(height: 5),
+                                        if (index == 1)
+                                          SizedBox(
+                                            height: Get.width / 3.25,
+                                            child: ListView.separated(
+                                                padding: const EdgeInsets.symmetric(vertical: 5),
+                                                itemCount: 4,
+                                                shrinkWrap: true,
+                                                scrollDirection: Axis.horizontal,
+                                                physics: const BouncingScrollPhysics(),
+                                                separatorBuilder: (BuildContext context, index) {
+                                                  return const SizedBox(width: 5);
+                                                },
+                                                itemBuilder: (BuildContext context, index) {
+                                                  return CachedNetworkImage(
+                                                    imageUrl: "https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg",
+                                                    fit: BoxFit.cover,
+                                                    imageBuilder: (context, imageProvider) {
+                                                      return Container(
+                                                        clipBehavior: Clip.none,
+                                                        width: Get.width / 4.5,
+                                                        decoration: BoxDecoration(
+                                                          image: DecorationImage(
+                                                            image: imageProvider,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                          borderRadius: BorderRadius.circular(8),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                }),
+                                          )
+                                        else
+                                          const SizedBox(),
+                                        reservationController.room.value!.data.comments[index].comment == null
+                                            ? const SizedBox()
+                                            : Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                                                Text(
+                                                  reservationController.room.value!.data.comments[index].date.toPersianDate(),
+                                                  style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor),
+                                                  textDirection: TextDirection.rtl,
+                                                ),
+                                                const Spacer(),
+                                                InkWell(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  onTap: () {
+                                                    Get.bottomSheet(
+                                                        isScrollControlled: true,
+                                                        SingleChildScrollView(
+                                                          physics: const NeverScrollableScrollPhysics(),
+                                                          child: Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
+                                                            child: Column(children: [
+                                                              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                                                IconButton(
+                                                                    onPressed: () {
+                                                                      Get.back();
+                                                                    },
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                                                                    icon: const Icon(
+                                                                      Icons.cancel_rounded,
+                                                                      color: AppColors.grayColor,
+                                                                    )),
+                                                                Text('ثبت نظر برای ${reservationController.room.value!.data.title}', style: Theme.of(Get.context!).textTheme.labelLarge),
+                                                              ]),
+                                                              const SizedBox(
+                                                                height: 15,
+                                                              ),
+                                                              FocusScope(
+                                                                child: Focus(
+                                                                  onFocusChange: (value) {
+                                                                    reservationController.isTextFieldSelected.value = value;
+                                                                  },
+                                                                  child: Obx(() => MyTextField(
+                                                                        label: 'نام',
+                                                                        textEditingController: reservationController.nameController,
+                                                                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[ا-ی ئ و ]'))],
+                                                                        maxline: 1,
+                                                                        onEditingComplete: () {
+                                                                          reservationController.isTextFieldSelected.value = false;
+                                                                          FocusManager.instance.primaryFocus?.unfocus();
+                                                                        },
+                                                                        keyboardType: TextInputType.name,
+                                                                        iconButton: reservationController.isTextFieldSelected.value
+                                                                            ? IconButton(
+                                                                                onPressed: () {
+                                                                                  reservationController.nameController.clear();
+                                                                                },
+                                                                                splashRadius: 20,
+                                                                                icon: SvgPicture.asset('assets/icons/close_ic.svg'))
+                                                                            : null,
+                                                                        textInputAction: TextInputAction.next,
+                                                                      )),
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 25,
+                                                              ),
+                                                              MyTextField(
+                                                                label: 'پست الکترونیکی',
+                                                                hintText: 'پست الکترونیکی (اختیاری)',
+                                                                inputFormatters: [
+                                                                  FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9@_]')),
+                                                                ],
+                                                                textEditingController: reservationController.emailController,
+                                                                maxline: 1,
+                                                                keyboardType: TextInputType.emailAddress,
+                                                                textInputAction: TextInputAction.done,
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 25,
+                                                              ),
+                                                              MyTextField(
+                                                                label: 'نظر شما',
+                                                                textEditingController: reservationController.commentController,
+                                                                verticalScrollPadding: 15,
+                                                                maxline: 6,
+                                                                keyboardType: TextInputType.multiline,
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 10,
+                                                              ),
+                                                              Align(
+                                                                  alignment: Alignment.topRight,
+                                                                  child: Text(
+                                                                    'تصاویر و ویدیو های خود را بارگذاری کنید.',
+                                                                    style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.grayColor),
+                                                                    textAlign: TextAlign.right,
+                                                                  )),
+                                                              const SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              Obx(
+                                                                () => reservationController.selectedImages.isEmpty
+                                                                    ? InkWell(
+                                                                        borderRadius: BorderRadius.circular(50),
+                                                                        onTap: () async {
+                                                                          final pickedFile = await reservationController.picker.pickMultiImage(imageQuality: 50);
+                                                                          List<XFile> xFilePick = pickedFile;
+                                                                          if (xFilePick.isNotEmpty) {
+                                                                            for (var i = 0; i < xFilePick.length; i++) {
+                                                                              reservationController.selectedImages.add(File(xFilePick[i].path));
+                                                                            }
+                                                                          }
+                                                                        },
+                                                                        child: Container(width: Get.width / 4.5, height: Get.width / 4.5, decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xffF6FAFF), border: Border.all(color: const Color(0xffE8EEF3))), child: Column(mainAxisSize: MainAxisSize.max, mainAxisAlignment: MainAxisAlignment.center, children: [SvgPicture.asset('assets/icons/upload_ic.svg'), const SizedBox(height: 5), Text('بارگذاری', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.grayColor))])),
+                                                                      )
+                                                                    : Row(mainAxisAlignment: MainAxisAlignment.start, mainAxisSize: MainAxisSize.max, children: [
+                                                                        Flexible(
+                                                                            child: Wrap(
+                                                                          spacing: 5,
+                                                                          runSpacing: 5,
+                                                                          alignment: WrapAlignment.start,
+                                                                          children: reservationController.selectedImages
+                                                                              .map((e) => Stack(
+                                                                                    alignment: Alignment.center,
+                                                                                    fit: StackFit.loose,
+                                                                                    children: [
+                                                                                      Container(
+                                                                                        clipBehavior: Clip.hardEdge,
+                                                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+                                                                                        width: Get.width / 5,
+                                                                                        height: Get.width / 4,
+                                                                                        child: Image.file(
+                                                                                          e,
+                                                                                          fit: BoxFit.cover,
+                                                                                          frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                                                                                            if (wasSynchronouslyLoaded) return child;
+                                                                                            return AnimatedOpacity(
+                                                                                              opacity: frame == null ? 0 : 1,
+                                                                                              duration: const Duration(seconds: 2),
+                                                                                              curve: Curves.easeOut,
+                                                                                              child: child,
+                                                                                            );
+                                                                                          },
+                                                                                        ),
+                                                                                      ),
+                                                                                      IconButton(
+                                                                                          icon: const Icon(Icons.close, color: Colors.white),
+                                                                                          onPressed: () {
+                                                                                            reservationController.selectedImages.removeWhere(
+                                                                                              (element) => element.path == e.path,
+                                                                                            );
+                                                                                          }),
+                                                                                    ],
+                                                                                  ))
+                                                                              .toList(),
+                                                                        )),
+                                                                        const SizedBox(width: 20),
+                                                                        Padding(
+                                                                          padding: const EdgeInsets.only(right: 10.0),
+                                                                          child: InkWell(
+                                                                            onTap: () async {
+                                                                              final pickedFile = await reservationController.picker.pickMultiImage(imageQuality: 50);
+                                                                              List<XFile> xFilePick = pickedFile;
+                                                                              if (xFilePick.isNotEmpty) {
+                                                                                for (var i = 0; i < xFilePick.length; i++) {
+                                                                                  reservationController.selectedImages.add(File(xFilePick[i].path));
+                                                                                }
+                                                                              }
+                                                                            },
+                                                                            child: Column(children: [Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(shape: BoxShape.circle, color: const Color(0xffF6FAFF), border: Border.all(color: const Color(0xffE8EEF3))), child: SvgPicture.asset('assets/icons/upload_ic.svg')), const SizedBox(height: 8), Text('بارگذاری', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.grayColor))]),
+                                                                          ),
+                                                                        ),
+                                                                      ]),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 30,
+                                                              ),
+                                                              SizedBox(
+                                                                width: Get.width,
+                                                                height: 45,
+                                                                child: ElevatedButton(
+                                                                  onPressed: () {},
+                                                                  style: ElevatedButton.styleFrom(
+                                                                      backgroundColor: AppColors.mainColor,
+                                                                      shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(8),
+                                                                      )),
+                                                                  child: Text('ارسال نظر', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Colors.white)),
+                                                                ),
+                                                              )
+                                                            ]),
+                                                          ),
+                                                        ),
+                                                        backgroundColor: Colors.white,
+                                                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(28), topLeft: Radius.circular(28))));
+                                                  },
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2.0),
+                                                    child: Row(
+                                                      children: [
+                                                        SvgPicture.asset('assets/icons/reply_ic.svg'),
+                                                        Padding(
+                                                          padding: const EdgeInsets.only(left: 6, top: 5.0),
+                                                          child: Text('پاسخ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor)),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ])
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(height: 20);
+                          },
+                          itemCount: reservationController.room.value!.data.comments.length),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          ));
+                ),
+              ));
   }
 }

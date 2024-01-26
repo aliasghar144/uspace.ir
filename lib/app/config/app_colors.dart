@@ -24,6 +24,8 @@ class AppColors{
 
   static const Color grayColor = Color(0xff888888);
 
+  static const Color roomsBackground = Color(0xffF3F3F3);
+
   static const Color primaryTextColor = Color(0xff051726);
 
   static Color secondTextColor = const Color(0xff100F0F80).withOpacity(0.5);
