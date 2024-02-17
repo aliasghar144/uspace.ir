@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:http/http.dart' as http;
 import 'package:uspace_ir/models/room_reservation_model.dart';
@@ -76,7 +77,6 @@ class ReservationController extends GetxController {
     }
   }
 
-
   iconMaker(String? icon){
     print('its empty name $icon');
     if(icon == null){}else{
@@ -97,7 +97,24 @@ class ReservationController extends GetxController {
     'fa-toilet': FontAwesomeIcons.toilet
   };
 
-  // IconData icon = FontAwesomeIcons();
+  String roomAvailabilityCheck(String availability){
+    switch(availability){
+      case 'available':
+        return 'موجود';
+      case 'unavailable':
+        return 'ناموجود';
+      case 'inquiry':
+        return 'نیازمند استعلام';
+      default: return '';
+    }
+  }
+
+
+
+
+  iconSeter(String mcode){
+    return IconDataSolid(int.parse(mcode,radix: 16));
+  }
 
   String dateEdit(int date){
     if( date > 10){
@@ -112,6 +129,7 @@ class ReservationController extends GetxController {
   ScrollController roomSugestionController = ScrollController();
 
   Rx<DateTime> entryDate = DateTime.now().obs;
+
   RxBool isDateSelected = false.obs;
 
   final RxInt durationValue = 1.obs;
@@ -146,14 +164,40 @@ class ReservationController extends GetxController {
   TextEditingController emailController = TextEditingController();
   TextEditingController commentController = TextEditingController();
 
+  sendReply()async{
+    try{
+      loadingRoom.value = true;
+      Uri url = Uri.parse('https://api.uspace.ir/api/p_u_api/v1/comments/new-comment');
+      Map<String,String> body = {
+        'name':nameController.text,
+        'comment':commentController.text,
+        'email':emailController.text,
+        'best_url':'test',
+      };
+      var response = await http.post(url,body: body,headers: {
+        'Accept':'application/json'
+      });
+      if(response.statusCode == 200){
+        print(response.body);
+        Get.showSnackbar(
+            GetSnackBar(
+              backgroundColor: AppColors.mainColor,
+              duration: const Duration(seconds: 3),
+              messageText: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(jsonDecode(response.body)['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
 
+            ));
+      }else{
+    throw response.body;
+    }}catch(e){
+      throw 'ERR = $e';
+    }
+  }
   //#endregion =============== Comments =======================
 
 
   RxBool isFave = false.obs;
-
-  RxInt selectedPackageIndex = 100.obs;
-  RxInt selectedPackageId = 100.obs;
-
+  
   final PageController pageController = PageController();
 }

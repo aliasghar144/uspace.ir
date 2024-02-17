@@ -10,9 +10,9 @@ import 'package:uspace_ir/pages/auth/phone_authentication_screen.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
 
-  LoginController loginController = Get.put(LoginController());
+  final LoginController loginController = Get.put(LoginController());
 
-  RxBool activeButton = false.obs;
+  final RxBool activeButton = false.obs;
 
   @override
   Widget build(BuildContext context) {

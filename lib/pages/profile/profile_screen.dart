@@ -5,7 +5,7 @@ import 'package:uspace_ir/controllers/login_controller.dart';
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
 
-  LoginController loginController = Get.find();
+  final LoginController loginController = Get.find();
 
   @override
   Widget build(BuildContext context) {

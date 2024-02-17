@@ -10,8 +10,8 @@ import 'package:uspace_ir/controllers/search_controller.dart';
 class LiveSearchScreen extends StatelessWidget {
   LiveSearchScreen({Key? key}) : super(key: key);
 
-  SearchController liveSearchController = Get.find();
-  BaseController baseController = Get.find();
+  final SearchController liveSearchController = Get.find();
+  final BaseController baseController = Get.find();
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uspace_ir/models/room_reservation_model.dart';
+import 'package:uspace_ir/models/rooms_register_model.dart';
 
 class RegisterReservationController extends GetxController{
+
+
+  RxList<RoomsRegisterModel> roomRegisterList = <RoomsRegisterModel>[].obs;
+
+  RxBool isTextFieldSelected = false.obs;
+
   //#region ================ Booker Details ========================
 
-  final RxBool isTextFieldSelected = false.obs;
+  final RxBool nameTextFieldSelected = false.obs;
   final RxBool isAcceptTerms = false.obs;
 
   TextEditingController nameController = TextEditingController();
@@ -29,9 +37,14 @@ class RegisterReservationController extends GetxController{
     'قوانین خردسالان4',
   ];
 
+  void addRoom(List<Room> roomList) {
+    for(Room room in roomList){
+      roomRegisterList.add(RoomsRegisterModel(roomReservationModel: room));
+    }
+  }
 
 
-  //#endregion ================ Booker Details ========================
 
+//#endregion ================ Booker Details ========================
 
 }
