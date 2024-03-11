@@ -5,7 +5,9 @@ import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/login_controller.dart';
+import 'package:uspace_ir/controllers/order_history_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
+import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/pages/history/history_screen.dart';
 import 'package:uspace_ir/pages/home/home_screen.dart';
 import 'package:uspace_ir/pages/profile/profile_screen.dart';
@@ -22,6 +24,8 @@ class BaseScreen extends StatelessWidget {
   final BaseController baseController = Get.put(BaseController());
   final SearchController searchController = Get.put(SearchController());
   final HomeController homeController = Get.put(HomeController());
+  final UserController userController = Get.put(UserController());
+  final OrderHistoryController orderHistoryController = Get.put(OrderHistoryController());
 
 
   final page = [
@@ -65,8 +69,6 @@ class BaseScreen extends StatelessWidget {
                     splashRadius: 20,
                     icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
                     onPressed: () {
-                      loginController.phoneNumberController.clear();
-                      BottomSheets().loginBottomSheet();
                     },
                   ),
                 ),
@@ -80,8 +82,9 @@ class BaseScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-                bottom: PreferredSize(
-                  preferredSize: const Size(double.infinity, 70),
+                bottom:
+                PreferredSize(
+                  preferredSize: const Size(double.infinity,70),
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
                     width: double.infinity,
@@ -140,7 +143,7 @@ class BaseScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
+                  )
                 ),
               ),
                   SliverToBoxAdapter(

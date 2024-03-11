@@ -87,7 +87,9 @@ class ReservationScreen extends StatelessWidget {
               alignment: Alignment.bottomLeft,
               child: Padding(
                 padding: const EdgeInsets.only(left: 15, bottom: 15.0),
-                child: FloatingActionButton(backgroundColor: AppColors.mainColor, onPressed: () {}, child: SvgPicture.asset('assets/icons/chat_ic.svg')),
+                child: FloatingActionButton(backgroundColor: AppColors.mainColor, onPressed: () {
+                  sendComment(reservationController);
+                }, child: SvgPicture.asset('assets/icons/chat_ic.svg')),
               ),
             ),
             Obx(
@@ -1473,7 +1475,6 @@ class ReservationScreen extends StatelessWidget {
   }
 
   imagesView(ReservationController reservationController) {
-    reservationController.iconMaker(reservationController.room.value!.data.features[2].feature.image);
     return Get.dialog(
       Dialog(
         shape: RoundedRectangleBorder(
@@ -1711,99 +1712,104 @@ class ReservationScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          Get.dialog(facilityDialog(
-                                              feature:reservationController.room.value!.data.rooms[roomsIndex].features,
-                                              title: reservationController.room.value!.data.rooms[roomsIndex].title,
-                                              hasBrakeFast: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[0].value,
-                                              hasDinner: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[1].value,
-                                              hasLunch: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[2].value
-                                          ));
-                                        },
-                                        borderRadius: BorderRadius.circular(30),
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(30),
-                                              color: AppColors.mainColor.withOpacity(0.8),
-                                            ),
-                                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                                            child: Row(children: [
-                                              Text('امکانات',
-                                                  style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(
-                                                        color: Colors.white,
-                                                      )),
-                                              const SizedBox(width: 4),
-                                              SvgPicture.asset('assets/icons/facilities_ic.svg'),
-                                            ])),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        'توضیحات:',
-                                        style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.grey),
-                                        textDirection: TextDirection.rtl,
-                                      ),
-                                      Text('دارای تشک برای 3 نفر', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: Colors.grey)),
-                                      reservationController.durationValue.value != 1 ?
-                                      RichText(
-                                        textDirection: TextDirection.rtl,
-                                        text: TextSpan(children: [
-                                          TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
-                                          TextSpan(text: (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice ~/ reservationController.durationValue.value).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
-                                          TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
-                                        ]),
-                      ):const SizedBox(),
-                                      const SizedBox(height: 5),
-                                      reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
-                                          ? RichText(
-                                              textDirection: TextDirection.rtl,
-                                              text: TextSpan(children: [
-                                                TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey, decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
-                                                TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0 ? TextDecoration.lineThrough : null)),
-                                                TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
-                                              ]),
-                                            )
-                                          : const SizedBox(),
-                                      reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
-                                          ? Container(
-                                              margin: const EdgeInsets.only(top: 5, bottom: 5),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Get.dialog(facilityDialog(
+                                                feature:reservationController.room.value!.data.rooms[roomsIndex].features,
+                                                title: reservationController.room.value!.data.rooms[roomsIndex].title,
+                                                hasBrakeFast: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[0].value,
+                                                hasDinner: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[1].value,
+                                                hasLunch: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[2].value
+                                            ));
+                                          },
+                                          borderRadius: BorderRadius.circular(30),
+                                          child: Container(
                                               decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(30),
-                                                color: AppColors.redColor.withOpacity(0.8),
+                                                color: AppColors.mainColor.withOpacity(0.8),
                                               ),
-                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                              child: RichText(
-                                                textDirection: TextDirection.rtl,
-                                                text: TextSpan(children: [
-                                                  TextSpan(text: (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice - reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerPrice).toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
-                                                  TextSpan(text: 'تومان تخفیف', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
-                                                ]),
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                      const SizedBox(height: 8),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(30),
-                                          color: Colors.grey.withOpacity(0.12),
+                                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                              child: Row(
+                                                  mainAxisSize:MainAxisSize.min,
+                                                  children: [
+                                                Text('امکانات',
+                                                    style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(
+                                                          color: Colors.white,
+                                                        )),
+                                                const SizedBox(width: 4),
+                                                SvgPicture.asset('assets/icons/facilities_ic.svg'),
+                                              ])),
                                         ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                                        child: RichText(
+                                        const SizedBox(height: 5),
+                                        reservationController.room.value!.data.rooms[roomsIndex].details == null ? const SizedBox() :
+                                        Text(
+                                          'توضیحات:',
+                                          style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.grey),
+                                          textDirection: TextDirection.rtl,
+                                        ),
+                                        if (reservationController.room.value!.data.rooms[roomsIndex].details == null) const SizedBox() else Text(reservationController.room.value!.data.rooms[roomsIndex].details ?? '', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: Colors.grey),maxLines: 2,textDirection: TextDirection.rtl,softWrap: true,overflow: TextOverflow.ellipsis),
+                                        reservationController.durationValue.value != 1 ?
+                                        RichText(
                                           textDirection: TextDirection.rtl,
                                           text: TextSpan(children: [
-                                            TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
-                                            TextSpan(text: ' تومان ', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
-                                            TextSpan(text: 'برای ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
-                                            TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.durationDay.toString(), style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Colors.grey)),
-                                            TextSpan(text: ' شب', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                            TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                            TextSpan(text: (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice ~/ reservationController.durationValue.value).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
+                                            TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
                                           ]),
+                      ):const SizedBox(),
+                                        const SizedBox(height: 5),
+                                        reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
+                                            ? RichText(
+                                                textDirection: TextDirection.rtl,
+                                                text: TextSpan(children: [
+                                                  TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey, decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
+                                                  TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0 ? TextDecoration.lineThrough : null)),
+                                                  TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
+                                                ]),
+                                              )
+                                            : const SizedBox(),
+                                        reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
+                                            ? Container(
+                                                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(30),
+                                                  color: AppColors.redColor.withOpacity(0.8),
+                                                ),
+                                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                child: RichText(
+                                                  textDirection: TextDirection.rtl,
+                                                  text: TextSpan(children: [
+                                                    TextSpan(text: (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice - reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerPrice).toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
+                                                    TextSpan(text: 'تومان تخفیف', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
+                                                  ]),
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                        const SizedBox(height: 8),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30),
+                                            color: Colors.grey.withOpacity(0.12),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                          child: RichText(
+                                            textDirection: TextDirection.rtl,
+                                            text: TextSpan(children: [
+                                              TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
+                                              TextSpan(text: ' تومان ', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
+                                              TextSpan(text: 'برای ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                              TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.durationDay.toString(), style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Colors.grey)),
+                                              TextSpan(text: ' شب', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                            ]),
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 15,

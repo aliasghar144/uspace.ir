@@ -1,15 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:http/http.dart' as http;
 import 'package:uspace_ir/models/room_reservation_model.dart';
-
-import '../app/utils/string_to_icon.dart';
 
 class ReservationController extends GetxController {
   String url;
@@ -77,26 +74,6 @@ class ReservationController extends GetxController {
     }
   }
 
-  iconMaker(String? icon){
-    print('its empty name $icon');
-    if(icon == null){}else{
-      icon = icon[0].toUpperCase() + icon.substring(1).toLowerCase();
-      if(icon.startsWith('Fa')){
-        icon = icon.replaceAll('-', '');
-        print('without - is $icon');
-        icon = icon.substring(2);
-        print('without fa is $icon');
-        icon = icon[0].toLowerCase() + icon.substring(1);
-        print('last func is $icon');
-      }
-      return stringToIcons[icon];
-    }
-  }
-
-  Map<String,IconData> icons = {
-    'fa-toilet': FontAwesomeIcons.toilet
-  };
-
   String roomAvailabilityCheck(String availability){
     switch(availability){
       case 'available':
@@ -107,13 +84,6 @@ class ReservationController extends GetxController {
         return 'نیازمند استعلام';
       default: return '';
     }
-  }
-
-
-
-
-  iconSeter(String mcode){
-    return IconDataSolid(int.parse(mcode,radix: 16));
   }
 
   String dateEdit(int date){
@@ -178,7 +148,7 @@ class ReservationController extends GetxController {
         'Accept':'application/json'
       });
       if(response.statusCode == 200){
-        print(response.body);
+        Get.back();
         Get.showSnackbar(
             GetSnackBar(
               backgroundColor: AppColors.mainColor,

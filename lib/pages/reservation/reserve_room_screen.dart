@@ -69,7 +69,10 @@ class RoomReservationScreen extends StatelessWidget {
                   rooms.add(reservationController.room.value!.data.rooms[roomsIndex]);
                 }
                 Get.to(RegisterReservationScreen(),arguments: {
-                  'room': rooms
+                  'room': rooms,
+                  'url': reservationController.room.value!.data.url,
+                  'duration': reservationController.durationValue.value,
+                  'reserveDate': reservationController.entryDate,
                 });
               },
               child: Container(
@@ -180,7 +183,15 @@ class RoomReservationScreen extends StatelessWidget {
                 ),
               );
             },
-            errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+            errorWidget: (context, url, error) => Container(
+            clipBehavior: Clip.none,
+              width: MediaQuery.of(context).size.width,
+              height: Get.width / 2,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Image.asset('assets/images/image_not_available.png',fit: BoxFit.scaleDown,),
+          ),
           ),
         ),
       ),
@@ -325,7 +336,6 @@ class RoomReservationScreen extends StatelessWidget {
   }
 
   facilities(int roomsIndex,RoomReservationController roomReservationController) {
-    print(reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerPrice);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
@@ -394,10 +404,12 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
+        reservationController.room.value!.data.rooms[roomsIndex].details == null ? const SizedBox() :
         RichText(
+          textDirection: TextDirection.rtl,
           text: TextSpan(children: [
             TextSpan(text: 'توضیحات: ', style: Theme.of(Get.context!).textTheme.bodyMedium),
-            TextSpan(text: 'دارای تشک مسافرتی برای 3 نفر'.toPersianDigit(), style: Theme.of(Get.context!).textTheme.titleLarge),
+            TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].details, style: Theme.of(Get.context!).textTheme.titleLarge!.copyWith(),),
           ]),
         ),
         const SizedBox(

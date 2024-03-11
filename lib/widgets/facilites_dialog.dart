@@ -1,9 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
+
 
 
  Dialog facilityDialog({
@@ -100,7 +102,7 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
                   children: [
                     feature![index].feature.image == null ?
                     const Icon(Icons.done_rounded,size: 10,color:AppColors.mainColor,):
-                    feature[index].feature.image!.startsWith('fa') ? Icon(Icons.star,size: 10,color: Colors.yellow,) : Icon(Icons.done,size: 10,),
+                    feature[index].feature.image!.startsWith('fa') ?  FaIcon(iconSet(feature[index].feature.unicode??'f00c'),size: 10,color: AppColors.mainColor,) : const Icon(Icons.done,size: 10,),
                     const SizedBox(width: 5),
                     Flexible(
                         child: Text(
@@ -118,4 +120,9 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
       ),
     ]),
   );
+
+}
+
+iconSet(String mCode){
+  return IconDataSolid(int.parse(mCode,radix: 16));
 }

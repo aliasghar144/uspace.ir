@@ -242,10 +242,10 @@ class EcolodgeSuggestion {
     village: json["village"],
     address: json["address"],
     url: json["url"],
-    minPrice: json["min_price"],
+    minPrice: json["min_price"]?.toInt(),
     unitPrice: json["unit_price"],
-    maxDiscountPercent: json["max_discount_percent"],
-    maxDiscountPrice: json["max_discount_price"],
+    maxDiscountPercent: json["max_discount_percent"]?.toInt(),
+    maxDiscountPrice: json["max_discount_price"]?.toInt(),
     dollarEquivalent: json["dollar_equivalent"]?.toDouble(),
     currency: json["currency"],
   );
@@ -271,17 +271,20 @@ class FeatureFeature {
   String title;
   String? image;
   int vip;
+  String? unicode;
 
   FeatureFeature({
     required this.title,
     required this.image,
     required this.vip,
+    this.unicode,
   });
 
   factory FeatureFeature.fromJson(Map<String, dynamic> json) => FeatureFeature(
     title: json["title"],
     image: json["image"],
     vip: json["vip"],
+    unicode: json["unicode"],
   );
 
 }
@@ -328,6 +331,7 @@ class Room {
   String imageList;
   List<RoomFeature> features;
   List<RoomPackage> roomPackages;
+  int idRoom;
 
   Room({
     required this.title,
@@ -352,6 +356,7 @@ class Room {
     required this.imageList,
     required this.features,
     required this.roomPackages,
+    required this.idRoom,
   });
 
   factory Room.fromJson(Map<String, dynamic> json) => Room(
@@ -377,6 +382,7 @@ class Room {
     imageList: json["image_list"],
     features: List<RoomFeature>.from(json["features"].map((x) => RoomFeature.fromJson(x))),
     roomPackages: List<RoomPackage>.from(json["room_packages"].map((x) => RoomPackage.fromJson(x))),
+    idRoom: json["id_room"],
   );
 
 }
