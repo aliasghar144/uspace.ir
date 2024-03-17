@@ -1,27 +1,29 @@
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:persian_number_utility/persian_number_utility.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:persian_datetime_picker/persian_datetime_picker.dart';
+import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/custom_tab_indicator.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:uspace_ir/controllers/reservation_controller.dart';
+import 'package:uspace_ir/models/room_reservation_model.dart';
 import 'package:uspace_ir/pages/reservation/reserve_room_screen.dart';
 import 'package:uspace_ir/widgets/comment_rate_bar.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 import 'package:uspace_ir/widgets/single_image_view.dart';
 import 'package:uspace_ir/widgets/textfield.dart';
-import 'package:flutter_html/flutter_html.dart';
 
 class ReservationScreen extends StatelessWidget {
   const ReservationScreen({Key? key}) : super(key: key);
@@ -187,41 +189,11 @@ class ReservationScreen extends StatelessWidget {
                                                   return const SizedBox(height: 5);
                                                 },
                                                 itemCount: 8)
-                                            : Text(reservationController.room.value!.data.rules.cancelTerms,
+                                            : Text(reservationController.room.value!.data.rules.cancelTerms ?? '',
                                                 textAlign: TextAlign.justify,
                                                 textDirection: TextDirection.rtl,
                                                 style: Theme.of(Get.context!).textTheme.titleMedium,
                                               ),
-//                                         const SizedBox(
-//                                           height: 10,
-//                                         ),
-//                                         Text('کنسلی در نوروز یا ایام پیک', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: AppColors.mainColor)),
-//                                         const SizedBox(
-//                                           height: 5,
-//                                         ),
-//                                         Text(
-//                                           """کنسلی در نوروز (۲۰ اسفند تا ۲۰ فروردین)، تعطیلات رسمی و ایام پیک سفر ممکن است با قوانین کنسلی عادی اقامتگاه متفاوت باشد. لطفا قبل از کنسلی برای دریافت شرایط با سایت تماس بگیرید یا از طریق ارسال تیکت در بخش مدیریت سفارشات خود، پیگیر باشید""",
-//                                           textAlign: TextAlign.justify,
-//                                           textDirection: TextDirection.rtl,
-//                                           style: Theme.of(Get.context!).textTheme.titleMedium,
-//                                         ),
-//                                         const SizedBox(
-//                                           height: 10,
-//                                         ),
-//                                         Text('قوانین و مقررات اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: AppColors.mainColor)),
-//                                         const SizedBox(
-//                                           height: 5,
-//                                         ),
-//                                         Text(
-//                                           """ارائه مدارک محرمیت در زمان پذیرش الزامی است.
-// هتل سنتی شیران اصفهان از پذیرش حیوانات خانگی معذور است.
-// ارائه مدارک محرمیت معتبر در زمان پذیرش الزامی است.
-// هتل از پذیرش حیوانات خانگی معذور است.
-// با توجه به تفاوت نرخ و شرایط پذیرش مهمانان خارجی، قبل از قطعی کردن رزرو با پشتیبانی هماهنگ کنید.""",
-//                                           textAlign: TextAlign.justify,
-//                                           textDirection: TextDirection.rtl,
-//                                           style: Theme.of(Get.context!).textTheme.titleMedium,
-//                                         ),
                                         const SizedBox(
                                           height: 25,
                                         ),
@@ -955,11 +927,11 @@ class ReservationScreen extends StatelessWidget {
                       imageUrl: reservationController.room.value!.data.mainImageThumb,
                       fit: BoxFit.cover,
                       progressIndicatorBuilder: (context, url, progress) {
-                        return Align(
-                          child: SizedBox(
-                            width: Get.width / 7,
-                            height: Get.width / 6.5,
-                            child: const CircularProgressIndicator(
+                        return SizedBox(
+                          width: Get.width / 7,
+                          height: Get.width / 6.5,
+                          child: const Align(
+                            child: CircularProgressIndicator(
                               strokeWidth: 1,
                               color: AppColors.mainColor,
                             ),
@@ -1019,11 +991,11 @@ class ReservationScreen extends StatelessWidget {
                       imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[2].thumbImage}',
                       fit: BoxFit.cover,
                       progressIndicatorBuilder: (context, url, progress) {
-                        return Align(
-                          child: SizedBox(
-                            width: Get.width / 7,
-                            height: Get.width / 6.5,
-                            child: const CircularProgressIndicator(
+                        return SizedBox(
+                          width: Get.width / 7,
+                          height: Get.width / 6.5,
+                          child: const Align(
+                            child: CircularProgressIndicator(
                               strokeWidth: 1,
                               color: AppColors.mainColor,
                             ),
@@ -1067,11 +1039,11 @@ class ReservationScreen extends StatelessWidget {
                         imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[1].thumbImage}',
                         fit: BoxFit.cover,
                         progressIndicatorBuilder: (context, url, progress) {
-                          return Align(
-                            child: SizedBox(
-                              width: Get.width / 7,
-                              height: Get.width / 6.5,
-                              child: const CircularProgressIndicator(
+                          return SizedBox(
+                            width: Get.width / 7,
+                            height: Get.width / 6.5,
+                            child: const Align(
+                              child: CircularProgressIndicator(
                                 strokeWidth: 1,
                                 color: AppColors.mainColor,
                               ),
@@ -1106,11 +1078,11 @@ class ReservationScreen extends StatelessWidget {
                         imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[0].thumbImage}',
                         fit: BoxFit.cover,
                         progressIndicatorBuilder: (context, url, progress) {
-                          return Align(
-                            child: SizedBox(
-                              width: Get.width / 7,
-                              height: Get.width / 6.5,
-                              child: const CircularProgressIndicator(
+                          return SizedBox(
+                            width: Get.width / 7,
+                            height: Get.width / 6.5,
+                            child: const Align(
+                              child: CircularProgressIndicator(
                                 strokeWidth: 1,
                                 color: AppColors.mainColor,
                               ),
@@ -1145,11 +1117,11 @@ class ReservationScreen extends StatelessWidget {
                         imageUrl: reservationController.room.value!.data.mainImageThumb,
                         fit: BoxFit.cover,
                         progressIndicatorBuilder: (context, url, progress) {
-                          return Align(
-                            child: SizedBox(
-                              width: Get.width / 7,
-                              height: Get.width / 6.5,
-                              child: const CircularProgressIndicator(
+                          return SizedBox(
+                            width: Get.width / 7,
+                            height: Get.width / 6.5,
+                            child: const Align(
+                              child: CircularProgressIndicator(
                                 strokeWidth: 1,
                                 color: AppColors.mainColor,
                               ),
@@ -1344,8 +1316,10 @@ class ReservationScreen extends StatelessWidget {
                                   );
                                 }).toList(),
                                 onChanged: (value) {
-                                  reservationController.setSelectedDuration(value!);
-                                  reservationController.choseEntryDate();
+                                  if(!reservationController.loadingRoom.value){
+                                    reservationController.setSelectedDuration(value!);
+                                    reservationController.choseEntryDate();
+                                  }
                                 },
                                 value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
                                 buttonStyleData: ButtonStyleData(
@@ -1377,34 +1351,36 @@ class ReservationScreen extends StatelessWidget {
                           )),
                       InkWell(
                         onTap: () async {
-                          Jalali? picked = await showPersianDatePicker(
-                            context: Get.context!,
-                            helpText: '',
-                            initialEntryMode: PDatePickerEntryMode.calendarOnly,
-                            initialDate: reservationController.entryDate.value.toJalali() != Jalali.now() ? reservationController.entryDate.value.toJalali() : Jalali.now(),
-                            firstDate: Jalali.now(),
-                            lastDate: Jalali(1404, 1),
-                            builder: (context, child) {
-                              return Theme(
-                                data: ThemeData(
-                                  fontFamily: 'iransans',
-                                  primaryTextTheme: Typography.blackRedwoodCity,
-                                  dialogTheme: const DialogTheme(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                          if(!reservationController.loadingRoom.value){
+                            Jalali? picked = await showPersianDatePicker(
+                              context: Get.context!,
+                              helpText: '',
+                              initialEntryMode: PDatePickerEntryMode.calendarOnly,
+                              initialDate: reservationController.entryDate.value.toJalali() != Jalali.now() ? reservationController.entryDate.value.toJalali() : Jalali.now(),
+                              firstDate: Jalali.now(),
+                              lastDate: Jalali(1404, 1),
+                              builder: (context, child) {
+                                return Theme(
+                                  data: ThemeData(
+                                    fontFamily: 'iransans',
+                                    primaryTextTheme: Typography.blackRedwoodCity,
+                                    dialogTheme: const DialogTheme(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                child: child!,
-                              );
-                            },
-                          );
-                          picked?.toDateTime();
-                          if (picked != null) {
-                            reservationController.isDateSelected.value = true;
-                            reservationController.entryDate.value = picked.toDateTime();
+                                  child: child!,
+                                );
+                              },
+                            );
+                            picked?.toDateTime();
+                            if (picked != null) {
+                              reservationController.isDateSelected.value = true;
+                              reservationController.entryDate.value = picked.toDateTime();
+                            }
+                            reservationController.choseEntryDate();
                           }
-                          reservationController.choseEntryDate();
                         },
                         child: Container(
                             height: 35,
@@ -1720,7 +1696,7 @@ class ReservationScreen extends StatelessWidget {
                                         InkWell(
                                           onTap: () {
                                             Get.dialog(facilityDialog(
-                                                feature:reservationController.room.value!.data.rooms[roomsIndex].features,
+                                                roomFeatures:reservationController.room.value!.data.rooms[roomsIndex].features,
                                                 title: reservationController.room.value!.data.rooms[roomsIndex].title,
                                                 hasBrakeFast: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[0].value,
                                                 hasDinner: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[1].value,
@@ -1753,12 +1729,12 @@ class ReservationScreen extends StatelessWidget {
                                           textDirection: TextDirection.rtl,
                                         ),
                                         if (reservationController.room.value!.data.rooms[roomsIndex].details == null) const SizedBox() else Text(reservationController.room.value!.data.rooms[roomsIndex].details ?? '', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: Colors.grey),maxLines: 2,textDirection: TextDirection.rtl,softWrap: true,overflow: TextOverflow.ellipsis),
-                                        reservationController.durationValue.value != 1 ?
+                                        reservationController.durationValue.value != 1 && reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount == 0 ?
                                         RichText(
                                           textDirection: TextDirection.rtl,
                                           text: TextSpan(children: [
                                             TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
-                                            TextSpan(text: (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice ~/ reservationController.durationValue.value).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
+                                            TextSpan(text: oneNightPrice(reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
                                             TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
                                           ]),
                       ):const SizedBox(),
@@ -1767,9 +1743,9 @@ class ReservationScreen extends StatelessWidget {
                                             ? RichText(
                                                 textDirection: TextDirection.rtl,
                                                 text: TextSpan(children: [
-                                                  TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey, decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
-                                                  TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0 ? TextDecoration.lineThrough : null)),
-                                                  TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
+                                                  TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+                                                  TextSpan(text: oneNightPrice(reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7),)),
+                                                  TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
                                                 ]),
                                               )
                                             : const SizedBox(),
@@ -1785,7 +1761,7 @@ class ReservationScreen extends StatelessWidget {
                                                   textDirection: TextDirection.rtl,
                                                   text: TextSpan(children: [
                                                     TextSpan(text: (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice - reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerPrice).toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
-                                                    TextSpan(text: 'تومان تخفیف', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
+                                                    TextSpan (text: 'تومان تخفیف', style: Theme.of(Get.context!).textTheme.bodySmall!.copyWith(color: Colors.white)),
                                                   ]),
                                                 ),
                                               )
@@ -1800,7 +1776,7 @@ class ReservationScreen extends StatelessWidget {
                                           child: RichText(
                                             textDirection: TextDirection.rtl,
                                             text: TextSpan(children: [
-                                              TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
+                                              TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalPay.toString().seRagham(), style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
                                               TextSpan(text: ' تومان ', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: AppColors.mainColor)),
                                               TextSpan(text: 'برای ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
                                               TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.durationDay.toString(), style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: Colors.grey)),
@@ -1860,7 +1836,7 @@ class ReservationScreen extends StatelessWidget {
                             const SizedBox(
                               height: 15,
                             ),
-                            Container(
+                             Container(
                               alignment: Alignment.topRight,
                               height: Get.width / 5.0,
                               padding: const EdgeInsets.symmetric(horizontal:5),
@@ -1900,9 +1876,10 @@ class ReservationScreen extends StatelessWidget {
                                           ],
                                         ),
                                       );
-                                    }else{
+                                    }
+                                    else{
                                       return Container(
-                                        width:Get.width/4.55,
+                                        width:Get.width/4.05,
                                         clipBehavior: Clip.hardEdge,
                                         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(width: 0.4, color: AppColors.mainColor)),
                                         child: Column(
@@ -1910,19 +1887,24 @@ class ReservationScreen extends StatelessWidget {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Container(
-                                              width:Get.width/4.55,
+                                              width:Get.width/4.05,
                                               alignment: Alignment.center,
                                               padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 2),
                                               decoration: BoxDecoration(
                                                 color: AppColors.mainColor.withOpacity(0.1),
                                               ),
-                                              child: Text(reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days[roomIndex].date.toPersianDateStr(showDayStr: true,), style: Theme.of(Get.context!).textTheme.labelSmall),
+                                              child: Text(reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days[roomIndex].date.toPersianDateStr(showDayStr: true,),
+                                                style: Theme.of(Get.context!).textTheme.labelSmall,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
                                             ),
                                             const SizedBox(height: 3),
                                             Text(
                                               '${reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days[roomIndex].originalPrice.toString().seRagham()} تومان',
                                               style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
                                               textDirection: TextDirection.rtl,
+                                              maxLines: 1,
                                             ),
                                             const SizedBox(height: 3),
                                             Text(
@@ -2322,96 +2304,6 @@ class ReservationScreen extends StatelessWidget {
                               data: reservationController.room.value!.data.content,
                             )),
                         Directionality(textDirection: TextDirection.rtl, child: Html(data: reservationController.room.value!.data.distance)),
-                        // //TODO: remove if html is oky bellow
-                        // ReadMoreText(
-                        //   reservationController.room.value!.data.content,
-                        //   textAlign: TextAlign.justify,
-                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
-                        //   trimLines: 4,
-                        //   textDirection: TextDirection.rtl,
-                        //   trimMode: TrimMode.Line,
-                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        //   trimCollapsedText: 'نمایش بیشتر',
-                        //   trimExpandedText: 'نمایش کمتر',
-                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        // ),
-                        // const SizedBox(
-                        //   height: 15,
-                        // ),
-                        // Text('امکانات اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        // const SizedBox(
-                        //   height: 5,
-                        // ),
-                        // ReadMoreText(
-                        //   reservationController.roomEquipments,
-                        //   textAlign: TextAlign.justify,
-                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
-                        //   trimLines: 4,
-                        //   textDirection: TextDirection.rtl,
-                        //   trimMode: TrimMode.Line,
-                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        //   trimCollapsedText: 'نمایش بیشتر',
-                        //   trimExpandedText: 'نمایش کمتر',
-                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        // ),
-                        // const SizedBox(
-                        //   height: 15,
-                        // ),
-                        // Text('موقعیت جغرافیایی', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        // const SizedBox(
-                        //   height: 5,
-                        // ),
-                        // ReadMoreText(
-                        //   reservationController.roomLocation,
-                        //   textAlign: TextAlign.justify,
-                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
-                        //   trimLines: 4,
-                        //   textDirection: TextDirection.rtl,
-                        //   trimMode: TrimMode.Line,
-                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        //   trimCollapsedText: 'نمایش بیشتر',
-                        //   trimExpandedText: 'نمایش کمتر',
-                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        // ),
-                        // const SizedBox(
-                        //   height: 15,
-                        // ),
-                        // Text('فاصله (تقریبی) این هتل سنتی تا جاذبه های گردشگری و مکان های مهم', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        // const SizedBox(
-                        //   height: 5,
-                        // ),
-                        // ReadMoreText(
-                        //   reservationController.importantLocationDistance,
-                        //   textAlign: TextAlign.justify,
-                        //   style: Theme.of(Get.context!).textTheme.titleMedium,
-                        //   trimLines: 4,
-                        //   textDirection: TextDirection.rtl,
-                        //   trimMode: TrimMode.Line,
-                        //   lessStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        //   trimCollapsedText: 'نمایش بیشتر',
-                        //   trimExpandedText: 'نمایش کمتر',
-                        //   moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(fontSize: 10, color: Colors.blue),
-                        // ),
-                        // const SizedBox(
-                        //   height: 25,
-                        // ),
-                        // Text('ادرس اقامتگاه', style: Theme.of(Get.context!).textTheme.bodySmall),
-                        // const SizedBox(
-                        //   height: 10,
-                        // ),
-                        // Text('استان اصفهان،شهر اصفهان،خیابان میرداماد،انتهای کوچه یازدهم', style: Theme.of(Get.context!).textTheme.titleMedium),
-                        // const SizedBox(
-                        //   height: 5,
-                        // ),
-                        // TextButton(
-                        //     onPressed: () {},
-                        //     child: Text(
-                        //       'جستجو بر روی نقشه',
-                        //       style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.mainColor),
-                        //     )),
-                        // const SizedBox(
-                        //   height: 5,
-                        // ),
                         Container(
                           height: 165,
                           width: Get.width,
@@ -2596,13 +2488,6 @@ class ReservationScreen extends StatelessWidget {
                         width: Get.width,
                         color: Colors.black.withOpacity(0.1),
                       ),
-                      const SizedBox(
-                        height: 35,
-                      ),
-                      Text('تا کنون نظری ثبت نشده است', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 20)),
-                      const SizedBox(
-                        height: 25,
-                      ),
                     ],
                   ),
                 ),
@@ -2633,11 +2518,11 @@ class ReservationScreen extends StatelessWidget {
                                     children: [
                                       reservationController.room.value!.data.comments[index].type == 'feedback' ? Row(
                                         children: [
-                                          RateStar(point: reservationController.room.value!.data.comments[index].option1['point'],title:reservationController.room.value!.data.comments[index].option1['title']),
-                                          RateStar(point: reservationController.room.value!.data.comments[index].option2['point'],title:reservationController.room.value!.data.comments[index].option2['title']),
-                                          RateStar(point: reservationController.room.value!.data.comments[index].option3['point'],title:reservationController.room.value!.data.comments[index].option3['title']),
-                                          RateStar(point: reservationController.room.value!.data.comments[index].option4['point'],title:reservationController.room.value!.data.comments[index].option4['title']),
-                                          RateStar(point: reservationController.room.value!.data.comments[index].option5['point'],title:reservationController.room.value!.data.comments[index].option5['title']),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option1?.point,title:reservationController.room.value!.data.comments[index].option1!.title),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option2?.point,title:reservationController.room.value!.data.comments[index].option2!.title),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option3?.point,title:reservationController.room.value!.data.comments[index].option3!.title),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option4?.point,title:reservationController.room.value!.data.comments[index].option4!.title),
+                                          RateStar(point: reservationController.room.value!.data.comments[index].option5?.point,title:reservationController.room.value!.data.comments[index].option5!.title),
                                         ],
                                       ) : const SizedBox(),
                                       const Spacer(),
@@ -2678,40 +2563,41 @@ class ReservationScreen extends StatelessWidget {
                                                 moreStyle: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.mainColor),
                                               ),
                                         const SizedBox(height: 5),
-                                        if (index == 1)
-                                          SizedBox(
-                                            height: Get.width / 3.25,
-                                            child: ListView.separated(
-                                                padding: const EdgeInsets.symmetric(vertical: 5),
-                                                itemCount: 4,
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.horizontal,
-                                                physics: const BouncingScrollPhysics(),
-                                                separatorBuilder: (BuildContext context, index) {
-                                                  return const SizedBox(width: 5);
-                                                },
-                                                itemBuilder: (BuildContext context, index) {
-                                                  return CachedNetworkImage(
-                                                    imageUrl: "https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg",
-                                                    fit: BoxFit.cover,
-                                                    imageBuilder: (context, imageProvider) {
-                                                      return Container(
-                                                        clipBehavior: Clip.none,
-                                                        width: Get.width / 4.5,
-                                                        decoration: BoxDecoration(
-                                                          image: DecorationImage(
-                                                            image: imageProvider,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                          borderRadius: BorderRadius.circular(8),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                }),
-                                          )
-                                        else
-                                          const SizedBox(),
+                                        // show picture of comment
+                                        // if (index == 1)
+                                        //   SizedBox(
+                                        //     height: Get.width / 3.25,
+                                        //     child: ListView.separated(
+                                        //         padding: const EdgeInsets.symmetric(vertical: 5),
+                                        //         itemCount: 4,
+                                        //         shrinkWrap: true,
+                                        //         scrollDirection: Axis.horizontal,
+                                        //         physics: const BouncingScrollPhysics(),
+                                        //         separatorBuilder: (BuildContext context, index) {
+                                        //           return const SizedBox(width: 5);
+                                        //         },
+                                        //         itemBuilder: (BuildContext context, index) {
+                                        //           return CachedNetworkImage(
+                                        //             imageUrl: "https://www.uspace.ir/public/img/ecolodge/categories/trade-hotel2.jpg",
+                                        //             fit: BoxFit.cover,
+                                        //             imageBuilder: (context, imageProvider) {
+                                        //               return Container(
+                                        //                 clipBehavior: Clip.none,
+                                        //                 width: Get.width / 4.5,
+                                        //                 decoration: BoxDecoration(
+                                        //                   image: DecorationImage(
+                                        //                     image: imageProvider,
+                                        //                     fit: BoxFit.cover,
+                                        //                   ),
+                                        //                   borderRadius: BorderRadius.circular(8),
+                                        //                 ),
+                                        //               );
+                                        //             },
+                                        //           );
+                                        //         }),
+                                        //   )
+                                        // else
+                                        //   const SizedBox(),
                                         reservationController.room.value!.data.comments[index].comment == null
                                             ? const SizedBox()
                                             : Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -2945,6 +2831,15 @@ class ReservationScreen extends StatelessWidget {
         ),
         backgroundColor: Colors.white,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.only(topRight: Radius.circular(28), topLeft: Radius.circular(28))));
+  }
+
+  String oneNightPrice(List<Day> days) {
+    for (Day day in days){
+      if(day.originalPrice > 0){
+        return day.originalPrice.toString().seRagham();
+      }
+    }
+    return '0';
   }
 
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -380,6 +381,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
+                                print(homeController.newestEcolodgeList[index].url);
                                 Get.to(const ReservationScreen(),arguments: {'url':homeController.newestEcolodgeList[index].url});
                               },
                               borderRadius: BorderRadius.circular(12),

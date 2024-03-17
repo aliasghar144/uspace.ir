@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
@@ -13,7 +11,7 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
    required int hasBrakeFast,
    required int hasDinner,
    required int hasLunch,
-   List<RoomFeature>? feature,
+   required List<RoomFeature> roomFeatures,
 }){
   return Dialog(
     insetPadding: const EdgeInsets.symmetric(horizontal: 25),
@@ -91,27 +89,32 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
           Directionality(
             textDirection: TextDirection.rtl,
             child: GridView.builder(
-              itemCount: feature?.length,
+              itemCount: roomFeatures.length ,
               shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 4.19, mainAxisExtent: null),
               itemBuilder: (context, index) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    feature![index].feature.image == null ?
-                    const Icon(Icons.done_rounded,size: 10,color:AppColors.mainColor,):
-                    feature[index].feature.image!.startsWith('fa') ?  FaIcon(iconSet(feature[index].feature.unicode??'f00c'),size: 10,color: AppColors.mainColor,) : const Icon(Icons.done,size: 10,),
-                    const SizedBox(width: 5),
-                    Flexible(
-                        child: Text(
-                          feature[index].feature.title,
-                          style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey),
-                          textAlign: TextAlign.right,
-                        )),
-                  ],
-                );
+                // we have two list feature and features
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      roomFeatures[index].feature.image == null ?
+                      const Icon(Icons.done_rounded,size: 10,color:AppColors.mainColor,):
+                      roomFeatures[index].feature.image!.startsWith('fa') ?Icon(IconData(
+                          int.parse(roomFeatures[index].feature.unicode??'f00c',radix: 16),
+                        fontFamily: 'FontAwesomeSolid',
+                        fontPackage: 'font_awesome_flutter',
+                      ),size: 10,color: AppColors.mainColor,) : const Icon(Icons.done,size: 10,),
+                      const SizedBox(width: 5),
+                      Flexible(
+                          child: Text(
+                            roomFeatures[index].feature.title,
+                            style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey),
+                            textAlign: TextAlign.right,
+                          )),
+                    ],
+                  );
               },
             ),
           ),
@@ -123,6 +126,6 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
 
 }
 
-iconSet(String mCode){
-  return IconDataSolid(int.parse(mCode,radix: 16));
-}
+// iconSet(String mCode){
+//   return IconDataSolid(int.parse(mCode,radix: 16));
+// }

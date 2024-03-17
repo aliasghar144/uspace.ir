@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
+import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
+import 'package:uspace_ir/controllers/history_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
-import 'package:uspace_ir/controllers/login_controller.dart';
-import 'package:uspace_ir/controllers/order_history_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/pages/history/history_screen.dart';
 import 'package:uspace_ir/pages/home/home_screen.dart';
 import 'package:uspace_ir/pages/profile/profile_screen.dart';
-import 'package:uspace_ir/pages/search/live_serach_screen.dart';
+import 'package:uspace_ir/pages/search/live_search_screen.dart';
 import 'package:uspace_ir/pages/search/search_screen.dart';
-import 'package:uspace_ir/widgets/bottom_sheets.dart';
 
 class BaseScreen extends StatelessWidget {
   BaseScreen({Key? key}) : super(key: key);
 
   //test
-  final LoginController loginController = Get.put(LoginController());
+  // final LoginController loginController = Get.put(LoginController());
 
-  final BaseController baseController = Get.put(BaseController());
-  final SearchController searchController = Get.put(SearchController());
-  final HomeController homeController = Get.put(HomeController());
-  final UserController userController = Get.put(UserController());
-  final OrderHistoryController orderHistoryController = Get.put(OrderHistoryController());
+  final RxBool loading = false.obs;
+
+  final UserController userController = Get.put(UserController(),permanent: true);
+  final BaseController baseController = Get.put(BaseController(),permanent: true);
+  final SearchController searchController = Get.put(SearchController(),permanent: true);
+  final HomeController homeController = Get.put(HomeController(),permanent: true);
+  final HistoryController orderHistoryController = Get.put(HistoryController(),permanent: true);
 
 
   final page = [
@@ -39,6 +41,10 @@ class BaseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        if(loading.value == true){
+          print(loading.value);
+          return false;
+        }
         if(baseController.pageIndex.value != 3){
           baseController.pageIndex.value = 3;
           return false;
@@ -69,6 +75,7 @@ class BaseScreen extends StatelessWidget {
                     splashRadius: 20,
                     icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
                     onPressed: () {
+                      Hive.box(userBox).delete(userCart);
                     },
                   ),
                 ),
@@ -76,7 +83,8 @@ class BaseScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(right: 15,top: 15.0),
                     child: IconButton(
-                      onPressed: (){},
+                      onPressed: (){
+                      },
                       splashRadius: 20,
                       icon: const Icon(Icons.menu,color: Colors.grey,),
                     ),
@@ -208,11 +216,10 @@ class BaseScreen extends StatelessWidget {
         if(index == 2 && searchController.searchEcolodgesResult.isEmpty){
           searchController.searchWithFilter('');
         }
-        if(index ==0 && !loginController.isUserLogin.value){
-          BottomSheets().loginBottomSheet();
-        }else{
+        // if(index ==0 && !loginController.isUserLogin.value){
+        //   BottomSheets().loginBottomSheet();
           baseController.pageIndex.value = index;
-      }},
+        },
       child: Obx(() => SizedBox(
             child: Column(
               mainAxisSize: MainAxisSize.max,

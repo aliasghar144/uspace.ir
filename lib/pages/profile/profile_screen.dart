@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:uspace_ir/controllers/login_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key}) : super(key: key);
 
-  final LoginController loginController = Get.find();
+  // final LoginController loginController = Get.find();
 
   @override
   Widget build(BuildContext context) {

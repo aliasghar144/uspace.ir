@@ -63,17 +63,19 @@ class RoomReservationScreen extends StatelessWidget {
             InkWell(
               borderRadius: BorderRadius.circular(50),
               onTap: () {
-                List<Room> rooms = [];
-                // this use when user select more than one room
-                for(int i = 0; i < roomReservationController.dropdownValue.value;i++){
-                  rooms.add(reservationController.room.value!.data.rooms[roomsIndex]);
+                if(!reservationController.loadingRoom.value){
+                  List<Room> rooms = [];
+                  // this use when user select more than one room
+                  for(int i = 0; i < roomReservationController.dropdownValue.value;i++){
+                    rooms.add(reservationController.room.value!.data.rooms[roomsIndex]);
+                  }
+                  Get.to(RegisterReservationScreen(),arguments: {
+                    'room': rooms,
+                    'url': reservationController.room.value!.data.url,
+                    'duration': reservationController.durationValue.value,
+                    'reserveDate': reservationController.entryDate,
+                  });
                 }
-                Get.to(RegisterReservationScreen(),arguments: {
-                  'room': rooms,
-                  'url': reservationController.room.value!.data.url,
-                  'duration': reservationController.durationValue.value,
-                  'reserveDate': reservationController.entryDate,
-                });
               },
               child: Container(
                 height: 55,
@@ -242,8 +244,10 @@ class RoomReservationScreen extends StatelessWidget {
                           );
                         }).toList(),
                         onChanged: (value) {
-                          reservationController.setSelectedDuration(value!);
-                          reservationController.choseEntryDate();
+                          if(!reservationController.loadingRoom.value){
+                            reservationController.setSelectedDuration(value!);
+                            reservationController.choseEntryDate();
+                          }
                         },
                         value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
                         buttonStyleData: ButtonStyleData(
@@ -348,7 +352,7 @@ class RoomReservationScreen extends StatelessWidget {
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               InkWell(
                 onTap: () {
-                  Get.dialog(facilityDialog(feature: reservationController.room.value!.data.rooms[roomsIndex].features, title: reservationController.room.value!.data.rooms[roomsIndex].title, hasBrakeFast: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[0].value, hasDinner: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[1].value, hasLunch: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[2].value));
+                  Get.dialog(facilityDialog(roomFeatures: reservationController.room.value!.data.rooms[roomsIndex].features, title: reservationController.room.value!.data.rooms[roomsIndex].title, hasBrakeFast: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[0].value, hasDinner: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[1].value, hasLunch: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[2].value));
                 },
                 child: Text('امکانات',
                     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(
@@ -433,12 +437,12 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        Obx(() => reservationController.durationValue.value != 1 ?
+        Obx(() => reservationController.durationValue.value != 1 && reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount == 0?
             Obx(() => reservationController.loadingRoom.value || reservationController.loading.value ? const SizedBox(): RichText(
               textDirection: TextDirection.rtl,
               text: TextSpan(children: [
                 TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
-                TextSpan(text: (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice ~/ reservationController.durationValue.value).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
+                TextSpan(text: oneNightPrice(reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
                 TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
               ]),
             )):const SizedBox(),),
@@ -447,9 +451,9 @@ class RoomReservationScreen extends StatelessWidget {
             ? RichText(
           textDirection: TextDirection.rtl,
           text: TextSpan(children: [
-            TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey, decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
-            TextSpan(text: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalOriginalPrice.toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0 ? TextDecoration.lineThrough : null)),
-            TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7), decoration: roomsIndex == 0 ? TextDecoration.lineThrough : null)),
+            TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.grey)),
+            TextSpan(text: oneNightPrice(reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
+            TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.black.withOpacity(0.7))),
           ]),
         )
             : const SizedBox(),),
@@ -591,7 +595,7 @@ class RoomReservationScreen extends StatelessWidget {
                         );
                       } else {
                         return Container(
-                          width: Get.width / 4.55,
+                          width: Get.width / 4.05,
                           clipBehavior: Clip.hardEdge,
                           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(width: 0.4, color: AppColors.mainColor)),
                           child: Column(
@@ -599,7 +603,7 @@ class RoomReservationScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                width: Get.width / 4.55,
+                                width: Get.width / 4.05,
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
                                 decoration: BoxDecoration(
@@ -609,12 +613,15 @@ class RoomReservationScreen extends StatelessWidget {
                                     reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days[roomIndex].date.toPersianDateStr(
                                       showDayStr: true,
                                     ),
-                                    style: Theme.of(Get.context!).textTheme.labelSmall),
+                                    style: Theme.of(Get.context!).textTheme.labelSmall,
+                                    maxLines: 1,
+                                ),
                               ),
                               const SizedBox(height: 3),
                               Text(
                                 '${reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days[roomIndex].originalPrice.toString().seRagham()} تومان',
                                 style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
+                                maxLines: 1,
                                 textDirection: TextDirection.rtl,
                               ),
                               const SizedBox(height: 3),
@@ -652,4 +659,14 @@ class RoomReservationScreen extends StatelessWidget {
       ]),
     );
   }
+
+  String oneNightPrice(List<Day> days) {
+    for (Day day in days){
+      if(day.originalPrice > 0){
+        return day.originalPrice.toString().seRagham();
+      }
+    }
+    return '0';
+  }
+
 }

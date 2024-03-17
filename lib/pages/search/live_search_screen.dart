@@ -6,6 +6,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
+import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 
 class LiveSearchScreen extends StatelessWidget {
   LiveSearchScreen({Key? key}) : super(key: key);
@@ -95,10 +96,7 @@ class LiveSearchScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children:
                         liveSearchController.liveSearchEcolodgesResult.isEmpty && !liveSearchController.loading.value ? [
-                                                  Padding(
-                                                    padding: const EdgeInsets.symmetric(vertical: 35.0),
-                                                    child: Text(liveSearchController.firstOpen.value ? '' : 'موردی یافت نشد',style: Theme.of(context).textTheme.headlineSmall,),
-                                                  )
+                                                  const SizedBox()
                                                 ] :
                         [
                         Padding(
@@ -151,6 +149,7 @@ class LiveSearchScreen extends StatelessWidget {
                                       }else{
                                         return InkWell(
                                           onTap: () {
+                                            Get.to(const ReservationScreen(),arguments: {'url':liveSearchController.liveSearchEcolodgesResult[index].url});
                                           },
                                           borderRadius: BorderRadius.circular(12),
                                           child: Container(

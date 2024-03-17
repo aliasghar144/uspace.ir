@@ -1,13 +1,19 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
 import 'package:uspace_ir/app/config/app_colors.dart';
+import 'package:uspace_ir/app/utils/error_handle.dart';
+import 'package:uspace_ir/base_screen.dart';
+import 'package:uspace_ir/constance/constance.dart';
+import 'package:uspace_ir/controllers/history_controller.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
 import 'package:uspace_ir/models/rooms_register_model.dart';
-import 'package:http/http.dart' as http;
-import 'package:uspace_ir/pages/reservation/factors_screen.dart';
+
 class RegisterReservationController extends GetxController{
 
   final formKey = GlobalKey<FormState>();
@@ -25,8 +31,19 @@ class RegisterReservationController extends GetxController{
 
   void booking() async{
     try{
-
       loading.value = true;
+      showDialog(context: Get.context!, builder: (context) {
+        return WillPopScope(child: Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Align(child: CircularProgressIndicator(color: AppColors.mainColor,),),
+            ],
+          ),
+        ), onWillPop: () async => !loading.value,);
+      },);
       List reserveItems = [];
       for(RoomsRegisterModel room in roomRegisterList){
       reserveItems.add({
@@ -39,8 +56,8 @@ class RegisterReservationController extends GetxController{
       Map<String,dynamic> body = {
         'name': nameController.text,
         'mobile': phoneNumberController.text,
-        'phone': homeNumberController.text ?? '',
-        'emial': emailController.text ?? '',
+        'phone': homeNumberController.text,
+        'emial': emailController.text,
         'url': roomUrl,
         'terms': isAcceptTerms.value.toString(),
         'check_in': '${reserveDate.value.year.toString()}-${reserveDate.value.month.toString()}-${reserveDate.value.day.toString()}',
@@ -48,8 +65,9 @@ class RegisterReservationController extends GetxController{
         'reserve_items': reserveItems
       };
 
-      Uri url = Uri.parse('https://api.uspace.ir/api/p_u_api/v1/booking');
+      Uri url = Uri.parse('$mainUrl/booking');
 
+      print(jsonEncode(body));
 
       final http.Response response = await http.post(url,body: jsonEncode(body),headers: {
         'Content-type': 'application/json',
@@ -57,11 +75,15 @@ class RegisterReservationController extends GetxController{
       });
       if(response.statusCode == 200){
         var data = jsonDecode(response.body);
-        print(data.runtimeType);
+        print('order is successfully ==> $data');
         if(data['message'] == 'ok'){
+          loading.value = false;
           UserController userController = Get.find<UserController>();
+          HistoryController historyController = Get.find<HistoryController>();
           userController.userCart.add(data['data']['tracking_code']);
-          Get.to(FactorsScreen());
+          historyController.fetchOrder(data['data']['tracking_code']);
+          Hive.box(userBox).put(userCart, userController.userCart);
+          Get.offAll(BaseScreen());
           Get.showSnackbar(
               GetSnackBar(
                 backgroundColor: AppColors.mainColor,
@@ -72,9 +94,9 @@ class RegisterReservationController extends GetxController{
               ));
         }
         if(data['message'] == 'error'){
-          UserController userController = Get.find<UserController>();
-          // userController.userCart.add(data.body['data']['tracking_code']);
-          Get.to(FactorsScreen());
+          loading.value = false;
+
+          Get.offAll(BaseScreen());
           Get.showSnackbar(
               GetSnackBar(
                 backgroundColor: AppColors.redColor,
@@ -86,7 +108,15 @@ class RegisterReservationController extends GetxController{
               ));
         }
       }
-    }catch(e){
+    }
+    on SocketException{
+      Errors().connectLost(onTap: () {
+        booking();
+        Get.closeCurrentSnackbar();
+      },);
+    }
+    catch(e){
+      Get.offAll(BaseScreen());
       rethrow;
     }
   }

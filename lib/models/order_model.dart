@@ -4,9 +4,11 @@
 
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:uspace_ir/models/room_reservation_model.dart';
+
 OrderModel orderModelFromJson(String str) => OrderModel.fromJson(json.decode(str));
 
-String orderModelToJson(OrderModel data) => json.encode(data.toJson());
 
 class OrderModel {
   Data data;
@@ -19,31 +21,30 @@ class OrderModel {
     data: Data.fromJson(json["data"]),
   );
 
-  Map<String, dynamic> toJson() => {
-    "data": data.toJson(),
-  };
 }
 
 class Data {
   String name;
   String mobile;
   String trackCode;
-  String checkIn;
+  DateTime checkIn;
+  DateTime miladiCheckIn;
   int duration;
   String status;
   dynamic cancelInfo;
-  String pay;
-  String availableOperations;
+    dynamic pay;
+    dynamic availableOperations;
   List<RsvItem> rsvItems;
-  Ecolodge ecolodge;
-  Rules rules;
-  List<Support> supports;
+    Ecolodge ecolodge;
+    Rules rules;
+    List<Support> supports;
 
   Data({
     required this.name,
     required this.mobile,
     required this.trackCode,
     required this.checkIn,
+    required this.miladiCheckIn,
     required this.duration,
     required this.status,
     required this.cancelInfo,
@@ -59,44 +60,53 @@ class Data {
     name: json["name"],
     mobile: json["mobile"],
     trackCode: json["track_code"],
-    checkIn: json["check_in"],
+    checkIn: DateTime.parse(json["check_in"]),
+    miladiCheckIn: DateTime.parse(json["miladi_check_in"]),
     duration: json["duration"],
     status: json["status"],
     cancelInfo: json["cancel_info"],
     pay: json["pay"],
     availableOperations: json["available_operations"],
     rsvItems: List<RsvItem>.from(json["rsv_items"].map((x) => RsvItem.fromJson(x))),
-    ecolodge: Ecolodge.fromJson(json["ecolodge"]),
-    rules: Rules.fromJson(json["rules"]),
-    supports: List<Support>.from(json["supports"].map((x) => Support.fromJson(x))),
+        ecolodge: Ecolodge.fromJson(json["ecolodge"]),
+        rules: Rules.fromJson(json["rules"]),
+        supports: List<Support>.from(json["supports"].map((x) => Support.fromJson(x))),
   );
+}
 
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "mobile": mobile,
-    "track_code": trackCode,
-    "check_in": checkIn,
-    "duration": duration,
-    "status": status,
-    "cancel_info": cancelInfo,
-    "pay": pay,
-    "available_operations": availableOperations,
-    "rsv_items": List<dynamic>.from(rsvItems.map((x) => x.toJson())),
-    "ecolodge": ecolodge.toJson(),
-    "rules": rules.toJson(),
-    "supports": List<dynamic>.from(supports.map((x) => x.toJson())),
-  };
+class AvailableOperation {
+    String name;
+    String operation;
+    String type;
+
+    AvailableOperation({
+        required this.name,
+        required this.operation,
+        required this.type,
+    });
+
+    factory AvailableOperation.fromJson(Map<String, dynamic> json) => AvailableOperation(
+        name: json["name"],
+        operation: json["operation"],
+        type: json["type"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "operation": operation,
+        "type": type,
+    };
 }
 
 class Ecolodge {
-  String title;
-  String url;
-  String shortTitle;
+    String title;
+    String url;
+    String shortTitle;
 
   Ecolodge({
-    required this.title,
-    required this.url,
-    required this.shortTitle,
+        required this.title,
+        required this.url,
+        required this.shortTitle,
   });
 
   factory Ecolodge.fromJson(Map<String, dynamic> json) => Ecolodge(
@@ -112,7 +122,32 @@ class Ecolodge {
   };
 }
 
+class PayElement {
+    String name;
+    String logo;
+    String payLink;
+
+    PayElement({
+        required this.name,
+        required this.logo,
+        required this.payLink,
+    });
+
+    factory PayElement.fromJson(Map<String, dynamic> json) => PayElement(
+        name: json["name"],
+        logo: json["logo"],
+        payLink: json["pay_link"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "name": name,
+        "logo": logo,
+        "pay_link": payLink,
+    };
+}
+
 class RsvItem {
+  RxBool isExpanded = false.obs;
   String title;
   dynamic details;
   String thumbImage;
@@ -124,14 +159,14 @@ class RsvItem {
   int sofaBeds;
   int roomArea;
   String roomType;
-  int floor;
+    int? floor;
   int stair;
   String roomView;
   int bedroomNumber;
   String? additionalGuestService;
   int newBookingRsc;
   String imageList;
-  List<FeatureElement> features;
+  List<RoomFeature> features;
   RoomPackages roomPackages;
   List<DayAndPrice> dayAndPrice;
 
@@ -178,34 +213,11 @@ class RsvItem {
     additionalGuestService: json["additional_guest_service"],
     newBookingRsc: json["new_booking_rsc"],
     imageList: json["image_list"],
-    features: List<FeatureElement>.from(json["features"].map((x) => FeatureElement.fromJson(x))),
+    features: List<RoomFeature>.from(json["features"].map((x) => RoomFeature.fromJson(x))),
     roomPackages: RoomPackages.fromJson(json["room_packages"]),
     dayAndPrice: List<DayAndPrice>.from(json["day_and_price"].map((x) => DayAndPrice.fromJson(x))),
   );
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "details": details,
-    "thumb_image": thumbImage,
-    "room_capacity": roomCapacity,
-    "unit": unit,
-    "beds": beds,
-    "single_beds": singleBeds,
-    "double_beds": doubleBeds,
-    "sofa_beds": sofaBeds,
-    "room_area": roomArea,
-    "room_type": roomType,
-    "floor": floor,
-    "stair": stair,
-    "room_view": roomView,
-    "bedroom_number": bedroomNumber,
-    "additional_guest_service": additionalGuestService,
-    "new_booking_rsc": newBookingRsc,
-    "image_list": imageList,
-    "features": List<dynamic>.from(features.map((x) => x.toJson())),
-    "room_packages": roomPackages.toJson(),
-    "day_and_price": List<dynamic>.from(dayAndPrice.map((x) => x.toJson())),
-  };
 }
 
 class DayAndPrice {
@@ -248,26 +260,6 @@ class DayAndPrice {
   };
 }
 
-class FeatureElement {
-  int value;
-  FeatureFeature feature;
-
-  FeatureElement({
-    required this.value,
-    required this.feature,
-  });
-
-  factory FeatureElement.fromJson(Map<String, dynamic> json) => FeatureElement(
-    value: json["value"],
-    feature: FeatureFeature.fromJson(json["feature"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "value": value,
-    "feature": feature.toJson(),
-  };
-}
-
 class FeatureFeature {
   String title;
   String? image;
@@ -301,7 +293,7 @@ class RoomPackages {
   dynamic titleAlias;
   int isFloating;
   int isTemporary;
-  List<FeatureElement> features;
+  List<RoomFeature> features;
   dynamic finance;
 
   RoomPackages({
@@ -318,18 +310,10 @@ class RoomPackages {
     titleAlias: json["title_alias"],
     isFloating: json["is_floating"],
     isTemporary: json["is_temporary"],
-    features: List<FeatureElement>.from(json["features"].map((x) => FeatureElement.fromJson(x))),
+    features: List<RoomFeature>.from(json["features"].map((x) => RoomFeature.fromJson(x))),
     finance: json["finance"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "title_alias": titleAlias,
-    "is_floating": isFloating,
-    "is_temporary": isTemporary,
-    "features": List<dynamic>.from(features.map((x) => x.toJson())),
-    "finance": finance,
-  };
 }
 
 class Rules {

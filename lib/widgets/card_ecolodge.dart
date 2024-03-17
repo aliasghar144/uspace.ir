@@ -22,6 +22,7 @@ class CardEcolodge extends StatelessWidget {
         children: [
           InkWell(
             onTap:(){
+              print(ecolodge.url);
               Get.to(const ReservationScreen(),arguments: {'url':ecolodge.url});
             },
             borderRadius: BorderRadius.circular(12),

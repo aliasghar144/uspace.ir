@@ -4,8 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
-import 'package:uspace_ir/pages/reservation/factors_screen.dart';
-import 'package:uspace_ir/pages/reservation/reserve_room_screen.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 import 'package:uspace_ir/controllers/register_reservation_controller.dart';
 import 'package:uspace_ir/controllers/reservation_controller.dart';
@@ -170,7 +168,7 @@ class MoreRoomSelectionScreen extends StatelessWidget {
                         InkWell(
                           onTap: () {
                             Get.dialog(facilityDialog(
-                                feature:reservationController.room.value!.data.rooms[roomsIndex].features,
+                                roomFeatures:reservationController.room.value!.data.rooms[roomsIndex].features,
                                 title: reservationController.room.value!.data.rooms[roomsIndex].title,
                                 hasBrakeFast: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[0].value,
                                 hasDinner: reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].features[1].value,

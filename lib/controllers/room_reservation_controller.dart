@@ -33,14 +33,4 @@ class RoomReservationController extends GetxController{
     return list;
   }
 
-  final numberOfRoom = '1'.obs;
-
-  final List<String> numberOfRoomItems = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-  ];
-
 }

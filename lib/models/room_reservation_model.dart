@@ -90,10 +90,10 @@ class Data {
     mapLat: json["map_lat"]?.toDouble(),
     mapLong: json["map_long"]?.toDouble(),
     url: json["url"],
-    minPrice: json["min_price"],
+    minPrice: json["min_price"]?.toInt(),
     unitPrice: json["unit_price"],
     maxDiscountPercent: json["max_discount_percent"],
-    maxDiscountPrice: json["max_discount_price"],
+    maxDiscountPrice: json["max_discount_price"]?.toInt(),
     dollarEquivalent: json["dollar_equivalent"]?.toDouble(),
     currency: json["currency"],
     capacity: json["capacity"],
@@ -115,14 +115,13 @@ class Comment{
   String name;
   String date;
     String? durationReserve;
-    dynamic option1;
-    dynamic option2;
-    dynamic option3;
-    dynamic option4;
-    dynamic option5;
+    Option? option1;
+    Option? option2;
+    Option? option3;
+    Option? option4;
+    Option? option5;
   String? comment;
   String show;
-    String? status;
   String type;
   List<Reply> replies;
 
@@ -137,7 +136,6 @@ class Comment{
         this.option5,
     required this.comment,
     required this.show,
-        this.status,
     required this.type,
     required this.replies,
   });
@@ -146,18 +144,36 @@ class Comment{
     name: json["name"],
     date: json["date"],
     durationReserve: json["duration_reserve"],
-    option1: json["option1"],
-    option2: json["option2"],
-    option3: json["option3"],
-    option4: json["option4"],
-    option5: json["option5"],
+        option1: json["option1"] == null ? null : Option.fromJson(json["option1"]),
+        option2: json["option2"] == null ? null : Option.fromJson(json["option2"]),
+        option3: json["option3"] == null ? null : Option.fromJson(json["option3"]),
+        option4: json["option4"] == null ? null : Option.fromJson(json["option4"]),
+        option5: json["option5"] == null ? null : Option.fromJson(json["option5"]),
     comment: json["comment"],
     show: json["show"],
-    status: json["status"],
     type: json["type"],
     replies: List<Reply>.from(json["replies"].map((x) => Reply.fromJson(x))),
   );
+}
 
+class Option {
+  String title;
+  String? point;
+
+  Option({
+    required this.title,
+    required this.point,
+  });
+
+  factory Option.fromJson(Map<String, dynamic> json) => Option(
+    title: json["title"],
+    point: json["point"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "title": title,
+    "point": point,
+  };
 }
 
 class Reply {
@@ -270,21 +286,21 @@ class DataFeature {
 class FeatureFeature {
   String title;
   String? image;
-  int vip;
   String? unicode;
+  int vip;
 
   FeatureFeature({
     required this.title,
     required this.image,
-    required this.vip,
     this.unicode,
+    required this.vip,
   });
 
   factory FeatureFeature.fromJson(Map<String, dynamic> json) => FeatureFeature(
     title: json["title"],
     image: json["image"],
-    vip: json["vip"],
     unicode: json["unicode"],
+    vip: json["vip"],
   );
 
 }
@@ -309,6 +325,7 @@ class ImageList {
 }
 
 class Room {
+  int idRoom;
   String title;
   String? details;
   String thumbImage;
@@ -326,14 +343,14 @@ class Room {
   int stair;
   String roomView;
   int bedroomNumber;
-  String? additionalGuestService;
+    String? additionalGuestService;
   int newBookingRsc;
   String imageList;
   List<RoomFeature> features;
   List<RoomPackage> roomPackages;
-  int idRoom;
 
   Room({
+    required this.idRoom,
     required this.title,
     required this.details,
     required this.thumbImage,
@@ -356,10 +373,10 @@ class Room {
     required this.imageList,
     required this.features,
     required this.roomPackages,
-    required this.idRoom,
   });
 
   factory Room.fromJson(Map<String, dynamic> json) => Room(
+    idRoom: json["id_room"],
     title: json["title"],
     details: json["details"],
     thumbImage: json["thumb_image"],
@@ -382,7 +399,6 @@ class Room {
     imageList: json["image_list"],
     features: List<RoomFeature>.from(json["features"].map((x) => RoomFeature.fromJson(x))),
     roomPackages: List<RoomPackage>.from(json["room_packages"].map((x) => RoomPackage.fromJson(x))),
-    idRoom: json["id_room"],
   );
 
 }
@@ -482,8 +498,8 @@ class Day {
   factory Day.fromJson(Map<String, dynamic> json) => Day(
     date: DateTime.parse(json["date"]),
     jDate: json["j_date"],
-    originalPrice: json["original_price"],
-    priceWithDiscount: json["price_with_discount"],
+    originalPrice: json["original_price"]?.toInt(),
+    priceWithDiscount: json["price_with_discount"]?.toInt(),
     additionalGustPrice: json["additional_gust_price"],
     availability: json["availability"],
     details: json["details"],
@@ -495,7 +511,7 @@ class Day {
 class PriceInfo {
   int paidNumber;
   int additionalNumber;
-  dynamic durationDay;
+    dynamic durationDay;
   String unit;
   int totalAvailable;
   int idSalesPackage;
@@ -535,20 +551,20 @@ class PriceInfo {
     status: json["status"],
     needPickDate: json["need_pick_date"],
     bookType: json["book_type"],
-    totalOriginalPrice: json["total_original_price"],
-    totalCustomerPrice: json["total_customer_price"],
+    totalOriginalPrice: json["total_original_price"]!.toInt(),
+    totalCustomerPrice: json["total_customer_price"]!.toInt(),
     currency: json["currency"],
     totalCustomerDiscount: json["total_customer_discount"]?.toDouble(),
-    totalPay: json["total_pay"],
+    totalPay: json["total_pay"]!.toInt(),
   );
 
 }
 
 class Rules {
   String? kidsTerms;
-  String cancelTerms;
-  String entryTime;
-  String exitTime;
+  String? cancelTerms;
+    String? entryTime;
+    String? exitTime;
 
   Rules({
     required this.kidsTerms,

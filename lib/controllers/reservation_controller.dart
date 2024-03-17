@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
+import 'package:uspace_ir/app/utils/error_handle.dart';
+import 'package:uspace_ir/base_screen.dart';
 import 'package:uspace_ir/constance/constance.dart';
-import 'package:http/http.dart' as http;
 import 'package:uspace_ir/models/room_reservation_model.dart';
 
 class ReservationController extends GetxController {
@@ -30,7 +33,6 @@ class ReservationController extends GetxController {
   getMainInfo({
     required String roomUrl,
   }) async {
-    print(url);
     try {
       loading.value = true;
       var url = Uri.parse('$mainUrl/ecolodge/$roomUrl');
@@ -41,10 +43,13 @@ class ReservationController extends GetxController {
         print(room.value!.data.url);
       }
     } on SocketException {
-      loading.value = false;
-      print('socket');
+      Errors().connectLost(onTap: () {
+        getMainInfo(roomUrl: roomUrl);
+        Get.closeCurrentSnackbar();
+      },);
     } catch (e) {
       loading.value = false;
+      Get.offAll(BaseScreen());
       print(e);
     }
   }
@@ -56,11 +61,11 @@ class ReservationController extends GetxController {
       if(isDateSelected.value != false) {
         uri += 'start_date=${entryDate.value.year.toString()}-${dateEdit(entryDate.value.month)}-${dateEdit(entryDate.value.day)}&pick_date=1&duration=${durationValue.value.toString()}';
       }else{
-        uri += 'duration=${durationValue.value.toString()}';
+        uri += 'start_date=${DateTime.now().year.toString()}-${dateEdit(DateTime.now().month)}-${DateTime.now().day.toString()}&pick_date=1&duration=${durationValue.value.toString()}';
       }
       var localUrl = Uri.parse(uri.toString());
-      print(uri.runtimeType);
       print(localUrl.path);
+      print(localUrl.queryParameters);
       var response = await http.get(localUrl);
       if(response.statusCode == 200){
         room.value!.data.rooms.clear();
@@ -68,9 +73,17 @@ class ReservationController extends GetxController {
         room.value!.data.rooms = List<Room>.from(jsonDecode(response.body)['data'].map((x) => Room.fromJson(x)));
         loadingRoom.value = false;
       }
-    } catch (e) {
+    }
+    on SocketException{
+      Errors().connectLost(onTap: () {
+        choseEntryDate();
+        Get.closeCurrentSnackbar();
+      },);
+    }
+    catch (e) {
       loadingRoom.value = false;
-      print('ERR======>$e');
+      print(e);
+      Get.offAll(BaseScreen());
     }
   }
 
@@ -78,10 +91,10 @@ class ReservationController extends GetxController {
     switch(availability){
       case 'available':
         return 'موجود';
-      case 'unavailable':
-        return 'ناموجود';
       case 'inquiry':
         return 'نیازمند استعلام';
+      case 'unavailable':
+        return 'ناموجود';
       default: return '';
     }
   }
@@ -161,6 +174,7 @@ class ReservationController extends GetxController {
       }else{
     throw response.body;
     }}catch(e){
+      Get.offAll(BaseScreen());
       throw 'ERR = $e';
     }
   }
