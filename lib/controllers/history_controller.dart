@@ -70,6 +70,7 @@ class HistoryController extends GetxController{
       if(await fetchOrder(orderCode)){
         userController.userCart.add(orderCode);
         Hive.box(userBox).put(userCart, userController.userCart);
+        print(Hive.box(userBox).get(userCart));
       }
     }
   }

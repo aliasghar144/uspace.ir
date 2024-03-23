@@ -67,14 +67,6 @@ class SearchController extends GetxController {
     {'name': 'آب درمانی', 'id': 'hydrotherapy'}
   ];
 
-  final List commentList = [
-    {'name': 'بسیار عالی'},
-    {'name': 'خوب'},
-    {'name': 'متوسط'},
-    {'name': 'ضعیف'},
-    {'name': 'بسیار ضعیف'}
-  ];
-
 
   final sortByValue = 'پرفروش ترین'.obs;
 
@@ -203,7 +195,7 @@ class SearchController extends GetxController {
   void loadMoreData() async{
     try{
       print(' here we go nextLink $nextLink');
-      if( nextLink.value != 'null'){
+      if(nextLink.value != 'null'){
         url = Uri.parse(nextLink.value);
         var response = await http.get(url);
         if(response.statusCode == 200){
@@ -244,6 +236,17 @@ class SearchController extends GetxController {
       case 'گران ترین':
         return 'expensive';
     }
+  }
+
+  void resetFilter() {
+    rangeStart.value = 0;
+    rangeEnd.value = 100;
+    categoryTitle.value =  '';
+    categoryId.value =  '';
+    cityTitle.value = '';
+    cityUrl.value = '';
+    specialPlaceTitle.value = '';
+    specialPlaceUrl.value = '';
   }
 
 }

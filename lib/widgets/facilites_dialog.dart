@@ -34,50 +34,55 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
         child: Column(children: [
           Text(title, style: Theme.of(Get.context!).textTheme.labelSmall),
           const SizedBox(height: 10),
-          Row(
+          Wrap(
+            direction: Axis.horizontal,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 3,
+            runSpacing: 10,
+            alignment: WrapAlignment.end,
             children: [
               const SizedBox(width: 5),
-              Flexible(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(width: 0.1,color: hasLunch == 1 ?AppColors.mainColor:AppColors.grayColor),
-                  ),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(hasLunch == 1 ?'شام دارد':'شام ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: hasLunch == 1 ? AppColors.mainColor : AppColors.grayColor)),
-                    const SizedBox(width: 2),
-                    SvgPicture.asset('assets/icons/lunch_ic.svg',color: hasLunch == 1 ?AppColors.mainColor:AppColors.grayColor),
-                  ]),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(width: 0.1,color: hasLunch == 1 ?AppColors.mainColor:AppColors.grayColor),
                 ),
+                child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(hasLunch == 1 ?'شام دارد':'شام ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: hasLunch == 1 ? AppColors.mainColor : AppColors.grayColor)),
+                  const SizedBox(width: 2),
+                  SvgPicture.asset('assets/icons/lunch_ic.svg',color: hasLunch == 1 ?AppColors.mainColor:AppColors.grayColor),
+                ]),
               ),
-              Flexible(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(width: 0.1,color: hasDinner == 1 ? AppColors.mainColor:AppColors.grayColor),
-                  ),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(hasDinner == 1 ? 'نهار دارد' : 'نهار ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: hasDinner == 1 ? AppColors.mainColor:AppColors.grayColor)),
-                    const SizedBox(width: 2),
-                    SvgPicture.asset('assets/icons/dinner_ic.svg',color: hasDinner == 1 ? AppColors.mainColor:AppColors.grayColor),
-                  ]),
+              const SizedBox(width: 3),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(width: 0.1,color: hasDinner == 1 ? AppColors.mainColor:AppColors.grayColor),
                 ),
+                child: Row(                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text(hasDinner == 1 ? 'نهار دارد' : 'نهار ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: hasDinner == 1 ? AppColors.mainColor:AppColors.grayColor)),
+                  const SizedBox(width: 2),
+                  SvgPicture.asset('assets/icons/dinner_ic.svg',color: hasDinner == 1 ? AppColors.mainColor:AppColors.grayColor),
+                ]),
               ),
-              Flexible(
-                child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(width: 0.1,color: hasBrakeFast == 1 ? AppColors.mainColor:AppColors.grayColor),
-                  ),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text( hasBrakeFast == 1 ? 'صبحانه دارد': 'صبحانه ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: hasBrakeFast == 1 ? AppColors.mainColor : AppColors.grayColor)),
-                    const SizedBox(width: 2),
-                    SvgPicture.asset('assets/icons/breakfast_ic.svg',color: hasBrakeFast == 1 ? AppColors.mainColor : AppColors.grayColor,),
-                  ]),
+              const SizedBox(width: 3),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(width: 0.1,color: hasBrakeFast == 1 ? AppColors.mainColor:AppColors.grayColor),
                 ),
+                child: Row(                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text( hasBrakeFast == 1 ? 'صبحانه دارد': 'صبحانه ندارد', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: hasBrakeFast == 1 ? AppColors.mainColor : AppColors.grayColor)),
+                  const SizedBox(width: 2),
+                  SvgPicture.asset('assets/icons/breakfast_ic.svg',color: hasBrakeFast == 1 ? AppColors.mainColor : AppColors.grayColor,),
+                ]),
               ),
               const SizedBox(width: 5),
             ],
@@ -101,8 +106,8 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
                     children: [
                       roomFeatures[index].feature.image == null ?
                       const Icon(Icons.done_rounded,size: 10,color:AppColors.mainColor,):
-                      roomFeatures[index].feature.image!.startsWith('fa') ?Icon(IconData(
-                          int.parse(roomFeatures[index].feature.unicode??'f00c',radix: 16),
+                      roomFeatures[index].feature.unicode != '' ? Icon(IconData(
+                          int.parse(roomFeatures[index].feature.unicode ?? 'f00c',radix: 16),
                         fontFamily: 'FontAwesomeSolid',
                         fontPackage: 'font_awesome_flutter',
                       ),size: 10,color: AppColors.mainColor,) : const Icon(Icons.done,size: 10,),

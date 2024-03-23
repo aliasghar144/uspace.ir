@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
@@ -129,7 +130,7 @@ class LoginScreen extends StatelessWidget {
                             style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,elevation: 0,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Text('ثبت نام',style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 24,color: Colors.white),),
+                              child: Text('ثبت نام',style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 22.sp,color: Colors.white),),
                             ))),
                   )),
                   const SizedBox(height: 5,),
@@ -151,7 +152,6 @@ class LoginScreen extends StatelessWidget {
                                         .textTheme
                                         .bodySmall!
                                         .copyWith(
-                                      fontSize:10,
                                         color: AppColors.mainColor,
                                         ),
                                     recognizer: TapGestureRecognizer()
@@ -172,10 +172,7 @@ class LoginScreen extends StatelessWidget {
                                       'قوانین و مقررات ',
                                       style: Theme.of(Get.context!)
                                           .textTheme
-                                          .bodySmall!
-                                          .copyWith(
-                                        fontSize: 10
-                                      )),
+                                          .bodySmall),
                                   TextSpan(
                                       text:
                                       'است.',

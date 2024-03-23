@@ -3,7 +3,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:persian_datetime_picker/persian_datetime_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
@@ -198,140 +197,82 @@ class RoomReservationScreen extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 15),
-      SizedBox(
-          width: Get.width,
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Obx(() => Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Row(children: [
-                          Text(
-                            'به مدت: ',
-                            style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                            textDirection: TextDirection.rtl,
-                          )
-                        ]),
-                        style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                        items: reservationController.durationDropDownItems.map((selectedType) {
-                          return DropdownMenuItem(
-                            value: selectedType,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                RichText(
-                                    textDirection: TextDirection.rtl,
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                        text: 'به مدت: ',
-                                        style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                      ),
-                                      TextSpan(
-                                        text: selectedType.toString(),
-                                        style: Theme.of(Get.context!).textTheme.labelMedium,
-                                      ),
-                                      TextSpan(
-                                        text: ' شب',
-                                        style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                      ),
-                                    ])),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if(!reservationController.loadingRoom.value){
-                            reservationController.setSelectedDuration(value!);
-                            reservationController.choseEntryDate();
-                          }
-                        },
-                        value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
-                        buttonStyleData: ButtonStyleData(
-                          height: 35,
-                          width: Get.width / 2.8,
-                          padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
-                        ),
-                        iconStyleData: const IconStyleData(
-                          icon: Icon(
-                            Icons.arrow_drop_down_rounded,
-                          ),
-                          iconEnabledColor: AppColors.grayColor,
-                        ),
-                        dropdownStyleData: DropdownStyleData(
-                            elevation: 2,
-                            padding: EdgeInsets.zero,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                            ),
-                            direction: DropdownDirection.textDirection,
-                            scrollbarTheme: ScrollbarThemeData(
-                              radius: const Radius.circular(40),
-                              thickness: MaterialStateProperty.all(6),
-                              thumbVisibility: MaterialStateProperty.all(true),
-                            )),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Obx(() => Directionality(
+              textDirection: TextDirection.rtl,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2(
+                  isExpanded: true,
+                  hint: Row(children: [
+                    Text(
+                      'به مدت: ',
+                      style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                      textDirection: TextDirection.rtl,
+                    )
+                  ]),
+                  style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                  items: reservationController.durationDropDownItems.map((selectedType) {
+                    return DropdownMenuItem(
+                      value: selectedType,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          RichText(
+                              textDirection: TextDirection.rtl,
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text: 'به مدت: ',
+                                  style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                ),
+                                TextSpan(
+                                  text: selectedType.toString(),
+                                  style: Theme.of(Get.context!).textTheme.labelMedium,
+                                ),
+                                TextSpan(
+                                  text: ' شب',
+                                  style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                ),
+                              ])),
+                        ],
                       ),
-                    ),
-                  )),
-              InkWell(
-                onTap: () async {
-                  // Jalali? picked = await showPersianDatePicker(
-                  //   context: Get.context!,
-                  //   helpText: '',
-                  //   initialEntryMode: PDatePickerEntryMode.calendarOnly,
-                  //   initialDate: reservationController.entryDate.value.toJalali() != Jalali.now() ? reservationController.entryDate.value.toJalali() : Jalali.now(),
-                  //   firstDate: Jalali.now(),
-                  //   lastDate: Jalali(1404, 1),
-                  //   builder: (context, child) {
-                  //     return Theme(
-                  //       data: ThemeData(
-                  //         fontFamily: 'iransans',
-                  //         primaryTextTheme: Typography.blackRedwoodCity,
-                  //         dialogTheme: const DialogTheme(
-                  //           shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.all(Radius.circular(15)),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       child: child!,
-                  //     );
-                  //   },
-                  // );
-                  // picked?.toDateTime();
-                  // if (picked != null) {
-                  //   reservationController.isDateSelected.value = true;
-                  //   reservationController.entryDate.value = picked.toDateTime();
-                  // }
-                },
-                borderRadius: BorderRadius.circular(25),
-                child: Container(
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if(!reservationController.loadingRoom.value){
+                      reservationController.setSelectedDuration(value!);
+                      reservationController.choseEntryDate();
+                    }
+                  },
+                  value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
+                  buttonStyleData: ButtonStyleData(
                     height: 35,
-                    width: Get.width / 2 - 50,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      border: Border.all(color: AppColors.grayColor, width: 0.3),
-                      borderRadius: BorderRadius.circular(25),
+                    width: Get.width / 2.8,
+                    padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
+                  ),
+                  iconStyleData: const IconStyleData(
+                    icon: Icon(
+                      Icons.arrow_drop_down_rounded,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(children: [
-                        const Icon(Icons.arrow_drop_down_rounded, color: AppColors.disabledIcon),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            Text('${reservationController.entryDate.value.toJalali().year}/${reservationController.entryDate.value.toJalali().month}/${reservationController.entryDate.value.toJalali().day}  ', style: Theme.of(Get.context!).textTheme.labelMedium),
-                            Text('تاریخ ورود:', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor), textDirection: TextDirection.rtl),
-                          ],
-                        ),
-                      ]),
-                    )),
+                    iconEnabledColor: AppColors.grayColor,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                      elevation: 2,
+                      padding: EdgeInsets.zero,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                      ),
+                      direction: DropdownDirection.textDirection,
+                      scrollbarTheme: ScrollbarThemeData(
+                        radius: const Radius.circular(40),
+                        thickness: MaterialStateProperty.all(6),
+                        thumbVisibility: MaterialStateProperty.all(true),
+                      )),
+                ),
               ),
-            ],
-          )),
+            )),
+      ),
       const SizedBox(height: 15),
       Container(height: 0.5, color: Colors.grey),
       const SizedBox(height: 15),

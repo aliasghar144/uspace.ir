@@ -17,6 +17,7 @@ import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 import 'package:uspace_ir/widgets/card_ecolodge.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -118,7 +119,7 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Positioned(
+                            homeController.mainGallery[index]['caption'] ==  '' ? const SizedBox() : Positioned(
                                 right: 30,
                                 bottom: 18,
                                 child: ClipRRect(
@@ -274,7 +275,7 @@ class HomeScreen extends StatelessWidget {
                                         homeController.categories[index]['title'],
                                         textAlign: TextAlign.center,
                                         maxLines: 2,
-                                        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10),
+                                        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10.sp),
                                       ),
                                     ),
                                   ],
@@ -288,28 +289,17 @@ class HomeScreen extends StatelessWidget {
 
   Widget newestEcolodge() {
     return Column(
+      crossAxisAlignment:CrossAxisAlignment.end,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Row(
-            children: [
-              // TextButton(
-              //   onPressed: () {},
-              //   child: Text( 
-              //     "مشاهده همه",
-              //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-              //   ),
-              // ),
-              const Spacer(),
-              Text(
-                "رزرو اقامتگاه بوم گردی،هتل سنتی و کلبه",
-                style: Theme.of(Get.context!).textTheme.bodyMedium,
-              ),
-            ],
+          child: Text(
+            "رزرو اقامتگاه بوم گردی،هتل سنتی و کلبه",
+            style: Theme.of(Get.context!).textTheme.bodyMedium,
           ),
         ),
         const SizedBox(
-          height: 5,
+          height: 8,
         ),
         SizedBox(
           width: MediaQuery.of(Get.context!).size.width,
@@ -1278,10 +1268,19 @@ class HomeScreen extends StatelessWidget {
       const SizedBox(
         height: 20,
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [progress(footer: 'روستا های تحت پوشش', centerText: '+755', startColor: const Color(0xff63b9ff), endColor: const Color(0xff3451FF), percent: Random.secure().nextDouble() * (0.8)), progress(footer: 'شهر های تحت پوشش', centerText: '+450', startColor: const Color(0xffFFD551), endColor: const Color(0xffFF4B34), percent: Random.secure().nextDouble() * (0.8)), progress(footer: 'اقامتگاه های فعال', centerText: '+1976', startColor: const Color(0xff6AC873), endColor: const Color(0xffF9841A), percent: Random.secure().nextDouble() * (0.8)), progress(centerText: '+148400', footer: 'تعداد کل سفارشات', startColor: const Color(0xffE42C64), endColor: const Color(0xff614AD3), percent: Random.secure().nextDouble() * (0.8))],
-      )
+      Wrap(
+        alignment: WrapAlignment.center,
+        children: [
+          progress(footer: 'روستا های تحت پوشش', centerText: '+755', startColor: const Color(0xff63b9ff), endColor: const Color(0xff3451FF), percent: Random.secure().nextDouble() * (0.8)),
+          const SizedBox(width:5),
+          progress(footer: 'شهر های تحت پوشش', centerText: '+450', startColor: const Color(0xffFFD551), endColor: const Color(0xffFF4B34), percent: Random.secure().nextDouble() * (0.8)),
+          const SizedBox(width:5),
+          progress(footer: 'اقامتگاه های فعال', centerText: '+1976', startColor: const Color(0xff6AC873), endColor: const Color(0xffF9841A), percent: Random.secure().nextDouble() * (0.8)),
+          const SizedBox(width:5),
+          progress(centerText: '+148400', footer: 'تعداد کل سفارشات', startColor: const Color(0xffE42C64), endColor: const Color(0xff614AD3), percent: Random.secure().nextDouble() * (0.8))
+        ],
+      ),
+
     ]);
   }
 

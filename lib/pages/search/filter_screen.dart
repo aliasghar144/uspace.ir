@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
@@ -54,8 +53,8 @@ class FilterScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       IconButton(
-                        onPressed: () {},
-                        icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
+                        onPressed: () {Get.back();},
+                        icon: const Icon(Icons.arrow_back_rounded,color: AppColors.disabledIcon),
                       ),
                       const Spacer(),
                       IconButton(
@@ -120,7 +119,7 @@ class FilterScreen extends StatelessWidget {
                               Obx(() => RangeSlider(
                                     divisions: 100,
                                     values: RangeValues(searchController.rangeStart.value, searchController.rangeEnd.value),
-                                    labels: RangeLabels('${formatAmount(searchController.rangeStart.value.round() * 50000)}تومان', '${formatAmount(searchController.rangeEnd.value.round() * 500000)}تومان'),
+                                    labels: RangeLabels('${formatAmount(searchController.rangeStart.value.round() * 500000)}تومان', '${formatAmount(searchController.rangeEnd.value.round() * 500000)}تومان'),
                                     onChanged: (value) {
                                       setRange(value.start, value.end);
                                     },
@@ -132,8 +131,8 @@ class FilterScreen extends StatelessWidget {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Obx(() => Text('${formatAmount(searchController.rangeStart.value.round() * 50000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
-                                    Obx(() => Text('${formatAmount(searchController.rangeEnd.value.round() * 50000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
+                                    Obx(() => Text('${formatAmount(searchController.rangeStart.value.round() * 500000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
+                                    Obx(() => Text('${formatAmount(searchController.rangeEnd.value.round() * 500000)} تومان', style: Theme.of(context).textTheme.labelLarge)),
                                   ],
                                 ),
                               ),

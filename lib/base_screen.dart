@@ -14,6 +14,7 @@ import 'package:uspace_ir/pages/home/home_screen.dart';
 import 'package:uspace_ir/pages/profile/profile_screen.dart';
 import 'package:uspace_ir/pages/search/live_search_screen.dart';
 import 'package:uspace_ir/pages/search/search_screen.dart';
+import 'package:uspace_ir/widgets/bottom_sheets.dart';
 
 class BaseScreen extends StatelessWidget {
   BaseScreen({Key? key}) : super(key: key);
@@ -42,7 +43,6 @@ class BaseScreen extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         if(loading.value == true){
-          print(loading.value);
           return false;
         }
         if(baseController.pageIndex.value != 3){
@@ -50,8 +50,7 @@ class BaseScreen extends StatelessWidget {
           return false;
         }
         else{
-          print('exit');
-          return false;
+          return true;
         }
       },
       child: GestureDetector(
@@ -108,7 +107,7 @@ class BaseScreen extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 20,left: 20.0,top: 3),
                           child: InkWell(
                             onTap: (){
-                              if(baseController.pageIndex.value == 2){}else{
+                              if(baseController.pageIndex.value != 2){
                                 Get.to(LiveSearchScreen());
                               }
                             },
@@ -211,13 +210,17 @@ class BaseScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
+        if(index == 1 && userController.userCart.isEmpty){
+          BottomSheets().orderCode();
+        }
         searchController.searchTextFieldController.clear();
         searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
         if(index == 2 && searchController.searchEcolodgesResult.isEmpty){
           searchController.searchWithFilter('');
         }
-        // if(index ==0 && !loginController.isUserLogin.value){
-        //   BottomSheets().loginBottomSheet();
+        if(index != 2 ){
+          searchController.resetFilter();
+        }
           baseController.pageIndex.value = index;
         },
       child: Obx(() => SizedBox(

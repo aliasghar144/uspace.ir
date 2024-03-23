@@ -84,7 +84,7 @@ class HistoryScreen extends StatelessWidget {
                   },
                   child: const Text('افزودن کد رهگیری')),
               const Spacer(),
-              Text('همه سفارشات من', style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 16)),
+              Text('همه سفارشات من', style: Theme.of(Get.context!).textTheme.bodyLarge),
             ],
           ),
           const SizedBox(

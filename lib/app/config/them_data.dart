@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 
 class ThemConfig {
@@ -12,48 +13,48 @@ class ThemConfig {
       appBarTheme: const AppBarTheme(
         elevation: 0,color: Colors.white,centerTitle: false,
       ),
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         displayLarge: TextStyle(
           color: AppColors.primaryTextColor,
-          fontSize: 26,
+          fontSize: 24.sp,
           fontWeight: FontWeight.w700,
         ),
         displayMedium: TextStyle(
-            color: AppColors.primaryTextColor, fontSize: 14, fontWeight: FontWeight.w700),
+            color: AppColors.primaryTextColor, fontSize: 14.sp, fontWeight: FontWeight.w700),
         displaySmall: TextStyle(
-            color: AppColors.primaryTextColor, fontSize: 12, fontWeight: FontWeight.w700),
+            color: AppColors.primaryTextColor, fontSize: 12.sp, fontWeight: FontWeight.w700),
         bodyLarge: TextStyle(
-            color: AppColors.primaryTextColor, fontSize: 16, fontWeight: FontWeight.w500),
+            color: AppColors.primaryTextColor, fontSize: 14.sp, fontWeight: FontWeight.w500),
         bodyMedium: TextStyle(
-            color: AppColors.primaryTextColor, fontSize: 14, fontWeight: FontWeight.w500),
+            color: AppColors.primaryTextColor, fontSize: 12.sp, fontWeight: FontWeight.w500),
         bodySmall: TextStyle(
             color: AppColors.primaryTextColor,
-            fontSize: 12,
+            fontSize: 10.sp,
             fontWeight: FontWeight.w500,
             letterSpacing: 0),
         labelLarge: TextStyle(
-            fontSize: 14,
+            fontSize: 12.sp,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
         labelMedium: TextStyle(
-            fontSize: 12,
+            fontSize: 10.sp,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
         labelSmall: TextStyle(
-            fontSize: 10,
+            fontSize: 8.sp,
             fontWeight: FontWeight.w400,
             letterSpacing: 0),
         titleLarge: TextStyle(
-            fontSize: 14,fontWeight: FontWeight.w300,letterSpacing: 0,
+            fontSize: 12.sp,fontWeight: FontWeight.w300,letterSpacing: 0,
         ),
         titleMedium: TextStyle(
             height: 2,
-            fontSize: 12,fontWeight: FontWeight.w300,letterSpacing: 0,
+            fontSize: 10.sp,fontWeight: FontWeight.w300,letterSpacing: 0,
         ),
         titleSmall:
         TextStyle(
           height: 2,
-          fontSize: 12,fontWeight: FontWeight.w200,letterSpacing: 0,
+          fontSize: 10.sp,fontWeight: FontWeight.w200,letterSpacing: 0,
         ),
       ),
     );

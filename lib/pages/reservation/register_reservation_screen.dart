@@ -14,6 +14,7 @@ import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/pages/reservation/more_room_selection_screen.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 import 'package:uspace_ir/widgets/textfield.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterReservationScreen extends StatelessWidget {
   RegisterReservationScreen({Key? key}) : super(key: key);
@@ -84,7 +85,7 @@ class RegisterReservationScreen extends StatelessWidget {
                                 Text(
                                   'انتخاب اتاق های بیشتر',
                                   style: Theme.of(Get.context!).textTheme.labelLarge!.copyWith(
-                                        fontSize: 16,
+                                        fontSize: 14.sp,
                                         color: AppColors.mainColor,
                                       ),
                                 ),
@@ -270,7 +271,7 @@ class RegisterReservationScreen extends StatelessWidget {
                                       ),
                                       Text(
                                         '${mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham()} تومان',
-                                        style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18, color: AppColors.mainColor),
+                                        style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 16.sp, color: AppColors.mainColor),
                                         textDirection: TextDirection.rtl,
                                       ),
                                     ],
@@ -1078,7 +1079,7 @@ class RegisterReservationScreen extends StatelessWidget {
               child: Center(
                   child: Text(
                 'ارسال و پرداخت',
-                style: Theme.of(Get.context!).textTheme.displayMedium!.copyWith(fontSize: 18, color: Colors.white),
+                style: Theme.of(Get.context!).textTheme.displayMedium!.copyWith(fontSize: 16.sp, color: Colors.white),
               )),
             ),
           ),
