@@ -5,6 +5,8 @@ import 'package:uspace_ir/app/config/app_colors.dart';
 class ThemConfig {
   static ThemeData createTheme() {
     return ThemeData(
+      colorScheme: const ColorScheme.light(primary: AppColors.mainColor),
+      indicatorColor: AppColors.mainColor,
       fontFamily: 'iransans',
       scaffoldBackgroundColor: Colors.white,
       bottomSheetTheme: const BottomSheetThemeData(

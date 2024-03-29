@@ -48,6 +48,13 @@ class Data {
   List<CommentsFile> commentsFiles;
   List<EcolodgeSuggestion> ecolodgeSuggestions;
   List<Room> rooms;
+  int? visitNumber;
+  String? totalRate;
+  AvgFbRate? avgFbRate;
+  AvgFbOpRate? avgFbOp2Rate;
+  AvgFbOpRate? avgFbOp3Rate;
+  AvgFbOpRate? avgFbOp4Rate;
+  int? rsvNights;
 
   Data({
     required this.title,
@@ -77,6 +84,13 @@ class Data {
     required this.commentsFiles,
     required this.ecolodgeSuggestions,
     required this.rooms,
+        this.visitNumber,
+        this.totalRate,
+        this.avgFbRate,
+        this.avgFbOp2Rate,
+        this.avgFbOp3Rate,
+        this.avgFbOp4Rate,
+        this.rsvNights,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -107,7 +121,49 @@ class Data {
     commentsFiles: List<CommentsFile>.from(json["comments_files"].map((x) => CommentsFile.fromJson(x))),
     ecolodgeSuggestions: List<EcolodgeSuggestion>.from(json["ecolodge_suggestions"].map((x) => EcolodgeSuggestion.fromJson(x))),
     rooms: List<Room>.from(json["rooms"].map((x) => Room.fromJson(x))),
+        visitNumber: json["visit_number"],
+        totalRate: json["total_rate"],
+        avgFbRate: json["avg_fb_rate"] == null ? null : AvgFbRate.fromJson(json["avg_fb_rate"]),
+        avgFbOp2Rate: json["avg_fb_op2_rate"] == null ? null : AvgFbOpRate.fromJson(json["avg_fb_op2_rate"]),
+        avgFbOp3Rate: json["avg_fb_op3_rate"] == null ? null : AvgFbOpRate.fromJson(json["avg_fb_op3_rate"]),
+        avgFbOp4Rate: json["avg_fb_op4_rate"] == null ? null : AvgFbOpRate.fromJson(json["avg_fb_op4_rate"]),
+        rsvNights: json["rsv_nights"],
+    );
+
+}
+
+class AvgFbOpRate {
+    String title;
+    double value;
+
+    AvgFbOpRate({
+        required this.title,
+        required this.value,
+    });
+
+    factory AvgFbOpRate.fromJson(Map<String, dynamic> json) => AvgFbOpRate(
+        title: json["title"],
+        value: json["value"]?.toDouble(),
   );
+
+}
+
+class AvgFbRate {
+    String title;
+    double value;
+    int numberFeedback;
+
+    AvgFbRate({
+        required this.title,
+        required this.value,
+        required this.numberFeedback,
+    });
+
+    factory AvgFbRate.fromJson(Map<String, dynamic> json) => AvgFbRate(
+        title: json["title"],
+        value: json["value"]?.toDouble(),
+        numberFeedback: json["number_feedback"],
+    );
 
 }
 
@@ -170,10 +226,6 @@ class Option {
     point: json["point"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "point": point,
-  };
 }
 
 class Reply {

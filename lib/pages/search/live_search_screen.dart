@@ -149,7 +149,7 @@ class LiveSearchScreen extends StatelessWidget {
                                       }else{
                                         return InkWell(
                                           onTap: () {
-                                            Get.to(const ReservationScreen(),arguments: {'url':liveSearchController.liveSearchEcolodgesResult[index].url});
+                                            Get.to(ReservationScreen(url:liveSearchController.liveSearchEcolodgesResult[index].url));
                                           },
                                           borderRadius: BorderRadius.circular(12),
                                           child: Container(

@@ -27,6 +27,7 @@ class HomeScreen extends StatelessWidget {
   final SearchController searchController = Get.find();
   final BaseController baseController = Get.find();
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -77,7 +78,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget mainGallery(context) {
     return Obx(() => Column(children: [
-          homeController.mainGallery.isEmpty
+          homeController.mainGallery.isEmpty || homeController.loading.value
               ? Shimmer.fromColors(
                   baseColor: Colors.grey.shade300,
                   highlightColor: Colors.grey.shade100,
@@ -183,7 +184,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget categories() {
     return Obx(() => Column(children: [
-          if (homeController.categories.isEmpty) SizedBox(
+          if (homeController.categories.isEmpty|| homeController.loading.value) SizedBox(
                   height: 100,
                   child: Directionality(
                     textDirection: TextDirection.rtl,
@@ -313,7 +314,7 @@ class HomeScreen extends StatelessWidget {
                   itemCount: homeController.newestEcolodgeList.isEmpty ? 3 : homeController.newestEcolodgeList.length,
                   controller: homeController.newestEcolodgeController,
                   itemBuilder: (context, index) {
-                    if (homeController.newestEcolodgeList.isEmpty) {
+                    if (homeController.newestEcolodgeList.isEmpty|| homeController.loading.value) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
@@ -370,9 +371,11 @@ class HomeScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InkWell(
-                              onTap: () {
+                              onTap: ()  {
                                 print(homeController.newestEcolodgeList[index].url);
-                                Get.to(const ReservationScreen(),arguments: {'url':homeController.newestEcolodgeList[index].url});
+                                Get.to(() {
+                                  return ReservationScreen(url: homeController.newestEcolodgeList[index].url,);
+                                } );
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(
@@ -534,15 +537,8 @@ class HomeScreen extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // TextButton(
-            //   onPressed: () {},
-            //   child: Text(
-            //     "مشاهده همه",
-            //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-            //   ),
-            // ),
-            const Spacer(),
             Text(
               "اقامتگاه های خاص",
               style: Theme.of(Get.context!).textTheme.bodyMedium,
@@ -565,7 +561,7 @@ class HomeScreen extends StatelessWidget {
                   return const SizedBox(width: 15);
                 },
                 itemBuilder: (context, index) {
-                  if (homeController.specialPlacesList.isEmpty) {
+                  if (homeController.specialPlacesList.isEmpty|| homeController.loading.value) {
                     return Shimmer.fromColors(
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
@@ -691,15 +687,8 @@ class HomeScreen extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
+          mainAxisAlignment:MainAxisAlignment.end,
           children: [
-            // TextButton(
-            //   onPressed: () {},
-            //   child: Text(
-            //     "مشاهده همه",
-            //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-            //   ),
-            // ),
-            const Spacer(),
             Text(
               "بهترین شهر های بوم گردی",
               style: Theme.of(Get.context!).textTheme.bodyMedium,
@@ -724,7 +713,7 @@ class HomeScreen extends StatelessWidget {
               return const SizedBox(width: 15);
             },
             itemBuilder: (context, index) {
-              if (homeController.bestPlacesList.isEmpty) {
+              if (homeController.bestPlacesList.isEmpty|| homeController.loading.value) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -815,15 +804,8 @@ class HomeScreen extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // TextButton(
-            //   onPressed: () {},
-            //   child: Text(
-            //     "مشاهده همه",
-            //     style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-            //   ),
-            // ),
-            const Spacer(),
             Text(
               "پیشنهاد های فصلی",
               style: Theme.of(Get.context!).textTheme.bodyMedium,
@@ -848,7 +830,7 @@ class HomeScreen extends StatelessWidget {
                 return const SizedBox(width: 18);
               },
               itemBuilder: (context, index) {
-                if (homeController.sessionSuggestList.isEmpty) {
+                if (homeController.sessionSuggestList.isEmpty || homeController.loading.value) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: SizedBox(
@@ -1000,7 +982,7 @@ class HomeScreen extends StatelessWidget {
                 return const SizedBox(width: 18);
               },
               itemBuilder: (context, index) {
-                if (homeController.bestSellersEcolodgeList.isEmpty) {
+                if (homeController.bestSellersEcolodgeList.isEmpty|| homeController.loading.value) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: SizedBox(
@@ -1152,7 +1134,7 @@ class HomeScreen extends StatelessWidget {
                 return const SizedBox(width: 18);
               },
               itemBuilder: (context, index) {
-                if (homeController.bestOfferEcolodgeList.isEmpty) {
+                if (homeController.bestOfferEcolodgeList.isEmpty|| homeController.loading.value) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: SizedBox(
@@ -1301,6 +1283,7 @@ class HomeScreen extends StatelessWidget {
           : const SizedBox(),
     );
   }
+
 
   progress({
     required String footer,

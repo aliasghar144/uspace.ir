@@ -9,14 +9,14 @@ class UserController extends GetxController{
     var box = await Hive.openBox(con.userBox);
     print(box.get(con.userCart));
     if(box.get(con.userCart) != null){
-      userCart.addAll(box.get(con.userCart));
+      lastReserveCode.value = (box.get(con.userCart));
       HistoryController historyController = Get.find<HistoryController>();
-      historyController.getOrderHistory(userCart);
+      historyController.getOrderHistory(lastReserveCode.value);
     }
     super.onInit();
   }
 
-  final RxList<String> userCart = <String>[].obs;
+  final RxString lastReserveCode = ''.obs;
 
 
 }

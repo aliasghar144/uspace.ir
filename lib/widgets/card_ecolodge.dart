@@ -23,7 +23,7 @@ class CardEcolodge extends StatelessWidget {
           InkWell(
             onTap:(){
               print(ecolodge.url);
-              Get.to(const ReservationScreen(),arguments: {'url':ecolodge.url});
+              Get.to(ReservationScreen(url:ecolodge.url));
             },
             borderRadius: BorderRadius.circular(12),
             child: SizedBox(

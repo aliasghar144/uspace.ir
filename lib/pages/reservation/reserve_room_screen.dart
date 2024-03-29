@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/reservation_controller.dart';
@@ -11,18 +12,24 @@ import 'package:uspace_ir/controllers/room_reservation_controller.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
 import 'package:uspace_ir/pages/reservation/register_reservation_screen.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
-import 'package:uspace_ir/widgets/single_image_view.dart';
+import 'package:uspace_ir/widgets/image_view.dart';
 
 class RoomReservationScreen extends StatelessWidget {
-  RoomReservationScreen({Key? key}) : super(key: key);
+  final int roomsIndex;
+
+  RoomReservationScreen({
+    required this.roomsIndex,
+    Key? key}) : super(key: key);
 
   final ReservationController reservationController = Get.find();
+
+  final RefreshController refreshController =
+  RefreshController(initialRefresh: false,);
 
 
   @override
   Widget build(BuildContext context) {
     RoomReservationController roomReservationController = Get.put(RoomReservationController());
-    final int roomsIndex = Get.arguments['roomsIndex'];
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -151,7 +158,11 @@ class RoomReservationScreen extends StatelessWidget {
                       alignment: Alignment.topRight,
                       child: IconButton(
                         onPressed: () {
-                          Get.to(SingleImageView(), arguments: {'image': reservationController.room.value!.data.rooms[roomsIndex].thumbImage});
+                          Get.to(ImageView(
+                            index: 0,
+                            url: reservationController.room.value!.data.url,
+                            image:reservationController.room.value!.data.rooms[roomsIndex].thumbImage
+                          ),);
                         },
                         icon: const Icon(Icons.fullscreen, color: Colors.white),
                       ),
@@ -244,7 +255,7 @@ class RoomReservationScreen extends StatelessWidget {
                       reservationController.choseEntryDate();
                     }
                   },
-                  value: reservationController.durationValue.value == "" ? null : reservationController.durationValue.value,
+                  value: reservationController.durationValue.value == 0 ? null : reservationController.durationValue.value,
                   buttonStyleData: ButtonStyleData(
                     height: 35,
                     width: Get.width / 2.8,
@@ -609,5 +620,6 @@ class RoomReservationScreen extends StatelessWidget {
     }
     return '0';
   }
+
 
 }

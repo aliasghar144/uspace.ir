@@ -54,8 +54,19 @@ class PhoneAuthenticationScreen extends StatelessWidget {
                             imageUrl:
                             "https://www.uspace.ir/public/img/bluesky/logo9.png",
                             fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                            const Icon(Icons.broken_image_outlined),
+                            errorWidget: (context, url, error) {
+                              return Container(
+                                clipBehavior: Clip.none,
+                                width: Get.width / 2.2,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/image_not_available.png',
+                                  fit: BoxFit.scaleDown,
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),

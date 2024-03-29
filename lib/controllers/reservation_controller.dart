@@ -19,10 +19,24 @@ class ReservationController extends GetxController {
   @override
   void onInit(){
     getMainInfo(roomUrl: url);
+    mainScrollController.addListener(() {
+      if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
+        tabIndex.value = 1;
+      }
+      if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
+        tabIndex.value = 2;
+      }
+      if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
+        tabIndex.value = 3;
+      }
+    });
     super.onInit();
   }
 
   ScrollController screenScrollController = ScrollController();
+  ScrollController mainScrollController = ScrollController();
+
+  RxDouble markerSized = 28.0.obs;
 
   RxBool userImages = false.obs;
   RxBool loading = true.obs;
@@ -131,11 +145,14 @@ class ReservationController extends GetxController {
 
   //#endregion  =============== Rooms =========================
 
-  //#region =============== Details =======================
+  //#region =============== Tabs =======================
+  RxInt tabIndex = 1.obs;
 
-  RxInt tabIndex = 0.obs;
+  var key1 = GlobalKey();
+  var key2 = GlobalKey();
+  var key3 = GlobalKey();
 
-  //#endregion =============== Details =======================
+  //#endregion =============== Tabs =======================
 
   //#region =============== Comments =======================
 

@@ -828,7 +828,6 @@ class RegisterReservationScreen extends StatelessWidget {
                       style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.mainColor, decoration: TextDecoration.underline),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('read form');
                           // Single tapped.
                         },
                     ),

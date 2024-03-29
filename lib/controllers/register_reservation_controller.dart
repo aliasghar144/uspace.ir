@@ -80,9 +80,9 @@ class RegisterReservationController extends GetxController{
           loading.value = false;
           UserController userController = Get.find<UserController>();
           HistoryController historyController = Get.find<HistoryController>();
-          userController.userCart.add(data['data']['tracking_code']);
+          userController.lastReserveCode.value = (data['data']['tracking_code']);
           historyController.fetchOrder(data['data']['tracking_code']);
-          Hive.box(userBox).put(userCart, userController.userCart);
+          Hive.box(userBox).put(userCart, userController.lastReserveCode);
           Get.offAll(BaseScreen());
           Get.showSnackbar(
               GetSnackBar(

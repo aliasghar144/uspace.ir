@@ -28,9 +28,10 @@ class RoomReservationController extends GetxController{
                   ])),
             ],
           )));
-      print(i);
     }
     return list;
   }
+
+  void onRefresh() async {}
 
 }

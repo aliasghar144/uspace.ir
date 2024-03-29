@@ -67,7 +67,7 @@ class HistoryScreen extends StatelessWidget {
                             ElevatedButton(
                                 onPressed: () {
                                   if (historyController.formKey.currentState!.validate()) {
-                                    historyController.addOrderCode(historyController.orderCodeTextEditController.text);
+                                    historyController.getOrderHistory(historyController.orderCodeTextEditController.text);
                                     historyController.orderCodeTextEditController.clear();
                                     Get.back();
                                   }
@@ -106,313 +106,143 @@ class HistoryScreen extends StatelessWidget {
                       ),
                     );
                   }
-                  if (historyController.orderHistory[orderIndex].data.rsvItems.length > 1) {
-                    return ListView.separated(
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, roomIndex) {
-                        return AnimatedSize(
-                          curve: Curves.ease,
-                          alignment: Alignment.topCenter,
-                          duration: const Duration(milliseconds: 500),
-                          child: Container(
-                              margin: EdgeInsets.zero,
-                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3), boxShadow: const [
-                                BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.14), blurRadius: 4, offset: Offset(0, 4)),
-                              ]),
-                              child: InkWell(
+                  return Container(
+                      margin: EdgeInsets.zero,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3), boxShadow: const [
+                        BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.14), blurRadius: 4, offset: Offset(0, 4)),
+                      ]),
+                      child: InkWell(
+                        onTap: () {
+                          historyController.orderHistory[orderIndex].data.rsvItems[0].isExpanded.toggle();
+                        },
+                        child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              InkWell(
                                 onTap: () {
-                                  historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].isExpanded.toggle();
+                                  orderStatus(orderIndex, 0);
                                 },
-                                child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
-                                  Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          orderStatus(orderIndex, roomIndex);
-                                        },
-                                        child: Container(
-                                            padding: const EdgeInsets.all(4),
-                                            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white, boxShadow: [
-                                              BoxShadow(
-                                                color: Color.fromRGBO(0, 0, 0, 0.25),
-                                                blurRadius: 4,
-                                                offset: Offset(0, 4),
-                                              )
-                                            ]),
-                                            child: Icon(Icons.info, color: orderStatusChecker(historyController.orderHistory[orderIndex].data.status), size: 20)),
-                                      ),
-                                      const SizedBox(
-                                        width: 25,
-                                      ),
-                                      Flexible(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].title,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              textDirection: TextDirection.rtl,
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            RichText(
-                                              textDirection: TextDirection.rtl,
-                                              text: TextSpan(
-                                                children: [TextSpan(text: 'قیمت پرداختی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].dayAndPrice).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.mainColor))],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10),
-                                        clipBehavior: Clip.hardEdge,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        width: Get.width / 6.5,
-                                        height: Get.width / 6.5,
-                                        child: CachedNetworkImage(
-                                          imageUrl: historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].thumbImage,
-                                          fit: BoxFit.fill,
-                                          errorWidget: (context, url, error) {
-                                            return Container(
-                                              clipBehavior: Clip.none,
-                                              width: Get.width / 4,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              child: Image.asset(
-                                                'assets/images/image_not_available.png',
-                                                fit: BoxFit.scaleDown,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  RichText(
+                                child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white, boxShadow: [
+                                      BoxShadow(
+                                        color: Color.fromRGBO(0, 0, 0, 0.25),
+                                        blurRadius: 4,
+                                        offset: Offset(0, 4),
+                                      )
+                                    ]),
+                                    child: Icon(Icons.info, color: orderStatusChecker(historyController.orderHistory[orderIndex].data.status), size: 20)),
+                              ),
+                              const SizedBox(
+                                width: 25,
+                              ),
+                              Flexible(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      historyController.orderHistory[orderIndex].data.rsvItems[0].title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       textDirection: TextDirection.rtl,
-                                      text: TextSpan(children: [
-                                        TextSpan(text: 'تاریخ ورود: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
-                                        TextSpan(
-                                            text: historyController.orderHistory[orderIndex].data.miladiCheckIn.toPersianDateStr(
-                                              showDayStr: true,
-                                            ),
-                                            style: Theme.of(Get.context!).textTheme.labelMedium)
-                                      ])),
-                                  RichText(
-                                      textDirection: TextDirection.rtl,
-                                      text: TextSpan(children: [
-                                        TextSpan(text: 'تاریخ خروج: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
-                                        TextSpan(
-                                            text: historyController.orderHistory[orderIndex].data.miladiCheckIn.add(Duration(days: historyController.orderHistory[orderIndex].data.duration)).toPersianDateStr(
-                                                  showDayStr: true,
-                                                ),
-                                            style: Theme.of(Get.context!).textTheme.labelMedium)
-                                      ])),
-                                  RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'مدت اقامت: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: historyController.orderHistory[orderIndex].data.duration.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
-                                  RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد اتاق: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: historyController.orderHistory[orderIndex].data.rsvItems.length.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
-                                  RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد مهمان: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].roomCapacity.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
-                                  Obx(() => historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].isExpanded.value ? onExpansion(orderIndex: orderIndex, roomIndex: roomIndex, oneDayPrice: historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].dayAndPrice[0].originalPrice.toString(), title: historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].title, featureElement: historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].features, roomPackages: historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].roomPackages) : const SizedBox()),
-                                  const SizedBox(
-                                    height: 10,
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت پرداختی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(historyController.orderHistory[orderIndex].data.rsvItems[0].dayAndPrice).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.mainColor))]))
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(left: 10),
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                width: Get.width / 6.5,
+                                height: Get.width / 6.5,
+                                child: CachedNetworkImage(
+                                  imageUrl: historyController.orderHistory[orderIndex].data.rsvItems[0].thumbImage,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          RichText(
+                              textDirection: TextDirection.rtl,
+                              text: TextSpan(children: [
+                                TextSpan(text: 'تاریخ ورود:', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
+                                TextSpan(
+                                    text: historyController.orderHistory[orderIndex].data.miladiCheckIn.toPersianDateStr(
+                                      showDayStr: true,
+                                    ),
+                                    style: Theme.of(Get.context!).textTheme.labelMedium)
+                              ])),
+                          RichText(
+                              textDirection: TextDirection.rtl,
+                              text: TextSpan(children: [
+                                TextSpan(text: 'تاریخ خروج: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
+                                TextSpan(
+                                    text: historyController.orderHistory[orderIndex].data.miladiCheckIn.add(Duration(days: historyController.orderHistory[orderIndex].data.duration)).toPersianDateStr(
+                                          showDayStr: true,
+                                        ),
+                                    style: Theme.of(Get.context!).textTheme.labelMedium)
+                              ])),
+                          RichText(
+                            textDirection: TextDirection.rtl,
+                            text: TextSpan(children:
+                            [
+                              TextSpan(text: 'مدت اقامت: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
+                              TextSpan(text: historyController.orderHistory[orderIndex].data.duration.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)
+                            ]
+                            ),
+                          ),
+                          RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد اتاق: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: historyController.orderHistory[orderIndex].data.rsvItems.length.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
+                          RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد مهمان: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: historyController.orderHistory[orderIndex].data.rsvItems[0].roomCapacity.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
+                          Obx(() => historyController.orderHistory[orderIndex].data.rsvItems[0].isExpanded.value ? onExpansion(roomIndex: 0, orderIndex: orderIndex, roomPackages: historyController.orderHistory[orderIndex].data.rsvItems[0].roomPackages, featureElement: historyController.orderHistory[orderIndex].data.rsvItems[0].features, title: historyController.orderHistory[orderIndex].data.rsvItems[0].title, oneDayPrice: historyController.orderHistory[orderIndex].data.rsvItems[0].dayAndPrice[0].originalPrice.toString()) : const SizedBox()),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Stack(alignment: Alignment.center, children: [
+                            Align(
+                              alignment: Alignment.bottomLeft,
+                              child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: colorStatus(historyController.orderHistory[orderIndex].data.status),
                                   ),
-                                  Stack(alignment: Alignment.center, children: [
-                                    Align(
-                                      alignment: Alignment.bottomLeft,
-                                      child: Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(20),
-                                            color: colorStatus(historyController.orderHistory[orderIndex].data.status),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                historyController.orderHistory[orderIndex].data.status,
-                                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white),
-                                              ),
-                                              const SizedBox(width: 2),
-                                              iconStatus(historyController.orderHistory[orderIndex].data.status)
-                                            ],
-                                          )),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: Obx(() => Text(historyController.orderHistory[orderIndex].data.rsvItems[roomIndex].isExpanded.value ? 'اطلاعات کمتر' : 'اطلاعات بیشتر',
-                                          style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                                                color: AppColors.grayColor,
-                                              ))),
-                                    ),
-                                  ])
-                                ]),
-                              )),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(height: 15);
-                      },
-                      itemCount: historyController.orderHistory[orderIndex].data.rsvItems.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                    );
-                  }
-                  return AnimatedSize(
-                    curve: Curves.ease,
-                    alignment: Alignment.topCenter,
-                    duration: const Duration(milliseconds: 500),
-                    child: Container(
-                        margin: EdgeInsets.zero,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3), boxShadow: const [
-                          BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.14), blurRadius: 4, offset: Offset(0, 4)),
-                        ]),
-                        child: InkWell(
-                          onTap: () {
-                            historyController.orderHistory[orderIndex].data.rsvItems[0].isExpanded.toggle();
-                          },
-                          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    orderStatus(orderIndex, 0);
-                                  },
-                                  child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white, boxShadow: [
-                                        BoxShadow(
-                                          color: Color.fromRGBO(0, 0, 0, 0.25),
-                                          blurRadius: 4,
-                                          offset: Offset(0, 4),
-                                        )
-                                      ]),
-                                      child: Icon(Icons.info, color: orderStatusChecker(historyController.orderHistory[orderIndex].data.status), size: 20)),
-                                ),
-                                const SizedBox(
-                                  width: 25,
-                                ),
-                                Flexible(
-                                  child: Column(
+                                  child: Row(
                                     mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        historyController.orderHistory[orderIndex].data.rsvItems[0].title,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        textDirection: TextDirection.rtl,
+                                        historyController.orderHistory[orderIndex].data.status,
+                                        style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white),
                                       ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت پرداختی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(historyController.orderHistory[orderIndex].data.rsvItems[0].dayAndPrice).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.mainColor))]))
+                                      const SizedBox(width: 2),
+                                      iconStatus(historyController.orderHistory[orderIndex].data.status),
                                     ],
-                                  ),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.only(left: 10),
-                                  clipBehavior: Clip.hardEdge,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  width: Get.width / 6.5,
-                                  height: Get.width / 6.5,
-                                  child: CachedNetworkImage(
-                                    imageUrl: historyController.orderHistory[orderIndex].data.rsvItems[0].thumbImage,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ],
+                                  )),
                             ),
-                            const SizedBox(
-                              height: 5,
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Obx(() => Text(historyController.orderHistory[orderIndex].data.rsvItems[0].isExpanded.value ? 'اطلاعات کمتر' : 'اطلاعات بیشتر',
+                                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                                        color: AppColors.grayColor,
+                                      ))),
                             ),
-                            RichText(
-                                textDirection: TextDirection.rtl,
-                                text: TextSpan(children: [
-                                  TextSpan(text: 'تاریخ ورود:', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
-                                  TextSpan(
-                                      text: historyController.orderHistory[orderIndex].data.miladiCheckIn.toPersianDateStr(
-                                        showDayStr: true,
-                                      ),
-                                      style: Theme.of(Get.context!).textTheme.labelMedium)
-                                ])),
-                            RichText(
-                                textDirection: TextDirection.rtl,
-                                text: TextSpan(children: [
-                                  TextSpan(text: 'تاریخ خروج: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
-                                  TextSpan(
-                                      text: historyController.orderHistory[orderIndex].data.miladiCheckIn.add(Duration(days: historyController.orderHistory[orderIndex].data.duration)).toPersianDateStr(
-                                            showDayStr: true,
-                                          ),
-                                      style: Theme.of(Get.context!).textTheme.labelMedium)
-                                ])),
-                            RichText(
-                              textDirection: TextDirection.rtl,
-                              text: TextSpan(children:
-                              [
-                                TextSpan(text: 'مدت اقامت: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
-                                TextSpan(text: historyController.orderHistory[orderIndex].data.duration.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)
-                              ]
-                              ),
-                            ),
-                            RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد اتاق: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: historyController.orderHistory[orderIndex].data.rsvItems.length.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
-                            RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد مهمان: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: historyController.orderHistory[orderIndex].data.rsvItems[0].roomCapacity.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
-                            Obx(() => historyController.orderHistory[orderIndex].data.rsvItems[0].isExpanded.value ? onExpansion(roomIndex: 0, orderIndex: orderIndex, roomPackages: historyController.orderHistory[orderIndex].data.rsvItems[0].roomPackages, featureElement: historyController.orderHistory[orderIndex].data.rsvItems[0].features, title: historyController.orderHistory[orderIndex].data.rsvItems[0].title, oneDayPrice: historyController.orderHistory[orderIndex].data.rsvItems[0].dayAndPrice[0].originalPrice.toString()) : const SizedBox()),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Stack(alignment: Alignment.center, children: [
-                              Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      color: colorStatus(historyController.orderHistory[orderIndex].data.status),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          historyController.orderHistory[orderIndex].data.status,
-                                          style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white),
-                                        ),
-                                        const SizedBox(width: 2),
-                                        iconStatus(historyController.orderHistory[orderIndex].data.status),
-                                      ],
-                                    )),
-                              ),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Obx(() => Text(historyController.orderHistory[orderIndex].data.rsvItems[0].isExpanded.value ? 'اطلاعات کمتر' : 'اطلاعات بیشتر',
-                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                                          color: AppColors.grayColor,
-                                        ))),
-                              ),
-                            ])
-                          ]),
-                        )),
-                  );
+                          ])
+                        ]),
+                      ));
                 },
                 separatorBuilder: (context, index) {
                   return const SizedBox(height: 15);

@@ -52,7 +52,6 @@ class HomeController extends GetxController {
 
   fetchTest()async{
     try{
-      print('try');
       var url = Uri.parse('$mainUrl/seasonal_suggest_ecolodge');
       var response = await http.get(url);
       if(response.statusCode == 200){
@@ -106,6 +105,7 @@ class HomeController extends GetxController {
   fetchNewestEcolodge()async{
     try{
       loading.value = true;
+      newestEcolodgeList.clear();
       var url = Uri.parse('$mainUrl/newest_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
@@ -123,6 +123,7 @@ class HomeController extends GetxController {
   fetchSessionSuggest()async{
     try{
       loading.value = true;
+      sessionSuggestList.clear();
       var url = Uri.parse('$mainUrl/seasonal_suggest_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
@@ -140,6 +141,7 @@ class HomeController extends GetxController {
   fetchBestSellersEcolodge()async{
     try{
       loading.value = true;
+      bestSellersEcolodgeList.clear();
       var url = Uri.parse('$mainUrl/best_sellers_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
@@ -157,6 +159,7 @@ class HomeController extends GetxController {
   fetchBestOfferEcolodge()async{
     try{
       loading.value = true;
+      bestOfferEcolodgeList.clear();
       var url = Uri.parse('$mainUrl/best_offer_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
@@ -173,6 +176,7 @@ class HomeController extends GetxController {
   fetchBestPlaces()async{
     try{
       loading.value = true;
+      bestPlacesList.clear();
       var url = Uri.parse('$mainUrl/best_places');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
@@ -190,6 +194,7 @@ class HomeController extends GetxController {
   fetchSpecialPlaces()async{
     try{
       loading.value = true;
+      specialPlacesList.clear();
       var url = Uri.parse('$mainUrl/get_landings?number=12');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
@@ -207,5 +212,6 @@ class HomeController extends GetxController {
     retry.value = false;
     onInit();
   }
+
 
 }

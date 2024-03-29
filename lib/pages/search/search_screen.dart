@@ -18,6 +18,7 @@ class SearchScreen extends StatelessWidget {
 
   final SearchController searchController = Get.find();
 
+
   final RxInt itemCount = 5.obs;
 
   @override
@@ -34,7 +35,11 @@ class SearchScreen extends StatelessWidget {
                     Expanded(
                         child: SizedBox(
                       height: 25,
-                      child: Obx(() => ListView(scrollDirection: Axis.horizontal, physics: const BouncingScrollPhysics(), shrinkWrap: true, children: [
+                      child: Obx(() => ListView(
+                          reverse: true,
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true, children: [
                             if (searchController.specialPlaceTitle.value != '') ...[
                               Container(
                                 padding: const EdgeInsets.only(right: 4, left: 6),
@@ -330,7 +335,7 @@ class SearchScreen extends StatelessWidget {
                             if (!searchController.loadMore.value && index < searchController.searchEcolodgesResult.length) {
                               return InkWell(
                                 onTap: () {
-                                  Get.to(const ReservationScreen(), arguments: {'url': searchController.searchEcolodgesResult[index].url});
+                                  Get.to(ReservationScreen(url:searchController.searchEcolodgesResult[index].url));
                                 },
                                 borderRadius: BorderRadius.circular(25),
                                 child: Stack(
@@ -469,4 +474,5 @@ class SearchScreen extends StatelessWidget {
       ),
     );
   }
+
 }
