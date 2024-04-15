@@ -9,6 +9,7 @@ import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/error_handle.dart';
 import 'package:uspace_ir/base_screen.dart';
 import 'package:uspace_ir/constance/constance.dart';
+import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
 
 class ReservationController extends GetxController {
@@ -20,21 +21,25 @@ class ReservationController extends GetxController {
   void onInit(){
     getMainInfo(roomUrl: url);
     mainScrollController.addListener(() {
-      if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
-        tabIndex.value = 1;
-      }
+      // if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
+      //   tabIndex.value = 1;
+      // }
       if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
         tabIndex.value = 2;
+      }else{
+        tabIndex.value = 1;
       }
-      if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
-        tabIndex.value = 3;
-      }
+      // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
+      //   tabIndex.value = 3;
+      // }
     });
     super.onInit();
   }
 
   ScrollController screenScrollController = ScrollController();
   ScrollController mainScrollController = ScrollController();
+
+  UserController userController = Get.find<UserController>();
 
   RxDouble markerSized = 28.0.obs;
 
@@ -121,6 +126,7 @@ class ReservationController extends GetxController {
     }
   }
 
+
   //#region  =============== Rooms =========================
 
   ScrollController roomSugestionController = ScrollController();
@@ -197,8 +203,6 @@ class ReservationController extends GetxController {
   }
   //#endregion =============== Comments =======================
 
-
-  RxBool isFave = false.obs;
-  
   final PageController pageController = PageController();
+
 }

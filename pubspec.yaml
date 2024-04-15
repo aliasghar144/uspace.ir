@@ -60,6 +60,8 @@ dependencies:
   hive_flutter:
   pull_to_refresh:
   scrollable_positioned_list: ^0.3.8
+  url_launcher:
+  flutter_masked_text2:
 
 dev_dependencies:
   flutter_test:

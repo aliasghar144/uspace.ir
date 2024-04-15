@@ -6,7 +6,6 @@ import 'dart:convert';
 
 List<EcolodgeModel> ecolodgeModelFromJson(String str) => List<EcolodgeModel>.from(json.decode(str).map((x) => EcolodgeModel.fromJson(x)));
 
-String ecolodgeModelToJson(List<EcolodgeModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class EcolodgeModel {
   String title;
@@ -55,19 +54,4 @@ class EcolodgeModel {
     currency: json["currency"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "image": image,
-    "province": province,
-    "city": city,
-    "village": village,
-    "address": address,
-    "url": url,
-    "min_price": minPrice,
-    "unit_price": unitPrice,
-    "max_discount_percent": maxDiscountPercent,
-    "max_discount_price": maxDiscountPrice,
-    "dollar_equivalent": dollarEquivalent,
-    "currency": currency,
-  };
 }

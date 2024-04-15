@@ -257,7 +257,7 @@ class BottomSheets{
                         child: ElevatedButton(
                             onPressed: (){
                               if(historyController.orderCodeTextEditController.text.isNotEmpty){
-                                historyController.getOrderHistory(historyController.orderCodeTextEditController.text);
+                                historyController.fetchOrderHistory(historyController.orderCodeTextEditController.text);
                                 Get.back();
                                 historyController.orderCodeTextEditController.clear();
                               }

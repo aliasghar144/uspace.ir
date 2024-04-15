@@ -6,7 +6,6 @@ import 'dart:convert';
 
 List<SearchPlacesModel> liveSearchPlacesModelFromJson(String str) => List<SearchPlacesModel>.from(json.decode(str).map((x) => SearchPlacesModel.fromJson(x)));
 
-String liveSearchPlacesModelToJson(List<SearchPlacesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class SearchPlacesModel {
   String title;
@@ -37,13 +36,4 @@ class SearchPlacesModel {
     visitNumber: json["visit_number"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "alias_title": aliasTitle,
-    "image": image,
-    "group_type": groupType,
-    "parent_url": parentUrl,
-    "url": url,
-    "visit_number": visitNumber,
-  };
 }

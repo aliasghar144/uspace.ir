@@ -1,22 +1,37 @@
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
-import 'package:uspace_ir/constance/constance.dart' as con ;
-import 'package:uspace_ir/controllers/history_controller.dart';
+import 'package:uspace_ir/memory/memory.dart';
+import 'package:uspace_ir/models/room_reservation_model.dart';
+
 class UserController extends GetxController{
 
   @override
-  void onInit() async {
-    var box = await Hive.openBox(con.userBox);
-    print(box.get(con.userCart));
-    if(box.get(con.userCart) != null){
-      lastReserveCode.value = (box.get(con.userCart));
-      HistoryController historyController = Get.find<HistoryController>();
-      historyController.getOrderHistory(lastReserveCode.value);
+  void onInit(){
+    if(Memory().readFavList() != null){
+
+      favList.addAll(Memory().readFavList());
     }
     super.onInit();
   }
 
-  final RxString lastReserveCode = ''.obs;
+  RxBool favLoading = false.obs;
+  RxList<String> favList = <String>[].obs;
 
+  addToFav(RoomReservationModel room){
+    final String fav = roomReservationModelToJson(room);
+    favList.add(fav);
+    Memory().saveFavList(favList);
+  }
+
+  removeFav(RoomReservationModel room){
+    favList.removeWhere((element) {
+      final RoomReservationModel index = roomReservationModelFromJson(element);
+      if(index.data.url == room.data.url){
+        Memory().saveFavList(favList);
+        return true;
+      }else{
+        return false;
+      }
+    });
+  }
 
 }

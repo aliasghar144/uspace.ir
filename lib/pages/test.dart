@@ -15,7 +15,7 @@ class TestScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
       Text(
-      homeController.mainGallery[0]['caption'],
+      'homeController.mainGallery[0][]',
         style: Theme.of(context)
             .textTheme
             .bodySmall!

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
-import 'package:uspace_ir/constance/constance.dart';
+import 'package:uspace_ir/routes/route.dart';
 
 class IntroScreen extends StatelessWidget{
   const IntroScreen({Key? key}) : super(key: key);

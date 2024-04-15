@@ -1,26 +1,34 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/error_handle.dart';
 import 'package:uspace_ir/base_screen.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/controllers/history_controller.dart';
-import 'package:uspace_ir/controllers/user_controller.dart';
+import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
 import 'package:uspace_ir/models/rooms_register_model.dart';
 
 class RegisterReservationController extends GetxController{
 
-  final formKey = GlobalKey<FormState>();
-
   late String roomUrl;
   late Rx<DateTime> reserveDate;
   late int duration;
+  late List<Room> room;
+  RegisterReservationController({required this.roomUrl, required this.reserveDate, required this.duration, required this.room});
+
+  @override
+  void onInit() {
+    addRoom(room);
+    super.onInit();
+  }
+
+  final formKey = GlobalKey<FormState>();
+
+
 
   RxList<RoomsRegisterModel> roomRegisterList = <RoomsRegisterModel>[].obs;
 
@@ -32,6 +40,8 @@ class RegisterReservationController extends GetxController{
   void booking() async{
     try{
       loading.value = true;
+
+      //loading
       showDialog(context: Get.context!, builder: (context) {
         return WillPopScope(child: Dialog(
           backgroundColor: Colors.transparent,
@@ -44,15 +54,18 @@ class RegisterReservationController extends GetxController{
           ),
         ), onWillPop: () async => !loading.value,);
       },);
+
+
       List reserveItems = [];
+
       for(RoomsRegisterModel room in roomRegisterList){
       reserveItems.add({
         'sid':room.roomReservationModel.idRoom.toString(),
         'package_id':room.roomReservationModel.roomPackages[0].finance.priceInfo.idSalesPackage.toString(),
         'additional_guest': room.additionalGuest.value.toString()
-      });
+      });}
 
-      }
+
       Map<String,dynamic> body = {
         'name': nameController.text,
         'mobile': phoneNumberController.text,
@@ -65,24 +78,29 @@ class RegisterReservationController extends GetxController{
         'reserve_items': reserveItems
       };
 
-      Uri url = Uri.parse('$mainUrl/booking');
 
-      print(jsonEncode(body));
+      Uri url = Uri.parse('$mainUrl/booking');
 
       final http.Response response = await http.post(url,body: jsonEncode(body),headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json'
       });
+
+
       if(response.statusCode == 200){
         var data = jsonDecode(response.body);
-        print('order is successfully ==> $data');
+
         if(data['message'] == 'ok'){
           loading.value = false;
-          UserController userController = Get.find<UserController>();
+
           HistoryController historyController = Get.find<HistoryController>();
-          userController.lastReserveCode.value = (data['data']['tracking_code']);
-          historyController.fetchOrder(data['data']['tracking_code']);
-          Hive.box(userBox).put(userCart, userController.lastReserveCode);
+
+          historyController.fetchOrderHistory(data['data']['tracking_code']);
+
+          // save order code on storage
+          Memory().saveOrderCode((data['data']['tracking_code']));
+
+
           Get.offAll(BaseScreen());
           Get.showSnackbar(
               GetSnackBar(
@@ -93,6 +111,7 @@ class RegisterReservationController extends GetxController{
                     child: Text(data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
               ));
         }
+
         if(data['message'] == 'error'){
           loading.value = false;
 
@@ -120,6 +139,7 @@ class RegisterReservationController extends GetxController{
       rethrow;
     }
   }
+
 
   RxBool reserveCheck(int idPackage) {
     for(RoomsRegisterModel room in roomRegisterList){

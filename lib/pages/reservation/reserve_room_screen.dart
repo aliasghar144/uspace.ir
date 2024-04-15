@@ -75,12 +75,7 @@ class RoomReservationScreen extends StatelessWidget {
                   for(int i = 0; i < roomReservationController.dropdownValue.value;i++){
                     rooms.add(reservationController.room.value!.data.rooms[roomsIndex]);
                   }
-                  Get.to(RegisterReservationScreen(),arguments: {
-                    'room': rooms,
-                    'url': reservationController.room.value!.data.url,
-                    'duration': reservationController.durationValue.value,
-                    'reserveDate': reservationController.entryDate,
-                  });
+                  Get.to(RegisterReservationScreen(roomUrl: reservationController.room.value!.data.url, duration: reservationController.durationValue.value,reserveDate: reservationController.entryDate,room: rooms,));
                 }
               },
               child: Container(

@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/models/best_places_model.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
+import 'package:uspace_ir/models/main_gallery_model.dart';
 import 'package:uspace_ir/models/special_places_model.dart';
 import 'package:uspace_ir/models/test.dart';
 
@@ -38,9 +39,9 @@ class HomeController extends GetxController {
 
   RxBool retry = false.obs;
 
-  RxList mainGallery = [].obs;
   RxList categories = [].obs;
 
+  late final  mainGalleryList = Rxn<MainGalleryModel>();
   List<EcolodgeModel> sessionSuggestList = <EcolodgeModel>[].obs;
   List<EcolodgeModel> newestEcolodgeList = <EcolodgeModel>[].obs;
   List<EcolodgeModel> bestSellersEcolodgeList = <EcolodgeModel>[].obs;
@@ -73,7 +74,7 @@ class HomeController extends GetxController {
       var url = Uri.parse('$mainUrl/main_gallery');
       var response = await http.get(url);
       if(response.statusCode == 200){
-       mainGallery.value = (jsonDecode(response.body))['data'];
+        mainGalleryList.value = mainGalleryModelFromJson(response.body);
        loading.value = false;
       }
     } on SocketException {

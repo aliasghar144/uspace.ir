@@ -6,7 +6,6 @@ import 'dart:convert';
 
 List<SearchLandingPagesModel> liveSearchLandingPagesModelFromJson(String str) => List<SearchLandingPagesModel>.from(json.decode(str).map((x) => SearchLandingPagesModel.fromJson(x)));
 
-String liveSearchLandingPagesModelToJson(List<SearchLandingPagesModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class SearchLandingPagesModel {
   String? title;
@@ -25,9 +24,4 @@ class SearchLandingPagesModel {
     verticalImg: json["vertical_img"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "url": url,
-    "vertical_img": verticalImg,
-  };
 }

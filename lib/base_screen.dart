@@ -9,9 +9,10 @@ import 'package:uspace_ir/controllers/history_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
+import 'package:uspace_ir/memory/memory.dart';
+import 'package:uspace_ir/pages/favourit/favourit_screen.dart';
 import 'package:uspace_ir/pages/history/history_screen.dart';
 import 'package:uspace_ir/pages/home/home_screen.dart';
-import 'package:uspace_ir/pages/profile/profile_screen.dart';
 import 'package:uspace_ir/pages/search/live_search_screen.dart';
 import 'package:uspace_ir/pages/search/search_screen.dart';
 import 'package:uspace_ir/widgets/bottom_sheets.dart';
@@ -37,7 +38,7 @@ class BaseScreen extends StatelessWidget {
 
 
   final page = [
-    ProfileScreen(),
+    FavouriteScreen(),
     HistoryScreen(),
     SearchScreen(),
     HomeScreen(),
@@ -50,6 +51,11 @@ class BaseScreen extends StatelessWidget {
       onWillPop: () async {
         if(loading.value == true){
           return false;
+        }
+        if(baseController.pageIndex.value == 2){
+          searchController.resetFilter();
+          searchController.searchTextFieldController.clear();
+          searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
         }
         if(baseController.pageIndex.value != 3){
           baseController.pageIndex.value = 3;
@@ -85,7 +91,7 @@ class BaseScreen extends StatelessWidget {
                       splashRadius: 20,
                       icon: SvgPicture.asset('assets/icons/bell_ic.svg'),
                       onPressed: () {
-                        Hive.box(userBox).delete(userCart);
+
                       },
                     ),
                   ),
@@ -185,9 +191,9 @@ class BaseScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       myNavigationItem(
-                          picture: 'assets/icons/profile_nav_outline_ic.svg',
-                          pictureSelected: 'assets/icons/profile_nav_fill_ic.svg',
-                          text: "پروفایل",
+                          picture: 'assets/icons/favorite2_ic.svg',
+                          pictureSelected: 'assets/icons/favorite2_fill_ic.svg',
+                          text: "علاقه مندی ها",
                           index: 0),
                       myNavigationItem(
                           picture: 'assets/icons/paper_outline_ic.svg',
@@ -222,7 +228,7 @@ class BaseScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
-        if(index == 1 && userController.lastReserveCode.isEmpty){
+        if(index == 1 && Memory().readOrderCode() == null){
           BottomSheets().orderCode();
         }
         searchController.searchTextFieldController.clear();
@@ -230,33 +236,39 @@ class BaseScreen extends StatelessWidget {
         if(index == 2 && searchController.searchEcolodgesResult.isEmpty){
           searchController.searchWithFilter('');
         }
+        if(index == 1 && historyController.orderHistory.isEmpty){
+          historyController.onInit();
+        }
         if(index != 2 ){
           searchController.resetFilter();
         }
           baseController.pageIndex.value = index;
         },
-      child: Obx(() => SizedBox(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Expanded(child: SizedBox()),
-                baseController.pageIndex.value == index
-                    ? SvgPicture.asset(pictureSelected)
-                    : SvgPicture.asset(picture),
-                const SizedBox(
-                  height: 3,
-                ),
-                Text(
-                  text,
-                  style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(
-                      color: baseController.pageIndex.value == index
-                          ? AppColors.mainColor
-                          : AppColors.disabledText),
-                )
-              ],
-            ),
-          )),
+      child: Padding(
+        padding: const EdgeInsets.all(3.0),
+        child: Obx(() => SizedBox(
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Expanded(child: SizedBox()),
+                  baseController.pageIndex.value == index
+                      ? SvgPicture.asset(pictureSelected)
+                      : SvgPicture.asset(picture),
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  Text(
+                    text,
+                    style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(
+                        color: baseController.pageIndex.value == index
+                            ? AppColors.mainColor
+                            : AppColors.disabledText),
+                  )
+                ],
+              ),
+            )),
+      ),
     );
   }
 
@@ -270,6 +282,7 @@ class BaseScreen extends StatelessWidget {
         searchController.searchWithFilter(searchController.searchTextFieldController.text);
         break;
       case 1:
+        historyController.fetchOrderHistory(Memory().readOrderCode());
     }
     refreshController.refreshCompleted();
   }

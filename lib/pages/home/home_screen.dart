@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,7 +36,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             retry(),
-            mainGallery(context),
+            mainGallery(),
             const SizedBox(
               height: 20,
             ),
@@ -76,21 +75,21 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget mainGallery(context) {
+  Widget mainGallery() {
     return Obx(() => Column(children: [
-          homeController.mainGallery.isEmpty || homeController.loading.value
+          homeController.mainGalleryList.value == null || homeController.loading.value
               ? Shimmer.fromColors(
                   baseColor: Colors.grey.shade300,
                   highlightColor: Colors.grey.shade100,
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: Colors.white),
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery.of(Get.context!).size.width,
                     height: 170,
                   ),
                 )
               : SizedBox(
-                  width: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(Get.context!).size.width,
                   height: 170,
                   child: Directionality(
                     textDirection: TextDirection.rtl,
@@ -98,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                       scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
                       allowImplicitScrolling: true,
                       physics: const BouncingScrollPhysics(),
-                      itemCount: homeController.mainGallery.length,
+                      itemCount: homeController.mainGalleryList.value!.data.length,
                       controller: homeController.mainGalleryController,
                       onPageChanged: (value) {
                         homeController.currentPage.value = value;
@@ -111,16 +110,22 @@ class HomeScreen extends StatelessWidget {
                               margin: const EdgeInsets.symmetric(horizontal: 20),
                               width: MediaQuery.of(context).size.width,
                               height: 220,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25),
-                                child: CachedNetworkImage(
-                                  imageUrl: homeController.mainGallery[index]['image'],
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                              child: InkWell(
+                                borderRadius:BorderRadius.circular(20),
+                                onTap:() {
+                                  mainGalleryType(homeController.mainGalleryList.value!.data[index].type,index);
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
+                                  child: CachedNetworkImage(
+                                    imageUrl: homeController.mainGalleryList.value!.data[index].image,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                  ),
                                 ),
                               ),
                             ),
-                            homeController.mainGallery[index]['caption'] ==  '' ? const SizedBox() : Positioned(
+                            homeController.mainGalleryList.value!.data[index].caption ==  '' ? const SizedBox() : Positioned(
                                 right: 30,
                                 bottom: 18,
                                 child: ClipRRect(
@@ -142,7 +147,7 @@ class HomeScreen extends StatelessWidget {
                                             width: 5,
                                           ),
                                           Text(
-                                            homeController.mainGallery[index]['caption'],
+                                            homeController.mainGalleryList.value!.data[index].caption,
                                             style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
                                           ),
                                         ],
@@ -159,7 +164,7 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          homeController.mainGallery.isEmpty
+          homeController.mainGalleryList.value == null
               ? const SizedBox(
                   height: 0,
                 )
@@ -175,7 +180,7 @@ class HomeScreen extends StatelessWidget {
                       homeController.currentPage.value = index;
                     } ,
                     controller: homeController.mainGalleryController,
-                    count: homeController.mainGallery.length,
+                    count: homeController.mainGalleryList.value!.data.length,
                     effect: const JumpingDotEffect(dotHeight: 6, dotWidth: 6, dotColor: Color(0xffD9D9D9), activeDotColor: AppColors.mainColor),
                   ),
                 ),
@@ -1323,5 +1328,15 @@ class HomeScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  mainGalleryType(String type,int index) {
+    switch(type){
+      case 'category':
+        searchController.categoryId.value = homeController.mainGalleryList.value!.data[index].destination;
+        searchController.categoryTitle.value = homeController.mainGalleryList.value!.data[index].caption;
+        searchController.searchWithFilter('');
+        baseController.pageIndex.value = 2;
+    }
   }
 }

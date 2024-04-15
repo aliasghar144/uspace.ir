@@ -32,7 +32,7 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30.0),
         child: Column(children: [
-          Text(title, style: Theme.of(Get.context!).textTheme.labelSmall),
+          Text(title, style: Theme.of(Get.context!).textTheme.labelMedium),
           const SizedBox(height: 10),
           Wrap(
             direction: Axis.horizontal,

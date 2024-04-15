@@ -11,24 +11,30 @@ import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/register_reservation_controller.dart';
 import 'package:uspace_ir/controllers/reservation_controller.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
+import 'package:uspace_ir/models/room_reservation_model.dart';
 import 'package:uspace_ir/pages/reservation/more_room_selection_screen.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 import 'package:uspace_ir/widgets/textfield.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RegisterReservationScreen extends StatelessWidget {
-  RegisterReservationScreen({Key? key}) : super(key: key);
+  final String roomUrl;
+  final int duration;
+  final Rx<DateTime> reserveDate;
+  final List<Room> room;
+  RegisterReservationScreen({
+    required this.roomUrl,
+    required this.duration,
+    required this.reserveDate,
+    required this.room,
+    Key? key}) : super(key: key);
 
   final ReservationController reservationController = Get.find();
   final UserController userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
-    final RegisterReservationController mainController = Get.put(RegisterReservationController());
-    mainController.addRoom(Get.arguments['room']);
-    mainController.roomUrl = Get.arguments['url'];
-    mainController.duration = Get.arguments['duration'];
-    mainController.reserveDate = Get.arguments['reserveDate'];
+    final RegisterReservationController mainController = Get.put(RegisterReservationController(duration: duration,roomUrl: roomUrl,reserveDate: reserveDate,room: room));
     return GestureDetector(
       onTap: () {
         return FocusManager.instance.primaryFocus?.unfocus();
@@ -527,7 +533,7 @@ class RegisterReservationScreen extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Container(
-                                      height: Get.width / 5.0,
+                                      height: Get.height * 0.09,
                                       width: Get.width,
                                       padding: const EdgeInsets.only(right: 15),
                                       child: ListView.separated(
@@ -551,7 +557,7 @@ class RegisterReservationScreen extends StatelessWidget {
                                               children: [
                                                 Container(
                                                   width: Get.width / 4.05,
-                                                  alignment: Alignment.centerRight,
+                                                  alignment: Alignment.center,
                                                   padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                                                   decoration: BoxDecoration(
                                                     color: AppColors.mainColor.withOpacity(0.1),
@@ -601,87 +607,18 @@ class RegisterReservationScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'جزئیات قیمت',
-                                            style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
-                                          ),
-                                          const SizedBox(width: 5),
-                                          const Icon(
-                                            Icons.info,
-                                            color: AppColors.grayColor,
-                                            size: 15,
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      // Obx(() => Directionality(
-                                      //   textDirection: TextDirection.rtl,
-                                      //   child: DropdownButtonHideUnderline(
-                                      //     child: DropdownButton2(
-                                      //       isExpanded: true,
-                                      //       style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                      //       items: roomReservationController.numberOfRoomItems.map((selectedType) {
-                                      //         return DropdownMenuItem(
-                                      //           value: selectedType,
-                                      //           child: Row(
-                                      //             mainAxisAlignment: MainAxisAlignment.start,
-                                      //             children: [
-                                      //               RichText(
-                                      //                   textDirection: TextDirection.rtl,
-                                      //                   text: TextSpan(children: [
-                                      //                     TextSpan(
-                                      //                       text: 'تعداد سوئیت: ',
-                                      //                       style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                      //                     ),
-                                      //                     TextSpan(
-                                      //                       text: selectedType,
-                                      //                       style: Theme.of(Get.context!).textTheme.labelMedium,
-                                      //                     )
-                                      //                   ])),
-                                      //             ],
-                                      //           ),
-                                      //         );
-                                      //       }).toList(),
-                                      //       onChanged: (value) {
-                                      //         roomReservationController.numberOfRoom.value = value!;
-                                      //       },
-                                      //       value: roomReservationController.numberOfRoom.value,
-                                      //       buttonStyleData: ButtonStyleData(
-                                      //         height: 35,
-                                      //         width: Get.width / 3.2,
-                                      //         padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
-                                      //         decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
-                                      //       ),
-                                      //       iconStyleData: const IconStyleData(
-                                      //         icon: Icon(
-                                      //           Icons.keyboard_arrow_down_rounded,
-                                      //           size: 20,
-                                      //         ),
-                                      //         iconEnabledColor: AppColors.mainColor,
-                                      //       ),
-                                      //       dropdownStyleData: DropdownStyleData(
-                                      //           elevation: 2,
-                                      //           padding: EdgeInsets.zero,
-                                      //           decoration: const BoxDecoration(
-                                      //             borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                                      //           ),
-                                      //           direction: DropdownDirection.textDirection,
-                                      //           scrollbarTheme: ScrollbarThemeData(
-                                      //             radius: const Radius.circular(40),
-                                      //             thickness: MaterialStateProperty.all(6),
-                                      //             thumbVisibility: MaterialStateProperty.all(true),
-                                      //           )),
-                                      //     ),
-                                      //   ),
-                                      // ))
-                                    ],
+                                  Text(
+                                    'جزئیات قیمت',
+                                    style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  const Icon(
+                                    Icons.info,
+                                    color: AppColors.grayColor,
+                                    size: 15,
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
                                   ),
                                 ],
                               ),

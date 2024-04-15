@@ -21,11 +21,14 @@ import 'package:uspace_ir/widgets/comment_rate_bar.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 import 'package:uspace_ir/widgets/image_view.dart';
 import 'package:uspace_ir/widgets/textfield.dart';
+import 'package:uspace_ir/controllers/user_controller.dart';
 
 class ReservationScreen extends StatelessWidget {
   final String url;
 
-  const ReservationScreen({required this.url, Key? key}) : super(key: key);
+  ReservationScreen({required this.url, Key? key}) : super(key: key);
+
+  final UserController userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
@@ -231,6 +234,7 @@ class ReservationScreen extends StatelessWidget {
     );
   }
 
+
   _buildBody(ReservationController reservationController) {
     return Obx(() => reservationController.loading.value
         ? Column(
@@ -320,26 +324,7 @@ class ReservationScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Row(
                   children: [
-                    InkWell(
-                        onTap: () {
-                          reservationController.isFave.toggle();
-                        },
-                        borderRadius: BorderRadius.circular(8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Obx(() => Icon(reservationController.isFave.value ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: reservationController.isFave.value ? Colors.red : null, size: 23)),
-                        )),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    InkWell(
-                        onTap: () {},
-                        borderRadius: BorderRadius.circular(8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: SvgPicture.asset('assets/icons/share_line_ic.svg'),
-                        )),
-                    const SizedBox(width: 15),
+                    SizedBox(width: Get.width/5),
                     Expanded(
                       child: Shimmer.fromColors(
                           baseColor: Colors.grey.shade300,
@@ -1095,12 +1080,17 @@ class ReservationScreen extends StatelessWidget {
                   children: [
                     InkWell(
                         onTap: () {
-                          reservationController.isFave.toggle();
+                          // print(roomReservationModelToJson(reservationController.room.value!).runtimeType);
+                          if(favChecker(reservationController).value){
+                            userController.removeFav(reservationController.room.value!);
+                          }else{
+                            userController.addToFav(reservationController.room.value!);
+                          }
                         },
                         borderRadius: BorderRadius.circular(8),
                         child: Padding(
                           padding: const EdgeInsets.all(2.0),
-                          child: Obx(() => Icon(reservationController.isFave.value ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: reservationController.isFave.value ? Colors.red : null, size: 23)),
+                          child: Obx(() => Icon(favChecker(reservationController).value ? Icons.favorite_rounded : Icons.favorite_border_rounded, color: favChecker(reservationController).value ? Colors.red : null, size: 23)),
                         )),
                     const SizedBox(
                       width: 10,
@@ -1130,7 +1120,7 @@ class ReservationScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('(${reservationController.room.value!.data.avgFbRate?.value.toStringAsFixed(1) ?? '-'}/10)', textDirection: TextDirection.ltr, style: Theme.of(Get.context!).textTheme.labelMedium),
+                    Text('(${reservationController.room.value!.data.avgFbRate.value.toStringAsFixed(1)}/10)', textDirection: TextDirection.ltr, style: Theme.of(Get.context!).textTheme.labelMedium),
                     const SizedBox(
                       width: 5,
                     ),
@@ -1566,11 +1556,7 @@ class ReservationScreen extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 dragStartBehavior: DragStartBehavior.down,
                 child: Column(children: [
-                  Container(
-                    height: 1,
-                    width: Get.width,
-                    color: Colors.black.withOpacity(0.1),
-                  ),
+                  const SizedBox(height: 20),
                   ListView.separated(
                     itemCount: 3,
                     scrollDirection: Axis.vertical,
@@ -2253,11 +2239,6 @@ class ReservationScreen extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               dragStartBehavior: DragStartBehavior.down,
               child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                Container(
-                  height: 1,
-                  width: Get.width,
-                  color: Colors.black.withOpacity(0.1),
-                ),
                 Padding(
                     padding: const EdgeInsets.only(right: 15, left: 15, top: 20),
                     child: Column(
@@ -2435,9 +2416,7 @@ class ReservationScreen extends StatelessWidget {
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                         ),
-                        const SizedBox(
-                          height: 60,
-                        ),
+                        const SizedBox(height: 20),
                       ],
                     )),
               ]),
@@ -2458,6 +2437,7 @@ class ReservationScreen extends StatelessWidget {
                     width: Get.width,
                     color: Colors.black.withOpacity(0.1),
                   ),
+                  const SizedBox(height: 20),
                   ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -2570,6 +2550,7 @@ class ReservationScreen extends StatelessWidget {
                         width: Get.width,
                         color: Colors.black.withOpacity(0.1),
                       ),
+                      const SizedBox(height: 20),
                       ListView.separated(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -2692,7 +2673,7 @@ class ReservationScreen extends StatelessWidget {
                           },
                           itemCount: reservationController.room.value!.data.comments.length),
                       const SizedBox(
-                        height: 25,
+                        height: 65,
                       ),
                     ],
                   ),
@@ -2817,4 +2798,15 @@ class ReservationScreen extends StatelessWidget {
       reservationController.choseEntryDate();
     }
   }
+
+  favChecker(ReservationController reservationController){
+    for(String fav in userController.favList){
+      RoomReservationModel room = roomReservationModelFromJson(fav);
+      if(reservationController.room.value?.data.url == room.data.url){
+        return true.obs;
+      }
+    }
+    return false.obs;
+  }
+
 }

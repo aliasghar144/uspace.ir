@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.example.uspace_ir",
+    "sha256_cert_fingerprints":
+    ["F8:6B:94:B3:B2:E7:1B:0B:1C:9D:82:BD:83:04:72:BC:E9:A9:4D:74:FD:21:F1:F0:DC:2F:2B:F7:9C:E7:88:16"]
+  }
+}]

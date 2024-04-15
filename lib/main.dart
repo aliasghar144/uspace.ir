@@ -11,14 +11,14 @@ import 'package:uspace_ir/routes/route.dart';
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  Hive.openBox(userBox);
+  await Hive.openBox(userBox);
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(
       ScreenUtilInit(
         builder: (BuildContext context, Widget? child) {
     return GetMaterialApp(
-        localizationsDelegates: [
+        localizationsDelegates: const [
           // this line is important
           RefreshLocalizations.delegate,
         ],
