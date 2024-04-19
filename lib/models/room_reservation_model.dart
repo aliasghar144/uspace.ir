@@ -737,7 +737,7 @@ class PriceInfo {
   int totalOriginalPrice;
   int totalCustomerPrice;
   String currency;
-  int totalCustomerDiscount;
+    double totalCustomerDiscount;
   int totalPay;
 
   PriceInfo({
@@ -770,7 +770,7 @@ class PriceInfo {
     totalOriginalPrice: json["total_original_price"],
     totalCustomerPrice: json["total_customer_price"],
     currency: json["currency"],
-    totalCustomerDiscount: json["total_customer_discount"],
+        totalCustomerDiscount: json["total_customer_discount"]?.toDouble(),
     totalPay: json["total_pay"],
   );
 

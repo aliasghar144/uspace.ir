@@ -9,7 +9,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/history_controller.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
-import 'package:uspace_ir/pages/history/order_details_screen.dart';
+import 'package:uspace_ir/routes/route.dart';
 import 'package:uspace_ir/widgets/textfield.dart';
 
 class HistoryScreen extends StatelessWidget {
@@ -30,7 +30,8 @@ class HistoryScreen extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          IconButton(onPressed: (){Get.to(OrderDetailsScreen(orderCode: '2af5a4bd4'));}, icon: Icon(Icons.add)),
+          IconButton(onPressed: (){Get.toNamed('${Routes.orderDetailsScreen}/89b7591bc');}, icon: Icon(Icons.add)),
+          IconButton(onPressed: (){Get.toNamed('${Routes.payStatusScreen}/89b7591bc/200');}, icon: Icon(Icons.add)),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -319,6 +320,6 @@ class HistoryScreen extends StatelessWidget {
   }
 
   void navigateTo(String orderCode) {
-    Get.to(OrderDetailsScreen(orderCode: orderCode,));
+    Get.toNamed('${Routes.orderDetailsScreen}/$orderCode');
   }
 }

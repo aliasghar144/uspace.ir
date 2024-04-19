@@ -153,7 +153,7 @@ class ReservationScreen extends StatelessWidget {
                                                 },
                                                 itemCount: 2)
                                             : Text(
-                                                reservationController.room.value!.data.rules.kidsTerms ?? '-',
+                                                reservationController.room.value!.data.rules.kidsTerms ,
                                                 textAlign: TextAlign.right,
                                                 textDirection: TextDirection.rtl,
                                                 style: Theme.of(Get.context!).textTheme.titleMedium,
@@ -190,7 +190,7 @@ class ReservationScreen extends StatelessWidget {
                                               },
                                               itemCount: 8)
                                           : Text(
-                                              reservationController.room.value!.data.rules.cancelTerms ?? '',
+                                              reservationController.room.value!.data.rules.cancelTerms,
                                               textAlign: TextAlign.justify,
                                               textDirection: TextDirection.rtl,
                                               style: Theme.of(Get.context!).textTheme.titleMedium,
@@ -236,7 +236,7 @@ class ReservationScreen extends StatelessWidget {
 
 
   _buildBody(ReservationController reservationController) {
-    return Obx(() => reservationController.loading.value
+    return Obx(() => reservationController.loading.value || reservationController.room.value == null
         ? Column(
             children: [
               Shimmer.fromColors(

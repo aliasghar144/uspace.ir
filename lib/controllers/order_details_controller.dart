@@ -1,16 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:http/http.dart'as http;
+import 'package:dio/dio.dart' as diopack;
 import 'package:uspace_ir/models/order_model.dart';
+import 'package:uspace_ir/pages/feedback/feedback_screen.dart';
 import 'package:uspace_ir/pages/history/history_screen.dart';
-import 'package:uspace_ir/pages/history/order_details_screen.dart';
-import 'package:uspace_ir/pages/history/rules_of_canceling_screen.dart';
 import 'package:uspace_ir/pages/history/tickect_screen.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
@@ -27,7 +29,110 @@ class OrderDetailsController extends GetxController{
 
   RxBool loading = false.obs;
   RxBool isAcceptTerms = false.obs;
+
   RxBool cancelingNeedCode = false.obs;
+
+
+  //#region  =============== feedBack =========================
+
+  final RxBool feedbackLoading = false.obs;
+
+  final RxBool needFeedback = true.obs;
+
+  final List<File> selectedImages = <File>[].obs;
+  final picker = ImagePicker();
+
+  RxInt alltotal = 1.obs;
+  RxInt received = 0.obs;
+
+  RxBool feedbackRulesShow = false.obs;
+
+  RxBool anonymousUser = false.obs;
+
+  TextEditingController feedbackTxtEditCtr = TextEditingController();
+
+  RxInt option1 = 0.obs;
+  RxInt option2 = 0.obs;
+  RxInt option3 = 0.obs;
+  RxInt option4 = 0.obs;
+  RxInt option5 = 0.obs;
+
+  List<int> feedbackPoint = [
+    1,2,3,4,5,6,7,8,9,10
+  ];
+
+
+  sendFeedBack() async {
+    print('object');
+    feedbackLoading.value = true;
+    final dio = diopack.Dio();
+    late diopack.FormData formData;
+    if(selectedImages.isEmpty){
+      formData = diopack.FormData.fromMap({
+        'tracking_code':orderCode,
+        'option1':orderCode,
+        'option2':orderCode,
+        'option3':orderCode,
+        'option4':orderCode,
+        'option5':orderCode,
+        'comment':feedbackTxtEditCtr.text,
+        'anonymous_user':anonymousUser.value ? 1 : 0,
+      });
+    }else{
+      formData = diopack.FormData.fromMap({
+        'tracking_code':orderCode,
+        'option1':orderCode,
+        'option2':orderCode,
+        'option3':orderCode,
+        'option4':orderCode,
+        'option5':orderCode,
+        'comment':feedbackTxtEditCtr.text,
+        'anonymous_user':anonymousUser.value ? 1 : 0,
+        'files' : [
+          for (var image in selectedImages)
+            {
+              await diopack.MultipartFile.fromFile(image.path,
+                  filename: '${DateTime.now()}.${image.path.split('.').last}')
+            }.toList()
+        ]
+    });
+    }
+    
+    await dio.post('$mainUrl/customer/comments/new-comment',onSendProgress: (count,total){
+      alltotal.value = total;
+      received.value = count;
+    },data: formData,).then((data){
+      if(data.statusCode == 200){
+        if(data.data['message'] == 200 || data.data['message'] == 'ok'){
+          feedbackLoading.value = false;
+          needFeedback.value = false;
+          Get.showSnackbar(
+              GetSnackBar(
+                backgroundColor: AppColors.mainColor,
+                duration: const Duration(seconds: 3),
+                messageText: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(data.data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
+              ));
+        }else{
+          Get.showSnackbar(
+              GetSnackBar(
+                backgroundColor: AppColors.redColor,
+                duration: const Duration(seconds: 3),
+                messageText: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(data.data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
+              ));
+          feedbackLoading.value = false;
+        }
+      }
+    });
+    
+  }
+
+  //#endregion  =============== feedBack =========================
+
+
 
   final order = Rxn<OrderDetailsModel>();
 
@@ -60,7 +165,7 @@ class OrderDetailsController extends GetxController{
     }
   }
 
-  void operation(String name) {
+  void operation({required String  name, String? operation}) {
     switch(name){
       case 'پرداخت آنلاین':
         pay();
@@ -69,14 +174,17 @@ class OrderDetailsController extends GetxController{
         cancelRsv();
         break;
       case 'انصراف از سفارش':
-        unpaid();
+        cancelRsv(operation: operation);
         break;
       case 'عدم پرداخت':
         unpaid();
         break;
       case 'پرداخت و قطعی شده':
-        ticketScreen();
+          ticketScreen();
       break;
+      case 'فرم نظرسنجی':
+        feedbackScreen();
+        break;
       case 'کنسلی':
         cancelRsvReq();
         break;
@@ -163,14 +271,25 @@ class OrderDetailsController extends GetxController{
     }
   }
 
-  void cancelRsv() async {
+  void cancelRsv({String? operation}) async {
     try{
-      Uri url = Uri.parse('$mainUrl/customer/reserves/$orderCode/customer-cancel-rsv');
+      late String uri;
+      if(operation != null){
+        uri = operation;
+      }else{
+        String uri = '$mainUrl/customer/reserves/$orderCode/customer-cancel-rsv';
+      }
+
+      Uri url = Uri.parse(uri);
+
       var response = await http.post(url);
+
       if(response.statusCode == 200){
-        onInit();
+        print(response.body);
+        fetchOrderDetails(orderCode);
       }
     }catch(e){
+      print(e);
       rethrow;
     }
   }
@@ -239,17 +358,28 @@ class OrderDetailsController extends GetxController{
   void unpaid() async{
     try{
       Uri url = Uri.parse('$mainUrl/customer/reserves/$orderCode/re-request-unpaid-rsv');
-      var response = await http.post(url);
+      var response = await http.post(url,headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      });
       if(response.statusCode == 200){
-        onInit();
+        fetchOrderDetails(orderCode);
+        print(jsonDecode(response.body));
+      }else{
+        print(jsonDecode(response.body));
       }
     }catch(e){
+      print(e);
       rethrow;
     }
   }
 
   void ticketScreen() {
     Get.to(TicketScreen(trackCode: orderCode,));
+  }
+
+  void feedbackScreen() {
+    Get.to(FeedBackScreen());
   }
 
 

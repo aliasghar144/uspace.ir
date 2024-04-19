@@ -41,8 +41,8 @@
                 <data
                     android:scheme="space"
                     android:host="uspace.ir" />
-
-                <data android:pathPrefix="/conformPay/" />
+                <data android:pathPattern="/reserves/.*" />
+                <data android:pathPrefix="/customer/" />
             </intent-filter>
 
         </activity>

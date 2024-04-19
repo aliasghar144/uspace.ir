@@ -299,7 +299,7 @@ class CancelingScreen extends StatelessWidget {
                     onPressed: () {
                       if(mainController.formKey.currentState!.validate()){
                         print('object');
-                        mainController.operation('کنسلی');
+                        mainController.operation(name:'کنسلی');
                       }
                     },
                     style: ElevatedButton.styleFrom(

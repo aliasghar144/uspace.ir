@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/color_extenstion.dart';
@@ -15,13 +16,15 @@ import 'package:uspace_ir/pages/history/rules_of_canceling_screen.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 
 class OrderDetailsScreen extends StatelessWidget {
-  final String orderCode;
+  OrderDetailsScreen({Key? key}) : super(key: key);
 
-  const OrderDetailsScreen({required this.orderCode, Key? key}) : super(key: key);
+  final RefreshController refreshController =
+  RefreshController(initialRefresh: false,);
 
   @override
   Widget build(BuildContext context) {
-    OrderDetailsController mainController = Get.put(OrderDetailsController(orderCode));
+    String? orderCode = Get.parameters['orderCode'];
+    OrderDetailsController mainController = Get.put(OrderDetailsController(orderCode!));
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -50,194 +53,224 @@ class OrderDetailsScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              const SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.only(bottom: 5, left: Get.width * 0.09, right: 25),
-                decoration: const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: AppColors.mainColor))),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Obx(() => mainController.loading.value
-                        ? Shimmer.fromColors(
+      body: SmartRefresher(
+        enablePullDown: true,
+        physics: const BouncingScrollPhysics(),
+        controller: refreshController,
+        onRefresh: onRefresh,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const SizedBox(height: 20),
+                Container(
+                  padding: EdgeInsets.only(bottom: 5, left: Get.width * 0.09, right: 25),
+                  decoration: const BoxDecoration(border: Border(bottom: BorderSide(width: 1, color: AppColors.mainColor))),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Obx(() => mainController.loading.value
+                          ? Shimmer.fromColors(
+                              baseColor: Colors.grey.shade300,
+                              highlightColor: Colors.grey.shade100,
+                              child: Container(
+                                height: 15,
+                                width: Get.width / 5,
+                                margin: EdgeInsets.zero,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3)),
+                              ))
+                          : Text(
+                              mainController.order.value!.data.ecolodge.title,
+                              style: Theme.of(Get.context!).textTheme.displayMedium,
+                            )),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      const Icon(
+                        FontAwesomeIcons.hotel,
+                        size: 15,
+                        color: AppColors.mainColor,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Obx(() => ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemBuilder: (context, rsvIndex) {
+                        if (mainController.loading.value) {
+                          return Shimmer.fromColors(
                             baseColor: Colors.grey.shade300,
                             highlightColor: Colors.grey.shade100,
                             child: Container(
-                              height: 15,
-                              width: Get.width / 5,
+                              height: Get.height / 4,
+                              width: Get.width,
                               margin: EdgeInsets.zero,
                               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3)),
-                            ))
-                        : Text(
-                            mainController.order.value!.data.ecolodge.title,
-                            style: Theme.of(Get.context!).textTheme.displayMedium,
-                          )),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    const Icon(
-                      FontAwesomeIcons.hotel,
-                      size: 15,
-                      color: AppColors.mainColor,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              Obx(() => ListView.separated(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemBuilder: (context, rsvIndex) {
-                      if (mainController.loading.value) {
-                        return Shimmer.fromColors(
-                          baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          child: Container(
-                            height: Get.height / 4,
-                            width: Get.width,
-                            margin: EdgeInsets.zero,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3)),
-                          ),
-                        );
-                      }
+                            ),
+                          );
+                        }
 
-                      return AnimatedSize(
-                        curve: Curves.ease,
-                        alignment: Alignment.topCenter,
-                        duration: const Duration(milliseconds: 500),
-                        child: Container(
-                            margin: EdgeInsets.zero,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3), boxShadow: const [
-                              BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.14), blurRadius: 4, offset: Offset(0, 4)),
-                            ]),
-                            child: InkWell(
-                              onTap: () {
-                                mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.toggle();
-                              },
-                              child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
-                                Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Flexible(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            mainController.order.value!.data.rsvItems[rsvIndex].title,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت پرداختی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.mainColor))]))
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 10),
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      width: Get.width / 6.5,
-                                      height: Get.width / 6.5,
-                                      child: CachedNetworkImage(
-                                        imageUrl: mainController.order.value!.data.rsvItems[rsvIndex].thumbImage,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                RichText(
-                                    textDirection: TextDirection.rtl,
-                                    text: TextSpan(children: [
-                                      TextSpan(text: 'تاریخ ورود:', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
-                                      TextSpan(
-                                          text: mainController.order.value!.data.miladiCheckIn.toPersianDateStr(
-                                            showDayStr: true,
-                                          ),
-                                          style: Theme.of(Get.context!).textTheme.labelMedium)
-                                    ])),
-                                RichText(
-                                    textDirection: TextDirection.rtl,
-                                    text: TextSpan(children: [
-                                      TextSpan(text: 'تاریخ خروج: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
-                                      TextSpan(
-                                          text: mainController.order.value!.data.miladiCheckIn.add(Duration(days: mainController.order.value!.data.duration)).toPersianDateStr(
-                                                showDayStr: true,
-                                              ),
-                                          style: Theme.of(Get.context!).textTheme.labelMedium)
-                                    ])),
-                                RichText(
-                                  textDirection: TextDirection.rtl,
-                                  text: TextSpan(children: [TextSpan(text: 'مدت اقامت: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: mainController.order.value!.data.duration.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)]),
-                                ),
-                                RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد اتاق: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: mainController.order.value!.data.rsvItems.length.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
-                                RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد مهمان: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: mainController.order.value!.data.rsvItems[rsvIndex].roomCapacity.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
-                                Obx(() => mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.value ? onExpansion(rsvItems: mainController.order.value!.data.rsvItems[rsvIndex]) : const SizedBox()),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Stack(alignment: Alignment.center, children: [
-                                  Align(
-                                    alignment: Alignment.bottomLeft,
-                                    child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
-                                          color: colorStatus(mainController.order.value!.data.status),
-                                        ),
-                                        child: Row(
+                        return AnimatedSize(
+                          curve: Curves.ease,
+                          alignment: Alignment.topCenter,
+                          duration: const Duration(milliseconds: 500),
+                          child: Container(
+                              margin: EdgeInsets.zero,
+                              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(24), color: const Color(0xffF3F3F3), boxShadow: const [
+                                BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.14), blurRadius: 4, offset: Offset(0, 4)),
+                              ]),
+                              child: InkWell(
+                                onTap: () {
+                                  mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.toggle();
+                                },
+                                child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Flexible(
+                                        child: Column(
                                           mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                              mainController.order.value!.data.status,
-                                              style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white),
+                                              mainController.order.value!.data.rsvItems[rsvIndex].title,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              textDirection: TextDirection.rtl,
                                             ),
-                                            const SizedBox(width: 2),
-                                            iconStatus(mainController.order.value!.data.status),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice[0].originalPrice != mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice[0].priceWithDiscount
+                                                ? Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        margin: const EdgeInsets.only(top: 5, bottom: 5),
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(30),
+                                                          color: AppColors.redColor.withOpacity(0.8),
+                                                        ),
+                                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                        child: RichText(
+                                                          textDirection: TextDirection.rtl,
+                                                          text: TextSpan(children: [
+                                                            TextSpan(text: ((payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, false) - payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, true))).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white)),
+                                                            TextSpan(text: ' تومان تخفیف', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white)),
+                                                          ]),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width:5),
+                                                      RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت اصلی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor, decoration: TextDecoration.lineThrough)), TextSpan(text: '${payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, true).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(decoration: TextDecoration.lineThrough))]))
+                                                    ],
+                                                  )
+                                                : const SizedBox(),
+                                            RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت پرداختی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, false).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.mainColor))]))
                                           ],
-                                        )),
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(left: 10),
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        width: Get.width / 6.5,
+                                        height: Get.width / 6.5,
+                                        child: CachedNetworkImage(
+                                          imageUrl: mainController.order.value!.data.rsvItems[rsvIndex].thumbImage,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Obx(() => Text(mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.value ? 'اطلاعات کمتر' : 'اطلاعات بیشتر',
-                                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                                              color: mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.value ? AppColors.grayColor : AppColors.mainColor,
-                                            ))),
+                                  const SizedBox(
+                                    height: 5,
                                   ),
-                                ])
-                              ]),
-                            )),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 15);
-                    },
-                    itemCount: mainController.loading.value ? 3 : mainController.order.value!.data.rsvItems.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                  )),
-              const SizedBox(
-                height: 60,
-              ),
-            ],
+                                  RichText(
+                                      textDirection: TextDirection.rtl,
+                                      text: TextSpan(children: [
+                                        TextSpan(text: 'تاریخ ورود:', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
+                                        TextSpan(
+                                            text: mainController.order.value!.data.miladiCheckIn.toPersianDateStr(
+                                              showDayStr: true,
+                                            ),
+                                            style: Theme.of(Get.context!).textTheme.labelMedium)
+                                      ])),
+                                  RichText(
+                                      textDirection: TextDirection.rtl,
+                                      text: TextSpan(children: [
+                                        TextSpan(text: 'تاریخ خروج: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)),
+                                        TextSpan(
+                                            text: mainController.order.value!.data.miladiCheckIn.add(Duration(days: mainController.order.value!.data.duration)).toPersianDateStr(
+                                                  showDayStr: true,
+                                                ),
+                                            style: Theme.of(Get.context!).textTheme.labelMedium)
+                                      ])),
+                                  RichText(
+                                    textDirection: TextDirection.rtl,
+                                    text: TextSpan(children: [TextSpan(text: 'مدت اقامت: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: mainController.order.value!.data.duration.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)]),
+                                  ),
+                                  RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد اتاق: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: mainController.order.value!.data.rsvItems.length.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
+                                  RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'تعداد مهمان: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: mainController.order.value!.data.rsvItems[rsvIndex].roomCapacity.toString(), style: Theme.of(Get.context!).textTheme.labelMedium)])),
+                                  Obx(() => mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.value ? onExpansion(rsvItems: mainController.order.value!.data.rsvItems[rsvIndex]) : const SizedBox()),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Stack(alignment: Alignment.center, children: [
+                                    Align(
+                                      alignment: Alignment.bottomLeft,
+                                      child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(20),
+                                            color: colorStatus(mainController.order.value!.data.status),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                mainController.order.value!.data.status,
+                                                style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white),
+                                              ),
+                                              const SizedBox(width: 2),
+                                              iconStatus(mainController.order.value!.data.status),
+                                            ],
+                                          )),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Obx(() => Text(mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.value ? 'اطلاعات کمتر' : 'اطلاعات بیشتر',
+                                          style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                                                color: mainController.order.value!.data.rsvItems[rsvIndex].isExpanded.value ? AppColors.grayColor : AppColors.mainColor,
+                                              ))),
+                                    ),
+                                  ])
+                                ]),
+                              )),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(height: 15);
+                      },
+                      itemCount: mainController.loading.value ? 3 : mainController.order.value!.data.rsvItems.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                    )),
+                const SizedBox(
+                  height: 60,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -249,7 +282,7 @@ class OrderDetailsScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(rsvItems.dayAndPrice).toString().seRagham()} تومان', style: Theme.of(Get.context!).textTheme.labelMedium)])),
+        RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${rsvItems.dayAndPrice[0].priceWithDiscount.toString().seRagham()} تومان', style: Theme.of(Get.context!).textTheme.labelMedium)])),
         const SizedBox(
           height: 10,
         ),
@@ -449,7 +482,7 @@ class OrderDetailsScreen extends StatelessWidget {
                     (e) => ElevatedButton(
                         onPressed: () {
                           print(e.name);
-                          mainController.operation(e.name);
+                          mainController.operation(name: e.name,operation: e.operation);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: e.btnType == 'simple' ? e.btnColor!.toColor() : Colors.white,
@@ -482,7 +515,7 @@ class OrderDetailsScreen extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    mainController.operation('عدم پرداخت');
+                    mainController.operation(name:'عدم پرداخت');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff4cae4c),
@@ -523,7 +556,7 @@ class OrderDetailsScreen extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    mainController.operation('عدم پرداخت');
+                    mainController.operation(name:'عدم پرداخت');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xff4cae4c),
@@ -564,7 +597,7 @@ class OrderDetailsScreen extends StatelessWidget {
             children: [
               ElevatedButton(
                   onPressed: () {
-                    mainController.operation('در انتظار تایید');
+                    mainController.operation(name:'در انتظار تایید');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xffd9534f),
@@ -597,66 +630,205 @@ class OrderDetailsScreen extends StatelessWidget {
           ),
         );
       case 'پرداخت و قطعی شده':
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 20.0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () {
-                    Get.to(RulesOfCancelingScreen(),transition: Transition.downToUp);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
+        if(DateTime.now().difference(mainController.order.value!.data.miladiCheckIn) >= const Duration(hours: 1)&&mainController.needFeedback.value){
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      mainController.operation(name:'فرم نظرسنجی');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: AppColors.acceptedGuest,
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
-                        side: const BorderSide(color: Color(0xffd9534f),width: 0.6)
-
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'لغو سفارش',
-                          style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: const Color(0xffd9534f).withOpacity(0.9)),
-                        ),
-                        const SizedBox(width: 5,),
-                        const Icon(Icons.remove_shopping_cart_outlined,color: Color(0xffd9534f),size: 18,),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'فرم نظرسنجی',
+                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }else{
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Get.to(RulesOfCancelingScreen(), transition: Transition.downToUp);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5), side: const BorderSide(color: Color(0xffd9534f), width: 0.6)),
                     ),
-                  )),
-              const SizedBox(width: 20,),
-              ElevatedButton(
-                  onPressed: () {
-                    mainController.operation('پرداخت و قطعی شده');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    backgroundColor: AppColors.acceptedGuest,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'لغو سفارش',
+                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: const Color(0xffd9534f).withOpacity(0.9)),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Icon(
+                            Icons.remove_shopping_cart_outlined,
+                            color: Color(0xffd9534f),
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    )),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      mainController.operation(name:'پرداخت و قطعی شده');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: AppColors.acceptedGuest,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'ارسال تیکت',
-                          style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp,color: Colors.white),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'ارسال تیکت',
+                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }
+      case 'مهمان پذیرش شده':
+        if(DateTime.now().difference(mainController.order.value!.data.miladiCheckIn) >= const Duration(hours: 1) && mainController.needFeedback.value){
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      mainController.operation(name:'فرم نظرسنجی');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: AppColors.acceptedGuest,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                     ),
-                  )),
-            ],
-          ),
-        );
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'فرم نظرسنجی',
+                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }else{
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: () {
+                      Get.to(RulesOfCancelingScreen(), transition: Transition.downToUp);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5), side: const BorderSide(color: Color(0xffd9534f), width: 0.6)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'لغو سفارش',
+                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: const Color(0xffd9534f).withOpacity(0.9)),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          const Icon(
+                            Icons.remove_shopping_cart_outlined,
+                            color: Color(0xffd9534f),
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    )),
+                const SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      mainController.operation(name:'پرداخت و قطعی شده');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: AppColors.acceptedGuest,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'ارسال تیکت',
+                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }
       default:
         return const SizedBox();
     }
@@ -718,4 +890,11 @@ class OrderDetailsScreen extends StatelessWidget {
         return const SizedBox();
     }
   }
+
+  void onRefresh() {
+    OrderDetailsController mainController = Get.find<OrderDetailsController>();
+    mainController.onInit();
+    refreshController.refreshCompleted();
+  }
+
 }
