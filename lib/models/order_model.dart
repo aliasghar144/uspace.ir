@@ -130,20 +130,20 @@ class AvailableOperation {
 class CancelInfo {
     int cancelId;
     int rid;
-    String hesab;
-    String sheba;
+    dynamic hesab;
+    dynamic sheba;
     String bank;
-    int amountCheckout;
-    int returnMoney;
-    String description;
-    String settleDescription;
+    dynamic amountCheckout;
+    dynamic returnMoney;
+    dynamic description;
+    dynamic settleDescription;
     dynamic cancelReason;
     int cancelCode;
     dynamic rejectComment;
-    int idOperator;
+    dynamic idOperator;
     dynamic manualCanceling;
     int silentSettle;
-    int settled;
+    dynamic settled;
     int state;
     int isArchive;
     DateTime createdAt;

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/ticket_controller.dart';
-import 'package:uspace_ir/main.dart';
 
 class TicketScreen extends StatelessWidget {
   final String trackCode;
@@ -146,7 +144,7 @@ class TicketScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text("${timeShow(mainController.allMessage.value!.data.mStartDate.hour)}:${timeShow(mainController.allMessage.value!.data.mStartDate.minute)}",style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor,fontSize: 9.sp),),
+                    Text("${timeShow(mainController.allMessage.value!.data.mStartDate.toLocal().hour)}:${timeShow(mainController.allMessage.value!.data.mStartDate.toLocal().minute)}",style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor,fontSize: 9.sp),),
                     const SizedBox(height: 15,)
                   ],
                 ),
@@ -224,7 +222,7 @@ class TicketScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Text("${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.hour)}:${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.minute)}",style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor,fontSize: 9),),
+                    Text("${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.toLocal().hour)}:${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.toLocal().minute)}",style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor,fontSize: 9),),
                     const SizedBox(height: 15,)
                   ],
                 ),
@@ -271,7 +269,7 @@ class TicketScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text("${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.hour)}:${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.minute)}",style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor,fontSize: 9.sp),),
+                  Text("${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.toLocal().hour)}:${timeShow(mainController.allMessage.value!.data.conversation[index-1].mStartDate.toLocal().minute)}",style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor,fontSize: 9.sp),),
                   const SizedBox(height: 15,)
                 ],
               ),
@@ -323,7 +321,9 @@ class TicketScreen extends StatelessWidget {
               constraints: const BoxConstraints(),
               splashRadius: 20,
               onPressed: (){
-                mainController.sendTicket();
+                if(mainController.replyTxtEditCtr.text.isNotEmpty){
+                  mainController.sendTicket();
+                }
               }, icon:const Icon(Icons.send_rounded),color: AppColors.mainColor,)
             )
           ],

@@ -10,8 +10,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
-import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 import 'package:uspace_ir/pages/search/filter_screen.dart';
+import 'package:uspace_ir/routes/route.dart';
 
 class SearchScreen extends StatelessWidget {
   SearchScreen({Key? key}) : super(key: key);
@@ -335,7 +335,9 @@ class SearchScreen extends StatelessWidget {
                             if (!searchController.loadMore.value && index < searchController.searchEcolodgesResult.length) {
                               return InkWell(
                                 onTap: () {
-                                  Get.to(ReservationScreen(url:searchController.searchEcolodgesResult[index].url));
+                                  Get.toNamed('${Routes.reservationScreen}/{$searchController.searchEcolodgesResult[index].url}');
+
+                                  // Get.to(ReservationScreen(url:searchController.searchEcolodgesResult[index].url));
                                 },
                                 borderRadius: BorderRadius.circular(25),
                                 child: Stack(

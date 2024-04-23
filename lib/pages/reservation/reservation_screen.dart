@@ -24,14 +24,14 @@ import 'package:uspace_ir/widgets/textfield.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
 
 class ReservationScreen extends StatelessWidget {
-  final String url;
 
-  ReservationScreen({required this.url, Key? key}) : super(key: key);
+  ReservationScreen({Key? key}) : super(key: key);
 
   final UserController userController = Get.find<UserController>();
 
   @override
   Widget build(BuildContext context) {
+    String url = Get.arguments['url'];
     ReservationController reservationController = Get.put(ReservationController(url));
     return Scaffold(
       appBar: AppBar(
@@ -70,7 +70,7 @@ class ReservationScreen extends StatelessWidget {
         },
         color: AppColors.mainColor,
         onRefresh: () async {
-          return onRefresh(reservationController);
+          return onRefresh(reservationController,url);
         },
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -1961,6 +1961,9 @@ class ReservationScreen extends StatelessWidget {
                                         InkWell(
                                           onTap: () {
                                             if (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.reservePermission) {
+                                              // Get.toNamed("${Get.currentRoute}/$roomsIndex",arguments: {
+                                              //   'roomsIndex':roomsIndex
+                                              // });
                                               Get.to(
                                                 () => RoomReservationScreen(roomsIndex: roomsIndex),
                                               );
@@ -2034,6 +2037,9 @@ class ReservationScreen extends StatelessWidget {
                                           InkWell(
                                             onTap: () {
                                               if (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.reservePermission) {
+                                                // Get.toNamed("${Get.currentRoute}/$roomsIndex",arguments: {
+                                                //   'roomsIndex':roomsIndex
+                                                // });
                                                 Get.to(() => RoomReservationScreen(roomsIndex: roomsIndex));
                                               }
                                             },
@@ -2790,7 +2796,7 @@ class ReservationScreen extends StatelessWidget {
     return '0';
   }
 
-  void onRefresh(ReservationController reservationController) async {
+  void onRefresh(ReservationController reservationController,String url) async {
     if (reservationController.durationValue.value == 0) {
       reservationController.getMainInfo(roomUrl: url);
     } else {

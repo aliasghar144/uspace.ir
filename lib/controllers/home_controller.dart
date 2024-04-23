@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:uni_links/uni_links.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/models/best_places_model.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
@@ -21,6 +24,22 @@ class HomeController extends GetxController {
 
   @override
   void onInit() {
+
+    Future<void> initUniLinks() async {
+      // Platform messages may fail, so we use a try/catch PlatformException.
+      try {
+        final initialLink = await getInitialLink();
+        // Parse the link and warn the user, if it is not correct,
+        // but keep in mind it could be `null`.
+        print(initialLink);
+      } catch (e){
+        print(e);
+        // Handle exception by warning the user their action did not succeed
+        // return?
+      }
+    }
+    initUniLinks();
+
     fetchMainGallery();
     fetchCategories();
     fetchNewestEcolodge();

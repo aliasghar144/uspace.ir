@@ -1,8 +1,10 @@
 // ignore_for_file: deprecated_member_use
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
@@ -14,9 +16,8 @@ import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
-import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
+import 'package:uspace_ir/routes/route.dart';
 import 'package:uspace_ir/widgets/card_ecolodge.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -378,9 +379,13 @@ class HomeScreen extends StatelessWidget {
                             InkWell(
                               onTap: ()  {
                                 print(homeController.newestEcolodgeList[index].url);
-                                Get.to(() {
-                                  return ReservationScreen(url: homeController.newestEcolodgeList[index].url,);
-                                } );
+                                Get.toNamed('${Routes.reservationScreen}/${homeController.newestEcolodgeList[index].url}',arguments: {
+                                  'url':homeController.newestEcolodgeList[index].url
+                                });
+
+                                // Get.to(() {
+                                //   return ReservationScreen(url: homeController.newestEcolodgeList[index].url,);
+                                // } );
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(

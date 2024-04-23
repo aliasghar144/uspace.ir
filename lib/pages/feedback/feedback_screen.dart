@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +13,6 @@ class FeedBackScreen extends StatelessWidget {
 
   final OrderDetailsController mainController = Get.find<OrderDetailsController>();
 
-  ScrollController scrollCtr = ScrollController(initialScrollOffset: double.minPositive);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,6 @@ class FeedBackScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        controller: scrollCtr,
         physics: const BouncingScrollPhysics(),
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -257,7 +256,7 @@ class FeedBackScreen extends StatelessWidget {
                           // boxShadow: [mainController.sendAzUnKnowPer.value ? BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 4, blurRadius: 0.1) : BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 6, blurRadius: 0.1)]
                         ),
                         child: mainController.anonymousUser.value
-                            ? Icon(
+                            ? const Icon(
                           Icons.done_outlined,
                           size: 12,
                           color: Colors.white,
@@ -316,7 +315,7 @@ class FeedBackScreen extends StatelessWidget {
                   List<XFile> xFilePick = pickedFile;
                   if (xFilePick.isNotEmpty) {
                     for (var i = 0; i < xFilePick.length; i++) {
-                      mainController.selectedImages.add(File(xFilePick[i].path) as File);
+                      mainController.selectedImages.add(File(xFilePick[i].path));
                     }
                   }
                 },
@@ -400,7 +399,7 @@ class FeedBackScreen extends StatelessWidget {
               height: 20,
             ),
             Obx(() =>
-            mainController.feedbackLoading.value ? Align(
+            mainController.feedbackLoading.value ? const Align(
                 alignment: Alignment.bottomCenter,
                 child: CircularProgressIndicator()) :
                 Align(

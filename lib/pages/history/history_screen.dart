@@ -22,6 +22,7 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(Get.currentRoute);
     return Form(
       key: historyController.formKey,
       child: Padding(
@@ -30,8 +31,7 @@ class HistoryScreen extends StatelessWidget {
           const SizedBox(
             height: 10,
           ),
-          IconButton(onPressed: (){Get.toNamed('${Routes.orderDetailsScreen}/89b7591bc');}, icon: Icon(Icons.add)),
-          IconButton(onPressed: (){Get.toNamed('${Routes.payStatusScreen}/89b7591bc/200');}, icon: Icon(Icons.add)),
+          // IconButton(onPressed: (){Get.toNamed('${Routes.statusPayScreen}/89b7591bc/200');}, icon: Icon(Icons.add)),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -109,7 +109,19 @@ class HistoryScreen extends StatelessWidget {
                     borderRadius:BorderRadius.circular(24),
                     onTap: (){
                       print(historyController.orderHistory[orderIndex].trackCode);
-                      navigateTo(historyController.orderHistory[orderIndex].trackCode);
+                      if(historyController.orderHistory[orderIndex].trackCode != null){
+                        navigateTo(historyController.orderHistory[orderIndex].trackCode!);
+                      }else{
+                        Get.showSnackbar(
+                            GetSnackBar(
+                              backgroundColor: AppColors.redColor,
+                              duration: const Duration(seconds: 3),
+                              messageText: Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: Text('مشکلی پیش آمده است',style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
+
+                            ));
+                      }
                     },
                     child: Container(
                         margin: EdgeInsets.zero,
@@ -130,7 +142,7 @@ class HistoryScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      historyController.orderHistory[orderIndex].ecolosge.title,
+                                      historyController.orderHistory[orderIndex].ecolosge?.title ?? '',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       textDirection: TextDirection.rtl,
@@ -147,7 +159,7 @@ class HistoryScreen extends StatelessWidget {
                                 width: Get.width / 6.5,
                                 height: Get.width / 6.5,
                                 child: CachedNetworkImage(
-                                  imageUrl: historyController.orderHistory[orderIndex].ecolosge.image,
+                                  imageUrl: historyController.orderHistory[orderIndex].ecolosge?.image ??'',
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -196,7 +208,19 @@ class HistoryScreen extends StatelessWidget {
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(8),
                                   onTap:(){
-                                    navigateTo(historyController.orderHistory[orderIndex].trackCode);
+                                    if(historyController.orderHistory[orderIndex].trackCode !=null){
+                                      navigateTo(historyController.orderHistory[orderIndex].trackCode!);
+                                    }else{
+                                      Get.showSnackbar(
+                                          GetSnackBar(
+                                            backgroundColor: AppColors.redColor,
+                                            duration: const Duration(seconds: 3),
+                                            messageText: Directionality(
+                                                textDirection: TextDirection.rtl,
+                                                child: Text('مشکلی پیش آمده است',style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
+
+                                          ));
+                                    }
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
@@ -242,6 +266,7 @@ class HistoryScreen extends StatelessWidget {
                 },
                 itemCount: historyController.loading.value ? 3 : historyController.orderHistory.length,
                 shrinkWrap: true,
+            reverse: true,
                 physics: const NeverScrollableScrollPhysics(),
               )),
           const SizedBox(

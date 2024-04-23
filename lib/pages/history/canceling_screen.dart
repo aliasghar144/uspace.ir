@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -52,6 +51,9 @@ class CancelingScreen extends StatelessWidget {
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
+                IconButton(onPressed: (){
+                  mainController.loading.toggle();
+                }, icon: Icon(Icons.add)),
                 const SizedBox(height: 20,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -291,7 +293,12 @@ class CancelingScreen extends StatelessWidget {
           ),
           bottomNavigationBar: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
-            child: Row(
+            child:  Obx(() => mainController.loading.value ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+              ],
+            ):Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -334,8 +341,8 @@ class CancelingScreen extends StatelessWidget {
                         }, builder: (context) {
                           return Container(
                             decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(topRight: Radius.circular(12),topLeft: Radius.circular(12))
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(topRight: Radius.circular(12),topLeft: Radius.circular(12))
                             ),
                             child:
                             Column(
@@ -399,6 +406,7 @@ class CancelingScreen extends StatelessWidget {
                                 ElevatedButton(
                                     onPressed: () {
                                       mainController.verifyCancelRsvReq();
+                                      Get.back();
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.mainColor,
@@ -429,7 +437,7 @@ class CancelingScreen extends StatelessWidget {
                         backgroundColor: AppColors.mainColor,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(5),
                         ),
                       ),
                       child: Padding(
@@ -446,7 +454,7 @@ class CancelingScreen extends StatelessWidget {
                       )),
                 ): const SizedBox())
               ],
-            ),
+            )),
           ),
         ),
       ),

@@ -40,7 +40,13 @@ class HistoryController extends GetxController{
       if(response.statusCode == 200){
         final data = jsonDecode(response.body)['data'];
         orderHistory.addAll(historyListModelFromJson(jsonEncode(data)));
-        orderHistory.value = orderHistory.reversed.toList();
+        orderHistory.sort((a, b) {
+          if(a.miladiCheckIn.difference(b.miladiCheckIn) < const Duration(days: 1)){
+            return -1;
+          }else{
+            return 1;
+          }
+        });
         Memory().saveOrderCode(orderCode);
         loading.value = false;
         return true;

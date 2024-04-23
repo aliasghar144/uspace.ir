@@ -10,12 +10,12 @@ List<HistoryListModel> historyListModelFromJson(String str) => List<HistoryListM
 class HistoryListModel {
   String name;
   String mobile;
-  String trackCode;
+    String? trackCode;
   String checkIn;
   DateTime miladiCheckIn;
   int duration;
   String status;
-  Ecolosge ecolosge;
+    Ecolosge? ecolosge;
 
   HistoryListModel({
     required this.name,
@@ -36,7 +36,7 @@ class HistoryListModel {
     miladiCheckIn: DateTime.parse(json["miladi_check_in"]),
     duration: json["duration"],
     status: json["status"],
-    ecolosge: Ecolosge.fromJson(json["ecolosge"]),
+        ecolosge: json["ecolosge"] == null ? null : Ecolosge.fromJson(json["ecolosge"]),
   );
 
 }

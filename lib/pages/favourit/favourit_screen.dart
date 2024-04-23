@@ -8,7 +8,7 @@ import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
-import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
+import 'package:uspace_ir/routes/route.dart';
 
 class FavouriteScreen extends StatelessWidget {
   FavouriteScreen({Key? key}) : super(key: key);
@@ -63,7 +63,9 @@ class FavouriteScreen extends StatelessWidget {
                   }else{
                     return InkWell(
                       onTap: () {
-                        Get.to(ReservationScreen(url:room.data.url));
+                        Get.toNamed('${Routes.reservationScreen}/${room.data.url}');
+
+                        // Get.to(ReservationScreen(url:room.data.url));
                       },
                       borderRadius: BorderRadius.circular(25),
                       child: Stack(

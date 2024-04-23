@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
-import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/history_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
@@ -16,7 +15,6 @@ import 'package:uspace_ir/pages/home/home_screen.dart';
 import 'package:uspace_ir/pages/search/live_search_screen.dart';
 import 'package:uspace_ir/pages/search/search_screen.dart';
 import 'package:uspace_ir/widgets/bottom_sheets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
 class BaseScreen extends StatelessWidget {
@@ -234,13 +232,14 @@ class BaseScreen extends StatelessWidget {
         searchController.searchTextFieldController.clear();
         searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
         if(index == 2 && searchController.searchEcolodgesResult.isEmpty){
-          searchController.searchWithFilter('');
+          searchController.searchWithFilter(searchController.searchTextFieldController.text);
         }
         if(index == 1 && historyController.orderHistory.isEmpty){
           historyController.onInit();
         }
         if(index != 2 ){
           searchController.resetFilter();
+          searchController.searchWithFilter(searchController.searchTextFieldController.text);
         }
           baseController.pageIndex.value = index;
         },

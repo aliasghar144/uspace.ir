@@ -12,7 +12,6 @@ import 'package:http/http.dart'as http;
 import 'package:dio/dio.dart' as diopack;
 import 'package:uspace_ir/models/order_model.dart';
 import 'package:uspace_ir/pages/feedback/feedback_screen.dart';
-import 'package:uspace_ir/pages/history/history_screen.dart';
 import 'package:uspace_ir/pages/history/tickect_screen.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 
@@ -130,6 +129,10 @@ class OrderDetailsController extends GetxController{
     
   }
 
+  feedBackCheck()async {
+
+  }
+
   //#endregion  =============== feedBack =========================
 
 
@@ -157,6 +160,7 @@ class OrderDetailsController extends GetxController{
       if(response.statusCode == 200){
         print(orderDetailsModelFromJson(response.body));
         order.value = orderDetailsModelFromJson(response.body);
+        setCancelingNeedCode();
         loading.value = false;
       }
 
@@ -274,12 +278,12 @@ class OrderDetailsController extends GetxController{
   void cancelRsv({String? operation}) async {
     try{
       late String uri;
-      if(operation != null){
-        uri = operation;
+      if(operation == null){
+        uri = '$mainUrl/customer/reserves/$orderCode/customer-cancel-rsv';
       }else{
-        String uri = '$mainUrl/customer/reserves/$orderCode/customer-cancel-rsv';
+        uri = operation;
       }
-
+      print(uri);
       Uri url = Uri.parse(uri);
 
       var response = await http.post(url);
@@ -287,6 +291,8 @@ class OrderDetailsController extends GetxController{
       if(response.statusCode == 200){
         print(response.body);
         fetchOrderDetails(orderCode);
+      }else{
+        print(jsonDecode(response.body));
       }
     }catch(e){
       print(e);
@@ -296,6 +302,7 @@ class OrderDetailsController extends GetxController{
 
   void cancelRsvReq() async {
     try{
+      loading.value = true;
       Map<String,dynamic> body = {
         'sheba': shebaNum.text,
         'hesab':int.parse(cardNum.text.replaceAll('-', '')),
@@ -312,9 +319,8 @@ class OrderDetailsController extends GetxController{
       if(response.statusCode == 200){
 
         var data = jsonDecode(response.body);
-
+        loading.value = false;
         cancelingNeedCode.value = true;
-
         Get.showSnackbar(
             GetSnackBar(
               backgroundColor: AppColors.mainColor,
@@ -323,14 +329,32 @@ class OrderDetailsController extends GetxController{
                   textDirection: TextDirection.rtl,
                   child: Text(data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
             ));
+      }else{
+        var data = jsonDecode(response.body);
+        print('send has problem $data');
+        Get.back();
+        Get.showSnackbar(
+            GetSnackBar(
+              backgroundColor: AppColors.mainColor,
+              duration: const Duration(seconds: 3),
+              messageText: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
+            ));
+        loading.value = false;
+
       }
     }catch(e){
+      Get.back();
+      loading.value = false;
+      print(e);
       rethrow;
     }
   }
 
   void verifyCancelRsvReq() async {
     try{
+      loading.value = true;
 
       Map<String,dynamic> body = {
         'code': verifyCode.text,
@@ -345,11 +369,25 @@ class OrderDetailsController extends GetxController{
 
       print(response.body);
       if(response.statusCode == 200){
-
-        Get.off(HistoryScreen());
+        Get.back();
+        onInit();
+        loading.value = false;
+      }else{
+        var data = jsonDecode(response.body);
+        Get.showSnackbar(
+            GetSnackBar(
+              backgroundColor: AppColors.mainColor,
+              duration: const Duration(seconds: 3),
+              messageText: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
+            ));
+        loading.value = false;
       }
 
     }catch(e){
+      Get.back();
+      loading.value = false;
       rethrow;
     }
 
@@ -380,6 +418,15 @@ class OrderDetailsController extends GetxController{
 
   void feedbackScreen() {
     Get.to(FeedBackScreen());
+  }
+
+  void setCancelingNeedCode() {
+    print(order.value!.data.cancelInfo);
+    if(order.value!.data.cancelInfo != null){
+      cancelingNeedCode.value = true;
+    }else{
+      cancelingNeedCode.value = false;
+    }
   }
 
 

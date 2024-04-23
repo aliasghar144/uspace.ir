@@ -29,6 +29,7 @@ class RoomReservationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // int roomsIndex = Get.arguments['roomsIndex'];
     RoomReservationController roomReservationController = Get.put(RoomReservationController());
     return Scaffold(
       appBar: AppBar(

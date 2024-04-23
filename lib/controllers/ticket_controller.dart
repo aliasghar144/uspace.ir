@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/constance/constance.dart';
-import 'package:http/http.dart' as http;
 import 'package:uspace_ir/models/new_ticket_model.dart';
 import 'package:uspace_ir/models/tickets_model.dart';
 
@@ -29,6 +29,14 @@ class TicketController extends GetxController{
   TextEditingController contentTxtEditCtr = TextEditingController();
   TextEditingController titleTxtEditCtr = TextEditingController();
   TextEditingController replyTxtEditCtr = TextEditingController();
+
+  checkTicketExist(){
+    //if empty show message
+
+
+    // else show send first ticket
+
+  }
 
   showFirstTicket() async {
     try{
@@ -65,9 +73,10 @@ class TicketController extends GetxController{
 
   sendTicket() async {
     try{
-      loading.value = true;
 
+      // send ticket az first time
       if(firstTicket.value!.data.isEmpty){
+        loading.value = true;
 
         Map<String,dynamic> body = {
           'title': titleTxtEditCtr.text,
@@ -86,12 +95,9 @@ class TicketController extends GetxController{
           var data = jsonDecode(response.body);
           contentTxtEditCtr.clear();
           titleTxtEditCtr.clear();
-
           if(data['message'] == 'ok' ||data['message'] == '200'){
-            firstTicket.value = newTicketModelFromJson(data['data']);
-            showAllMessage(firstTicket.value!.data[0].ticketCode.toString());
+            showFirstTicket();
             loading.value = false;
-
           }
           else
           {
@@ -134,10 +140,10 @@ class TicketController extends GetxController{
 
         if(response.statusCode == 200){
           var data = jsonDecode(response.body);
-
+          print('data on seconde pm is : ${data}');
           if(data['status'] == 'ok'){
             allMessage.value!.data.conversation.add(Conversation(side: Side(sideId: 2, sideName: 'مهمان'), content: replyTxtEditCtr.text, mStartDate: DateTime.now(), jStartDate: ''));
-            loading.value = false;
+            // loading.value = false;
             sendReply.value = false;
             replyTxtEditCtr.clear();
           }

@@ -24,6 +24,7 @@ class OrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? orderCode = Get.parameters['orderCode'];
+    print(orderCode);
     OrderDetailsController mainController = Get.put(OrderDetailsController(orderCode!));
     return Scaffold(
       appBar: AppBar(
@@ -98,6 +99,35 @@ class OrderDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+                Obx(() => mainController.loading.value ? const SizedBox() : mainController.order.value!.data.cancelInfo != null ?
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal:10,vertical: 5),
+                  margin: const EdgeInsets.only(left: 20,right: 20,bottom: 20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xfffff3cd),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Expanded(child: Text('سفارش شما به صورت قطعی لغو شده است',style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(color: const Color(0xff856404),fontSize:16.sp),maxLines: 2,textAlign: TextAlign.start,textDirection: TextDirection.rtl,)),
+                          const SizedBox(width:5),
+                          const Icon(Icons.warning_rounded,size:25,color:Color(0xff856404)),
+                        ],
+                      ),
+                      const SizedBox(height: 5,),
+                      Text('مشتری عزیز سفارش شما لغو شده و بازپرداخت و تسویه 24 الی 72 ساعت کاری از تاریخ ارسال لغو صورت خواهد پذیرفت',style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: const Color(0xff856404)),maxLines: 2,textAlign: TextAlign.start,textDirection: TextDirection.rtl,),
+                      const SizedBox(height: 5,),
+                      Text('با سپاس از شما، امیدواریم بازهم در کنار شما باشیم',style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: const Color(0xff856404)),maxLines: 2,textAlign: TextAlign.start,textDirection: TextDirection.rtl,)
+                    ],
+                  ),
+                )
+                    :
+                const SizedBox(),
+                ),
                 Obx(() => ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       itemBuilder: (context, rsvIndex) {
@@ -150,31 +180,7 @@ class OrderDetailsScreen extends StatelessWidget {
                                             const SizedBox(
                                               height: 5,
                                             ),
-                                            mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice[0].originalPrice != mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice[0].priceWithDiscount
-                                                ? Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    children: [
-                                                      Container(
-                                                        margin: const EdgeInsets.only(top: 5, bottom: 5),
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(30),
-                                                          color: AppColors.redColor.withOpacity(0.8),
-                                                        ),
-                                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                                        child: RichText(
-                                                          textDirection: TextDirection.rtl,
-                                                          text: TextSpan(children: [
-                                                            TextSpan(text: ((payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, false) - payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, true))).toString().seRagham(), style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white)),
-                                                            TextSpan(text: ' تومان تخفیف', style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(color: Colors.white)),
-                                                          ]),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width:5),
-                                                      RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت اصلی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor, decoration: TextDecoration.lineThrough)), TextSpan(text: '${payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, true).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(decoration: TextDecoration.lineThrough))]))
-                                                    ],
-                                                  )
-                                                : const SizedBox(),
-                                            RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت پرداختی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, false).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.mainColor))]))
+                                            RichText(textDirection: TextDirection.rtl, text: TextSpan(children: [TextSpan(text: 'قیمت پرداختی: ', style: Theme.of(Get.context!).textTheme.titleMedium!.copyWith(color: AppColors.grayColor)), TextSpan(text: '${payPriceCalculate(mainController.order.value!.data.rsvItems[rsvIndex].dayAndPrice, true).toString().seRagham()}تومان', style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.mainColor))]))
                                           ],
                                         ),
                                       ),
@@ -630,47 +636,48 @@ class OrderDetailsScreen extends StatelessWidget {
           ),
         );
       case 'پرداخت و قطعی شده':
-        if(DateTime.now().difference(mainController.order.value!.data.miladiCheckIn) >= const Duration(hours: 1)&&mainController.needFeedback.value){
+        // if(DateTime.now().difference(mainController.order.value!.data.miladiCheckIn) > const Duration(hours: 1) && mainController.needFeedback.value){
+        //   return Padding(
+        //     padding: const EdgeInsets.only(bottom: 20.0),
+        //     child: Row(
+        //       mainAxisSize: MainAxisSize.min,
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         ElevatedButton(
+        //             onPressed: () {
+        //               mainController.operation(name:'فرم نظرسنجی');
+        //             },
+        //             style: ElevatedButton.styleFrom(
+        //               elevation: 0,
+        //               backgroundColor: AppColors.acceptedGuest,
+        //               shape: RoundedRectangleBorder(
+        //                 borderRadius: BorderRadius.circular(5),
+        //               ),
+        //             ),
+        //             child: Padding(
+        //               padding: const EdgeInsets.symmetric(vertical: 10.0),
+        //               child: Row(
+        //                 mainAxisSize: MainAxisSize.min,
+        //                 children: [
+        //                   Text(
+        //                     'فرم نظرسنجی',
+        //                     style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: Colors.white),
+        //                   ),
+        //                 ],
+        //               ),
+        //             )),
+        //       ],
+        //     ),
+        //   );
+        // }else
+        {
           return Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
-                    onPressed: () {
-                      mainController.operation(name:'فرم نظرسنجی');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      elevation: 0,
-                      backgroundColor: AppColors.acceptedGuest,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'فرم نظرسنجی',
-                            style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 18.sp, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    )),
-              ],
-            ),
-          );
-        }else{
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 20.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
+                mainController.order.value!.data.cancelInfo == null ? ElevatedButton(
                     onPressed: () {
                       Get.to(RulesOfCancelingScreen(), transition: Transition.downToUp);
                     },
@@ -698,7 +705,7 @@ class OrderDetailsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    )),
+                    )) : const SizedBox(),
                 const SizedBox(
                   width: 20,
                 ),
@@ -730,7 +737,7 @@ class OrderDetailsScreen extends StatelessWidget {
           );
         }
       case 'مهمان پذیرش شده':
-        if(DateTime.now().difference(mainController.order.value!.data.miladiCheckIn) >= const Duration(hours: 1) && mainController.needFeedback.value){
+        if(DateTime.now().difference(mainController.order.value!.data.miladiCheckIn) > const Duration(hours: 1) && mainController.needFeedback.value){
           return Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child: Row(

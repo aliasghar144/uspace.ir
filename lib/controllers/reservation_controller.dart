@@ -11,6 +11,7 @@ import 'package:uspace_ir/base_screen.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
+import 'package:uspace_ir/routes/route.dart';
 
 class ReservationController extends GetxController {
   String url;
@@ -60,6 +61,7 @@ class ReservationController extends GetxController {
         room.value = roomReservationModelFromJson(response.body);
         loading.value = false;
         print(room.value!.data.url);
+      }else{
       }
     } on SocketException {
       Errors().connectLost(onTap: () {
@@ -68,7 +70,7 @@ class ReservationController extends GetxController {
       },);
     } catch (e) {
       loading.value = false;
-      Get.offAll(BaseScreen());
+      Get.offAllNamed(Routes.home);
       print(e);
     }
   }
