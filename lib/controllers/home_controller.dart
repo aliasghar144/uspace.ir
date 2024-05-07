@@ -61,10 +61,13 @@ class HomeController extends GetxController {
   RxList categories = [].obs;
 
   late final  mainGalleryList = Rxn<MainGalleryModel>();
-  List<EcolodgeModel> sessionSuggestList = <EcolodgeModel>[].obs;
-  List<EcolodgeModel> newestEcolodgeList = <EcolodgeModel>[].obs;
-  List<EcolodgeModel> bestSellersEcolodgeList = <EcolodgeModel>[].obs;
-  List<EcolodgeModel> bestOfferEcolodgeList = <EcolodgeModel>[].obs;
+
+  final newestEcolodge = Rxn<EcolodgeModel>();
+  final sessionSuggest = Rxn<EcolodgeModel>();
+  final bestSellersEcolodge = Rxn<EcolodgeModel>();
+  final bestOfferEcolodge = Rxn<EcolodgeModel>();
+
+
   List<BestPlacesModel> bestPlacesList = <BestPlacesModel>[].obs;
   List<SpecialPlacesModel> specialPlacesList = <SpecialPlacesModel>[].obs;
 
@@ -125,12 +128,11 @@ class HomeController extends GetxController {
   fetchNewestEcolodge()async{
     try{
       loading.value = true;
-      newestEcolodgeList.clear();
+      newestEcolodge.value = null;
       var url = Uri.parse('$mainUrl/newest_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
-        final data = jsonDecode(response.body)['data'];
-        newestEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        newestEcolodge.value = (ecolodgeModelFromJson(response.body));
         loading.value = false;
       }
     }catch(e){
@@ -143,12 +145,11 @@ class HomeController extends GetxController {
   fetchSessionSuggest()async{
     try{
       loading.value = true;
-      sessionSuggestList.clear();
+      sessionSuggest.value = null;
       var url = Uri.parse('$mainUrl/seasonal_suggest_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
-        final data = jsonDecode(response.body)['data'];
-        sessionSuggestList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        sessionSuggest.value = (ecolodgeModelFromJson(response.body));
         loading.value = false;
       }
     }catch (e){
@@ -161,12 +162,11 @@ class HomeController extends GetxController {
   fetchBestSellersEcolodge()async{
     try{
       loading.value = true;
-      bestSellersEcolodgeList.clear();
+      bestSellersEcolodge.value = null;
       var url = Uri.parse('$mainUrl/best_sellers_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
-        final data = jsonDecode(response.body)['data'];
-        bestSellersEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        bestSellersEcolodge.value = (ecolodgeModelFromJson(response.body));
         loading.value = false;
       }
     }catch (e){
@@ -179,12 +179,11 @@ class HomeController extends GetxController {
   fetchBestOfferEcolodge()async{
     try{
       loading.value = true;
-      bestOfferEcolodgeList.clear();
+      bestOfferEcolodge.value = null;
       var url = Uri.parse('$mainUrl/best_offer_ecolodge');
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
-        final data = jsonDecode(response.body)['data'];
-        bestOfferEcolodgeList.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        bestOfferEcolodge.value = (ecolodgeModelFromJson(response.body));
         loading.value = false;
       }
     }catch (e){
@@ -210,6 +209,7 @@ class HomeController extends GetxController {
 
     }
   }
+
 
   fetchSpecialPlaces()async{
     try{

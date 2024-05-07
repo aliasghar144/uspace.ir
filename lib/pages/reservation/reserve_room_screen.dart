@@ -487,7 +487,7 @@ class RoomReservationScreen extends StatelessWidget {
     highlightColor: Colors.grey.shade100,
 
     child: Container(alignment: Alignment.topRight,
-          height: Get.width / 4.2,
+          height: Get.width / 4.0,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: const Color(0xffE8E8E8).withOpacity(0.5),
@@ -495,7 +495,7 @@ class RoomReservationScreen extends StatelessWidget {
             )
             : Container(
                 alignment: Alignment.topRight,
-                height: Get.width / 4.2,
+                height: Get.width / 4.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   color: const Color(0xffE8E8E8).withOpacity(0.5),
@@ -515,7 +515,7 @@ class RoomReservationScreen extends StatelessWidget {
                     itemBuilder: (context, roomIndex) {
                       if (reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.status == 'unavailable') {
                         return Container(
-                          width: Get.width / 4.55,
+                                        width: Get.width / 4.05,
                           clipBehavior: Clip.hardEdge,
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), border: Border.all(width: 0.4, color: AppColors.mainColor)),
                           child: Column(
@@ -523,7 +523,7 @@ class RoomReservationScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Container(
-                                width: Get.width / 4.55,
+                                              width: Get.width / 4.05,
                                 alignment: Alignment.center,
                                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
                                 decoration: BoxDecoration(
@@ -577,6 +577,7 @@ class RoomReservationScreen extends StatelessWidget {
                                 reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days[roomIndex].additionalGustPrice == 0 ? 'نفر اضافه ندارد' : 'نفر اضافه: ${reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.days[roomIndex].additionalGustPrice.toString().seRagham()} تومان',
                                 style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
                                 textDirection: TextDirection.rtl,
+                                              textAlign: TextAlign.center,
                               ),
                               const Spacer(),
                               Row(
@@ -604,6 +605,10 @@ class RoomReservationScreen extends StatelessWidget {
                   ),
                 ),
               )),
+        const SizedBox(
+          height: 50,
+        ),
+
       ]),
     );
   }

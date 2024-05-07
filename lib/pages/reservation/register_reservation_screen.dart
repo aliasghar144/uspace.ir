@@ -174,6 +174,7 @@ class RegisterReservationScreen extends StatelessWidget {
                     bookerDetails(mainController),
                     const SizedBox(height: 25),
                     sendButton(mainController),
+                    const SizedBox(height: 50),
                   ],
                 ),
               ),
@@ -276,7 +277,7 @@ class RegisterReservationScreen extends StatelessWidget {
                                         height: 10,
                                       ),
                                       Text(
-                                        '${mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham()} تومان',
+                                        '${mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham()}تومان / ${mainController.duration.toString()} شب',
                                         style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 16.sp, color: AppColors.mainColor),
                                         textDirection: TextDirection.rtl,
                                       ),
@@ -312,31 +313,86 @@ class RegisterReservationScreen extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: Obx(
-                              () => Row(
-                                children: [
-                                  mainController.roomRegisterList[roomIndex].isExpanded.value
-                                      ? const Icon(
-                                          Icons.keyboard_arrow_up,
-                                          color: AppColors.grayColor,
-                                          size: 15,
-                                        )
-                                      : const Icon(Icons.keyboard_arrow_down, color: AppColors.mainColor, size: 15),
-                                  mainController.roomRegisterList[roomIndex].isExpanded.value
-                                      ? Text(
-                                          'اطلاعات کمتر',
-                                          style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
-                                        )
-                                      : Text(
-                                          'اطلاعات بیشتر',
-                                          style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.mainColor),
-                                        ),
-                                ],
+                          const SizedBox(height: 10,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Obx(
+                                    () => Row(
+                                  children: [
+                                    mainController.roomRegisterList[roomIndex].isExpanded.value
+                                        ? const Icon(
+                                      Icons.keyboard_arrow_up,
+                                      color: AppColors.grayColor,
+                                      size: 15,
+                                    )
+                                        : const Icon(Icons.keyboard_arrow_down, color: AppColors.mainColor, size: 15),
+                                    mainController.roomRegisterList[roomIndex].isExpanded.value
+                                        ? Text(
+                                      'اطلاعات کمتر',
+                                      style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.grayColor),
+                                    )
+                                        : Text(
+                                      'اطلاعات بیشتر',
+                                      style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(color: AppColors.mainColor),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
+                              const Spacer(),
+                              Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: DropdownButtonHideUnderline(
+                                  child: Obx(() => DropdownButton2(
+                                    isExpanded: true,
+                                    style: Theme.of(Get.context!).textTheme.labelSmall!.copyWith(
+                                      color: AppColors.mainColor,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    items: mainController.roomRegisterList[roomIndex].additionalGuestList,
+                                    onChanged: (unit) {
+                                      mainController.roomRegisterList[roomIndex].additionalGuest.value = unit!;
+                                    },
+                                    value: mainController.roomRegisterList[roomIndex].additionalGuest.value,
+                                    buttonStyleData: ButtonStyleData(
+                                      height: 35,
+                                      width: Get.width / 2.8,
+                                      padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
+                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
+                                    ),
+                                    iconStyleData: const IconStyleData(
+                                      icon: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        size: 20,
+                                      ),
+                                      iconEnabledColor: AppColors.mainColor,
+                                    ),
+                                    dropdownStyleData: DropdownStyleData(
+                                        elevation: 2,
+                                        padding: EdgeInsets.zero,
+                                        decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
+                                        ),
+                                        direction: DropdownDirection.textDirection,
+                                        scrollbarTheme: ScrollbarThemeData(
+                                          radius: const Radius.circular(40),
+                                          thickness: MaterialStateProperty.all(6),
+                                          thumbVisibility: MaterialStateProperty.all(true),
+                                        )),
+                                  )),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'نفر اضافی: ',
+                                style: Theme.of(Get.context!).textTheme.bodyMedium,
+                                textDirection: TextDirection.rtl,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5,),
                         ],
                       ),
                       children: [
@@ -449,91 +505,12 @@ class RegisterReservationScreen extends StatelessWidget {
                               const SizedBox(
                                 height: 5,
                               ),
-                              RichText(
-                                text: TextSpan(children: [
-                                  TextSpan(text: 'ظرفیت اضافه: ', style: Theme.of(Get.context!).textTheme.bodyMedium),
-                                  TextSpan(text: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.priceInfo.additionalNumber.toString().toPersianDigit(), style: Theme.of(Get.context!).textTheme.titleLarge),
-                                  TextSpan(text: ' نفر', style: Theme.of(Get.context!).textTheme.titleLarge),
-                                ]),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              RichText(
-                                textDirection: TextDirection.rtl,
-                                text: TextSpan(children: [
-                                  TextSpan(text: 'قیمت یک شب: ', style: Theme.of(Get.context!).textTheme.bodyMedium),
-                                  TextSpan(text: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.days[0].originalPrice.toString().toPersianDigit().seRagham(), style: Theme.of(Get.context!).textTheme.titleLarge),
-                                  TextSpan(text: ' تومان', style: Theme.of(Get.context!).textTheme.titleLarge),
-                                ]),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: DropdownButtonHideUnderline(
-                                      child: Obx(() => DropdownButton2(
-                                            isExpanded: true,
-                                            style: Theme.of(Get.context!).textTheme.labelMedium!.copyWith(
-                                                  color: AppColors.mainColor,
-                                                  overflow: TextOverflow.ellipsis,
-                                                ),
-                                            items: mainController.roomRegisterList[roomIndex].additionalGuestList,
-                                            onChanged: (unit) {
-                                              mainController.roomRegisterList[roomIndex].additionalGuest.value = unit!;
-                                            },
-                                            value: mainController.roomRegisterList[roomIndex].additionalGuest.value,
-                                            buttonStyleData: ButtonStyleData(
-                                              height: 35,
-                                              width: Get.width / 2.8,
-                                              padding: const EdgeInsets.only(right: 10, left: 8, top: 0, bottom: 2),
-                                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(18), color: Colors.transparent, border: Border.all(color: AppColors.grayColor, width: 0.3)),
-                                            ),
-                                            iconStyleData: const IconStyleData(
-                                              icon: Icon(
-                                                Icons.keyboard_arrow_down_rounded,
-                                                size: 20,
-                                              ),
-                                              iconEnabledColor: AppColors.mainColor,
-                                            ),
-                                            dropdownStyleData: DropdownStyleData(
-                                                elevation: 2,
-                                                padding: EdgeInsets.zero,
-                                                decoration: const BoxDecoration(
-                                                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(12), bottomLeft: Radius.circular(12)),
-                                                ),
-                                                direction: DropdownDirection.textDirection,
-                                                scrollbarTheme: ScrollbarThemeData(
-                                                  radius: const Radius.circular(40),
-                                                  thickness: MaterialStateProperty.all(6),
-                                                  thumbVisibility: MaterialStateProperty.all(true),
-                                                )),
-                                          )),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'نفر اضافی: ',
-                                    style: Theme.of(Get.context!).textTheme.bodyMedium,
-                                    textDirection: TextDirection.rtl,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Flexible(
                                     child: Container(
-                                      height: Get.height * 0.09,
+                                      height: Get.width / 4.7,
                                       width: Get.width,
                                       padding: const EdgeInsets.only(right: 15),
                                       child: ListView.separated(
@@ -1014,7 +991,7 @@ class RegisterReservationScreen extends StatelessWidget {
               ),
               child: Center(
                   child: Text(
-                'ارسال و پرداخت',
+                'ارسال و درخواست رزرو (رایگان)',
                 style: Theme.of(Get.context!).textTheme.displayMedium!.copyWith(fontSize: 16.sp, color: Colors.white),
               )),
             ),

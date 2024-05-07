@@ -8,6 +8,7 @@ class ThemConfig {
       colorScheme: const ColorScheme.light(primary: AppColors.mainColor),
       indicatorColor: AppColors.mainColor,
       fontFamily: 'iransans',
+      platform: TargetPlatform.iOS,
       scaffoldBackgroundColor: Colors.white,
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: Colors.transparent,

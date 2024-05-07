@@ -74,7 +74,7 @@ class BaseScreen extends StatelessWidget {
                 enablePullDown: true,
                 physics: const BouncingScrollPhysics(),
                 controller: refreshController,
-                onRefresh: onRefresh,
+                // onRefresh: onRefresh,
                 child: CustomScrollView(
                   controller: searchController.searchScrollController,
                   slivers: [
@@ -239,7 +239,8 @@ class BaseScreen extends StatelessWidget {
         }
         if(index != 2 ){
           searchController.resetFilter();
-          searchController.searchWithFilter(searchController.searchTextFieldController.text);
+          searchController.clearResultList();
+          // searchController.searchWithFilter(searchController.searchTextFieldController.text);
         }
           baseController.pageIndex.value = index;
         },
@@ -282,6 +283,7 @@ class BaseScreen extends StatelessWidget {
         break;
       case 1:
         historyController.fetchOrderHistory(Memory().readOrderCode());
+        break;
     }
     refreshController.refreshCompleted();
   }

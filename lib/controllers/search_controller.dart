@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/models/all_places_model.dart';
-import 'package:uspace_ir/models/ecolodge_model.dart';
 import 'package:uspace_ir/models/live_search_landing_model.dart';
 import 'package:uspace_ir/models/live_search_places_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:uspace_ir/models/search_model.dart';
 
 class SearchController extends GetxController {
 
@@ -30,6 +30,7 @@ class SearchController extends GetxController {
 
 
   RxBool loading = false.obs;
+  RxBool wait4req = false.obs;
   RxBool firstOpen = true.obs;
   RxBool needSearchAgain = false.obs;
   RxBool searchError = false.obs;
@@ -54,9 +55,9 @@ class SearchController extends GetxController {
 
   Rxn<AllPlacesModel> cityList  = Rxn<AllPlacesModel>();
 
-  List<EcolodgeModel> liveSearchEcolodgesResult = <EcolodgeModel>[].obs;
+  List<SearchModel> liveSearchEcolodgesResult = <SearchModel>[].obs;
   List<SearchPlacesModel> searchPlacesResult = <SearchPlacesModel>[].obs;
-  List<EcolodgeModel> searchEcolodgesResult = <EcolodgeModel>[].obs;
+  List<SearchModel> searchEcolodgesResult = <SearchModel>[].obs;
   List<SearchLandingPagesModel> liveSearchLandingPagesResult = <SearchLandingPagesModel>[].obs;
 
   final List categoryList = [
@@ -126,7 +127,7 @@ class SearchController extends GetxController {
       print(url);
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        searchEcolodgesResult.clear();
+        clearResultList();
         final data = jsonDecode(response.body)['data'];
         final link = jsonDecode(response.body)['links'];
         searchEcolodgesResult.addAll(ecolodgeModelFromJson(jsonEncode(data)));
@@ -216,6 +217,7 @@ class SearchController extends GetxController {
   void clearResultList() {
     liveSearchEcolodgesResult.clear();
     searchPlacesResult.clear();
+    searchEcolodgesResult.clear();
     liveSearchLandingPagesResult.clear();
   }
 

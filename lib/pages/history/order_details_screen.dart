@@ -12,6 +12,7 @@ import 'package:uspace_ir/app/utils/color_extenstion.dart';
 import 'package:uspace_ir/app/utils/pay_price_calculator.dart';
 import 'package:uspace_ir/controllers/order_details_controller.dart';
 import 'package:uspace_ir/models/order_model.dart';
+import 'package:uspace_ir/pages/history/canceling_screen.dart';
 import 'package:uspace_ir/pages/history/rules_of_canceling_screen.dart';
 import 'package:uspace_ir/widgets/facilites_dialog.dart';
 
@@ -86,6 +87,8 @@ class OrderDetailsScreen extends StatelessWidget {
                           : Text(
                               mainController.order.value!.data.ecolodge.title,
                               style: Theme.of(Get.context!).textTheme.displayMedium,
+                        maxLines: 2,
+                          textAlign: TextAlign.start,
                             )),
                       const SizedBox(
                         width: 8,
@@ -679,7 +682,11 @@ class OrderDetailsScreen extends StatelessWidget {
               children: [
                 mainController.order.value!.data.cancelInfo == null ? ElevatedButton(
                     onPressed: () {
-                      Get.to(RulesOfCancelingScreen(), transition: Transition.downToUp);
+                      if(mainController.isAcceptTerms.value){
+                        Get.to(RulesOfCancelingScreen(), transition: Transition.downToUp);
+                      }else{
+                        Get.to(CancelingScreen(), transition: Transition.downToUp);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -779,7 +786,11 @@ class OrderDetailsScreen extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      Get.to(RulesOfCancelingScreen(), transition: Transition.downToUp);
+                      if(mainController.isAcceptTerms.value){
+                        Get.to(RulesOfCancelingScreen(), transition: Transition.downToUp);
+                      }else{
+                        Get.to(CancelingScreen(), transition: Transition.downToUp);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

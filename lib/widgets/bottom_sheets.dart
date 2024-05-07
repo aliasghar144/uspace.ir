@@ -202,81 +202,71 @@ class BottomSheets{
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(23),
                 topRight: Radius.circular(23))),
-        SizedBox(
-          width: double.infinity,height: Get.height/4,
-          child: PageView.builder(
-            itemBuilder: (context, index) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 25,),
-                  Text('لطفا کد رهگیری سفارش خود را وارد کنید',textDirection: TextDirection.rtl,style: Theme.of(Get.context!).textTheme.labelLarge!.copyWith(fontSize:16,color:const Color(0xff666666)),),
-                  const SizedBox(height: 10,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: TextField(
-                        controller: historyController.orderCodeTextEditController,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.done,
-                        textDirection: TextDirection.rtl,
-                        style: Theme.of(Get.context!).textTheme.labelLarge!.copyWith(fontSize: 16),
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                            counterText: '',
-                            label: const Text('کد رهگیری',textDirection: TextDirection.rtl,),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(40),
-                                borderSide: const BorderSide(color: AppColors.mainColor,width: 0.5)
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(40),
-                                borderSide: const BorderSide(color: AppColors.grayColor,width: 0.5)
-                            )
-                            ,
-                            border:OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(40),
-                                borderSide: const BorderSide(color: AppColors.grayColor,width: 0.5)
-                            )
-                        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 25,),
+            Text('لطفا کد رهگیری سفارش خود را وارد کنید',textDirection: TextDirection.rtl,style: Theme.of(Get.context!).textTheme.labelLarge!.copyWith(fontSize:16,color:const Color(0xff666666)),),
+            const SizedBox(height: 10,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: TextField(
+                  controller: historyController.orderCodeTextEditController,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
+                  textDirection: TextDirection.rtl,
+                  style: Theme.of(Get.context!).textTheme.labelLarge!.copyWith(fontSize: 16),
+                  decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                      counterText: '',
+                      label: const Text('کد رهگیری',textDirection: TextDirection.rtl,),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: const BorderSide(color: AppColors.mainColor,width: 0.5)
                       ),
-                    ),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: const BorderSide(color: AppColors.grayColor,width: 0.5)
+                      )
+                      ,
+                      border:OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(40),
+                          borderSide: const BorderSide(color: AppColors.grayColor,width: 0.5)
+                      )
                   ),
-                  const SizedBox(height: 25,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Container(
-                        clipBehavior: Clip.hardEdge,
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                          color: AppColors.mainColor,
-                        ),
-                        child: ElevatedButton(
-                            onPressed: (){
-                              if(historyController.orderCodeTextEditController.text.isNotEmpty){
-                                historyController.fetchOrderHistory(historyController.orderCodeTextEditController.text);
-                                Get.back();
-                                historyController.orderCodeTextEditController.clear();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,elevation: 0,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Text('جست و جو',style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 24,color: Colors.white),),
-                            ))),
+                ),
+              ),
+            ),
+            const SizedBox(height: 25,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Container(
+                  clipBehavior: Clip.hardEdge,
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(40),
+                    color: AppColors.mainColor,
                   ),
-                  const SizedBox(height: 25,),
-                ],
-              );
-            },
-            controller: pageController,
-            physics: const NeverScrollableScrollPhysics(),
-          ),
-        )
-    );
+                  child: ElevatedButton(
+                      onPressed: (){
+                        if(historyController.orderCodeTextEditController.text.isNotEmpty){
+                          historyController.fetchOrderHistory(historyController.orderCodeTextEditController.text);
+                          Get.back();
+                          historyController.orderCodeTextEditController.clear();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.transparent,elevation: 0,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Text('جست و جو',style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 24,color: Colors.white),),
+                      ))),
+            ),
+            const SizedBox(height: 25,),
+          ],
+        )    );
   }
 
   // phoneAuth(){

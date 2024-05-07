@@ -62,29 +62,28 @@ class OrderDetailsController extends GetxController{
 
 
   sendFeedBack() async {
-    print('object');
     feedbackLoading.value = true;
     final dio = diopack.Dio();
     late diopack.FormData formData;
     if(selectedImages.isEmpty){
       formData = diopack.FormData.fromMap({
         'tracking_code':orderCode,
-        'option1':orderCode,
-        'option2':orderCode,
-        'option3':orderCode,
-        'option4':orderCode,
-        'option5':orderCode,
+        'option1':option5.value.toString(),
+        'option2':option1.value.toString(),
+        'option3':option2.value.toString(),
+        'option4':option3.value.toString(),
+        'option5':option4.value.toString(),
         'comment':feedbackTxtEditCtr.text,
         'anonymous_user':anonymousUser.value ? 1 : 0,
       });
     }else{
       formData = diopack.FormData.fromMap({
         'tracking_code':orderCode,
-        'option1':orderCode,
-        'option2':orderCode,
-        'option3':orderCode,
-        'option4':orderCode,
-        'option5':orderCode,
+        'option1':option5.value.toString(),
+        'option2':option1.value.toString(),
+        'option3':option2.value.toString(),
+        'option4':option3.value.toString(),
+        'option5':option4.value.toString(),
         'comment':feedbackTxtEditCtr.text,
         'anonymous_user':anonymousUser.value ? 1 : 0,
         'files' : [
@@ -105,6 +104,7 @@ class OrderDetailsController extends GetxController{
         if(data.data['message'] == 200 || data.data['message'] == 'ok'){
           feedbackLoading.value = false;
           needFeedback.value = false;
+          print('data from feedback is ${jsonDecode(data.data)}');
           Get.showSnackbar(
               GetSnackBar(
                 backgroundColor: AppColors.mainColor,
@@ -367,15 +367,24 @@ class OrderDetailsController extends GetxController{
         'Accept': 'application/json'
       });
 
+      var data = jsonDecode(response.body);
       print(response.body);
       if(response.statusCode == 200){
         Get.back();
+        Get.showSnackbar(
+            GetSnackBar(
+              backgroundColor: AppColors.mainColor,
+              duration: const Duration(seconds: 3),
+              messageText: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Text(data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
+            ));
         onInit();
         loading.value = false;
       }else{
-        var data = jsonDecode(response.body);
         Get.showSnackbar(
             GetSnackBar(
+
               backgroundColor: AppColors.mainColor,
               duration: const Duration(seconds: 3),
               messageText: Directionality(

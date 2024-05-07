@@ -77,6 +77,8 @@ class TicketScreen extends StatelessWidget {
                           : Text(
                         mainController.firstTicket.value!.data.isEmpty ? 'ارسال تیکت': mainController.firstTicket.value!.data[0].title,
                         style: Theme.of(Get.context!).textTheme.displayMedium,
+                        maxLines: 2,
+                        textAlign: TextAlign.start,
                       )),
                       const SizedBox(
                         width: 8,

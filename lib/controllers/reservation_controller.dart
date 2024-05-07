@@ -21,19 +21,24 @@ class ReservationController extends GetxController {
   @override
   void onInit(){
     getMainInfo(roomUrl: url);
-    mainScrollController.addListener(() {
-      // if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
-      //   tabIndex.value = 1;
-      // }
-      if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
-        tabIndex.value = 2;
-      }else{
-        tabIndex.value = 1;
-      }
-      // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
-      //   tabIndex.value = 3;
-      // }
-    });
+
+
+    // listen to user scroll
+    // mainScrollController.addListener(() {
+    //   // if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
+    //   //   tabIndex.value = 1;
+    //   // }
+    //   if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
+    //     tabIndex.value = 2;
+    //   }else{
+    //     tabIndex.value = 1;
+    //   }
+    //   // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
+    //   //   tabIndex.value = 3;
+    //   // }
+    // });
+
+
     super.onInit();
   }
 
@@ -45,6 +50,7 @@ class ReservationController extends GetxController {
   RxDouble markerSized = 28.0.obs;
 
   RxBool userImages = false.obs;
+  RxBool cancelingRules = false.obs;
   RxBool loading = true.obs;
   RxBool loadingRoom = false.obs;
 
@@ -82,7 +88,7 @@ class ReservationController extends GetxController {
       if(isDateSelected.value != false) {
         uri += 'start_date=${entryDate.value.year.toString()}-${dateEdit(entryDate.value.month)}-${dateEdit(entryDate.value.day)}&pick_date=1&duration=${durationValue.value.toString()}';
       }else{
-        uri += 'start_date=${DateTime.now().year.toString()}-${dateEdit(DateTime.now().month)}-${DateTime.now().day.toString()}&pick_date=1&duration=${durationValue.value.toString()}';
+        uri += 'start_date=${DateTime.now().year.toString()}-${dateEdit(DateTime.now().month)}-${dateEdit(DateTime.now().day)}&pick_date=1&duration=${durationValue.value.toString()}';
       }
       var localUrl = Uri.parse(uri.toString());
       print(localUrl.path);

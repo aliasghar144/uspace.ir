@@ -30,13 +30,6 @@ class TicketController extends GetxController{
   TextEditingController titleTxtEditCtr = TextEditingController();
   TextEditingController replyTxtEditCtr = TextEditingController();
 
-  checkTicketExist(){
-    //if empty show message
-
-
-    // else show send first ticket
-
-  }
 
   showFirstTicket() async {
     try{
@@ -89,10 +82,9 @@ class TicketController extends GetxController{
           'Accept': 'application/json'
         });
 
+        var data = jsonDecode(response.body);
 
         if(response.statusCode == 200){
-
-          var data = jsonDecode(response.body);
           contentTxtEditCtr.clear();
           titleTxtEditCtr.clear();
           if(data['message'] == 'ok' ||data['message'] == '200'){
@@ -117,7 +109,15 @@ class TicketController extends GetxController{
         }
         else
         {
+          Get.showSnackbar(
+              GetSnackBar(
+                backgroundColor: AppColors.redColor,
+                duration: const Duration(seconds: 3),
+                messageText: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Text(data['details'],style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color:Colors.white),textAlign: TextAlign.start)),
 
+              ));
           loading.value = false;
 
         }

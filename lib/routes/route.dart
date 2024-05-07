@@ -35,7 +35,6 @@ class Pages{
     // GetPage(name: Routes.reservation, page:() =>  ReservationScreen(),),
     // GetPage(name: Routes.reserveRoom, page:() =>  RoomReservationScreen(),),
 
-    GetPage(name: '${Routes.reservationScreen}/:url', page:() =>  ReservationScreen(),),
 
     GetPage(name: '${Routes.orderDetailsScreen}/:orderCode', page:() =>  OrderDetailsScreen(),),
 

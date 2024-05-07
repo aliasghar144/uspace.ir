@@ -57,7 +57,7 @@ class Data {
   List<DataFeature> features;
   List<Comment> comments;
   List<CommentsFile> commentsFiles;
-  List<EcolodgeSuggestion> ecolodgeSuggestions;
+    EcolodgeSuggestions ecolodgeSuggestions;
   List<Room> rooms;
 
   Data({
@@ -130,7 +130,7 @@ class Data {
     features: List<DataFeature>.from(json["features"].map((x) => DataFeature.fromJson(x))),
     comments: List<Comment>.from(json["comments"].map((x) => Comment.fromJson(x))),
     commentsFiles: List<CommentsFile>.from(json["comments_files"].map((x) => CommentsFile.fromJson(x))),
-    ecolodgeSuggestions: List<EcolodgeSuggestion>.from(json["ecolodge_suggestions"].map((x) => EcolodgeSuggestion.fromJson(x))),
+        ecolodgeSuggestions: EcolodgeSuggestions.fromJson(json["ecolodge_suggestions"]),
     rooms: List<Room>.from(json["rooms"].map((x) => Room.fromJson(x))),
   );
 
@@ -167,7 +167,7 @@ class Data {
     "features": List<dynamic>.from(features.map((x) => x.toJson())),
     "comments": List<dynamic>.from(comments.map((x) => x.toJson())),
     "comments_files": List<dynamic>.from(commentsFiles.map((x) => x.toJson())),
-    "ecolodge_suggestions": List<dynamic>.from(ecolodgeSuggestions.map((x) => x.toJson())),
+        "ecolodge_suggestions": ecolodgeSuggestions.toJson(),
     "rooms": List<dynamic>.from(rooms.map((x) => x.toJson())),
   };
 }
@@ -352,7 +352,27 @@ class CommentsFile {
   };
 }
 
-class EcolodgeSuggestion {
+class EcolodgeSuggestions {
+    List<dynamic> additional;
+    List<Datum> data;
+
+    EcolodgeSuggestions({
+        required this.additional,
+        required this.data,
+    });
+
+    factory EcolodgeSuggestions.fromJson(Map<String, dynamic> json) => EcolodgeSuggestions(
+        additional: List<dynamic>.from(json["additional"].map((x) => x)),
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "additional": List<dynamic>.from(additional.map((x) => x)),
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+    };
+}
+
+class Datum {
   String title;
   String image;
   String province;
@@ -367,7 +387,7 @@ class EcolodgeSuggestion {
   double dollarEquivalent;
   String currency;
 
-  EcolodgeSuggestion({
+    Datum({
     required this.title,
     required this.image,
     required this.province,
@@ -383,7 +403,7 @@ class EcolodgeSuggestion {
     required this.currency,
   });
 
-  factory EcolodgeSuggestion.fromJson(Map<String, dynamic> json) => EcolodgeSuggestion(
+    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     title: json["title"],
     image: json["image"],
     province: json["province"],

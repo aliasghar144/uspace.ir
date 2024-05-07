@@ -4,10 +4,58 @@
 
 import 'dart:convert';
 
-List<EcolodgeModel> ecolodgeModelFromJson(String str) => List<EcolodgeModel>.from(json.decode(str).map((x) => EcolodgeModel.fromJson(x)));
+EcolodgeModel ecolodgeModelFromJson(String str) => EcolodgeModel.fromJson(json.decode(str));
 
 
 class EcolodgeModel {
+    Additional additional;
+    List<Datum> data;
+    Links links;
+    Meta meta;
+    String listTitle;
+
+    EcolodgeModel({
+        required this.additional,
+        required this.data,
+        required this.links,
+        required this.meta,
+        required this.listTitle,
+    });
+
+    factory EcolodgeModel.fromJson(Map<String, dynamic> json) => EcolodgeModel(
+        additional: Additional.fromJson(json["additional"]),
+        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        links: Links.fromJson(json["links"]),
+        meta: Meta.fromJson(json["meta"]),
+        listTitle: json["list_title"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "additional": additional.toJson(),
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "links": links.toJson(),
+        "meta": meta.toJson(),
+        "list_title": listTitle,
+    };
+}
+
+class Additional {
+    String listTitle;
+
+    Additional({
+        required this.listTitle,
+    });
+
+    factory Additional.fromJson(Map<String, dynamic> json) => Additional(
+        listTitle: json["list_title"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "list_title": listTitle,
+    };
+}
+
+class Datum {
   String title;
   String image;
   String province;
@@ -22,7 +70,7 @@ class EcolodgeModel {
   double? dollarEquivalent;
   String? currency;
 
-  EcolodgeModel({
+    Datum({
     required this.title,
     required this.image,
     required this.province,
@@ -38,7 +86,7 @@ class EcolodgeModel {
     required this.currency,
   });
 
-  factory EcolodgeModel.fromJson(Map<String, dynamic> json) => EcolodgeModel(
+    factory Datum.fromJson(Map<String, dynamic> json) => Datum(
     title: json["title"],
     image: json["image"],
     province: json["province"],
@@ -54,4 +102,115 @@ class EcolodgeModel {
     currency: json["currency"],
   );
 
+    Map<String, dynamic> toJson() => {
+        "title": title,
+        "image": image,
+        "province": province,
+        "city": city,
+        "village": village,
+        "address": address,
+        "url": url,
+        "min_price": minPrice,
+        "unit_price": unitPrice,
+        "max_discount_percent": maxDiscountPercent,
+        "max_discount_price": maxDiscountPrice,
+        "dollar_equivalent": dollarEquivalent,
+        "currency": currency,
+    };
+}
+
+class Links {
+    String first;
+    String last;
+    dynamic prev;
+    String next;
+
+    Links({
+        required this.first,
+        required this.last,
+        required this.prev,
+        required this.next,
+    });
+
+    factory Links.fromJson(Map<String, dynamic> json) => Links(
+        first: json["first"],
+        last: json["last"],
+        prev: json["prev"],
+        next: json["next"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "first": first,
+        "last": last,
+        "prev": prev,
+        "next": next,
+    };
+}
+
+class Meta {
+    int currentPage;
+    int from;
+    int lastPage;
+    List<Link> links;
+    String path;
+    int perPage;
+    int to;
+    int total;
+
+    Meta({
+        required this.currentPage,
+        required this.from,
+        required this.lastPage,
+        required this.links,
+        required this.path,
+        required this.perPage,
+        required this.to,
+        required this.total,
+    });
+
+    factory Meta.fromJson(Map<String, dynamic> json) => Meta(
+        currentPage: json["current_page"],
+        from: json["from"],
+        lastPage: json["last_page"],
+        links: List<Link>.from(json["links"].map((x) => Link.fromJson(x))),
+        path: json["path"],
+        perPage: json["per_page"],
+        to: json["to"],
+        total: json["total"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "current_page": currentPage,
+        "from": from,
+        "last_page": lastPage,
+        "links": List<dynamic>.from(links.map((x) => x.toJson())),
+        "path": path,
+        "per_page": perPage,
+        "to": to,
+        "total": total,
+    };
+}
+
+class Link {
+    String? url;
+    String label;
+    bool active;
+
+    Link({
+        required this.url,
+        required this.label,
+        required this.active,
+    });
+
+    factory Link.fromJson(Map<String, dynamic> json) => Link(
+        url: json["url"],
+        label: json["label"],
+        active: json["active"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "url": url,
+        "label": label,
+        "active": active,
+    };
 }

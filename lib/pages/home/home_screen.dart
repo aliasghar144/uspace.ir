@@ -16,27 +16,27 @@ import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
-import 'package:uspace_ir/routes/route.dart';
+import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
+import 'package:uspace_ir/testscreen.dart';
 import 'package:uspace_ir/widgets/card_ecolodge.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
 
-
   final HomeController homeController = Get.find();
   final SearchController searchController = Get.find();
   final BaseController baseController = Get.find();
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0,bottom: 25),
+      padding: const EdgeInsets.only(top: 15.0, bottom: 25),
       child: SizedBox(
         width: Get.width,
         child: Column(
           children: [
             retry(),
+            IconButton(onPressed: (){Get.to(TestScreen());}, icon: Icon(Icons.height)),
             mainGallery(),
             const SizedBox(
               height: 20,
@@ -112,9 +112,9 @@ class HomeScreen extends StatelessWidget {
                               width: MediaQuery.of(context).size.width,
                               height: 220,
                               child: InkWell(
-                                borderRadius:BorderRadius.circular(20),
-                                onTap:() {
-                                  mainGalleryType(homeController.mainGalleryList.value!.data[index].type,index);
+                                borderRadius: BorderRadius.circular(20),
+                                onTap: () {
+                                  mainGalleryType(homeController.mainGalleryList.value!.data[index].type, index);
                                 },
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(25),
@@ -126,36 +126,41 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            homeController.mainGalleryList.value!.data[index].caption ==  '' ? const SizedBox() : Positioned(
-                                right: 30,
-                                bottom: 18,
-                                child: ClipRRect(
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 0.6, sigmaY: 0.6),
-                                    child: Container(
-                                      padding:const EdgeInsets.symmetric(horizontal: 8,vertical:5),
-                                      decoration:BoxDecoration(
-                                        borderRadius:BorderRadius.circular(12),
-                                        color:Colors.black.withOpacity(0.45),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset('assets/icons/location_small_pin_ic.svg', width: 18,
-                                              color: Colors.white,),
-                                          const SizedBox(
-                                            width: 5,
+                            homeController.mainGalleryList.value!.data[index].caption == ''
+                                ? const SizedBox()
+                                : Positioned(
+                                    right: 30,
+                                    bottom: 18,
+                                    child: ClipRRect(
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(sigmaX: 0.6, sigmaY: 0.6),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(12),
+                                            color: Colors.black.withOpacity(0.45),
                                           ),
-                                          Text(
-                                            homeController.mainGalleryList.value!.data[index].caption,
-                                            style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              SvgPicture.asset(
+                                                'assets/icons/location_small_pin_ic.svg',
+                                                width: 18,
+                                                color: Colors.white,
+                                              ),
+                                              const SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                homeController.mainGalleryList.value!.data[index].caption,
+                                                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
+                                              ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                )),
+                                    )),
                           ],
                         );
                       },
@@ -179,7 +184,7 @@ class HomeScreen extends StatelessWidget {
                         curve: Curves.easeInOut,
                       );
                       homeController.currentPage.value = index;
-                    } ,
+                    },
                     controller: homeController.mainGalleryController,
                     count: homeController.mainGalleryList.value!.data.length,
                     effect: const JumpingDotEffect(dotHeight: 6, dotWidth: 6, dotColor: Color(0xffD9D9D9), activeDotColor: AppColors.mainColor),
@@ -190,120 +195,133 @@ class HomeScreen extends StatelessWidget {
 
   Widget categories() {
     return Obx(() => Column(children: [
-          if (homeController.categories.isEmpty|| homeController.loading.value) SizedBox(
-                  height: 100,
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: ListView.builder(
+          if (homeController.categories.isEmpty || homeController.loading.value)
+            SizedBox(
+              height: 100,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: 4,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      width: 85,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Shimmer.fromColors(
+                            baseColor: Colors.grey.shade300,
+                            highlightColor: Colors.grey.shade100,
+                            child: Container(
+                              width: 45,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            )
+          else
+            SizedBox(
+              height: 100,
+              child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       physics: const BouncingScrollPhysics(),
-                      itemCount: 4,
+                      itemCount: homeController.categories.length,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         return SizedBox(
                           width: 85,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Shimmer.fromColors(
-                                baseColor: Colors.grey.shade300,
-                                highlightColor: Colors.grey.shade100,
-                                child: Container(
-                                  width: 60,
-                                  height: 60,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(50),
-                                    color: Colors.white,
+                          child: InkWell(
+                            onTap: () {
+                              searchController.categoryId.value = (homeController.categories[index]['url']).split('cat=').last;
+                              searchController.categoryTitle.value = (homeController.categories[index]['title']);
+                              searchController.searchWithFilter('');
+                              baseController.pageIndex.value = 2;
+
+                              //go to first of screen
+                              searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
+                            },
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    width: 60,
+                                    height: 60,
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50),
+                                        child: CachedNetworkImage(
+                                          imageUrl: homeController.categories[index]['image'],
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                        ))),
+                                const SizedBox(height: 4),
+                                Expanded(
+                                  child: Text(
+                                    homeController.categories[index]['title'],
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10.sp),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              Shimmer.fromColors(
-                                baseColor: Colors.grey.shade300,
-                                highlightColor: Colors.grey.shade100,
-                                child: Container(
-                                  width: 45,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
-                      },
-                    ),
-                  ),
-                ) else SizedBox(
-                  height: 100,
-                  child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: homeController.categories.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return SizedBox(
-                              width: 85,
-                              child: InkWell(
-                                onTap:(){
-                                  searchController.categoryId.value = (homeController.categories[index]['url']).split('cat=').last;
-                                  searchController.categoryTitle.value = (homeController.categories[index]['title']);
-                                  searchController.searchWithFilter('');
-                                  baseController.pageIndex.value = 2;
-
-                                  //go to first of screen
-                                  searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
-                                },
-                                splashColor: Colors.transparent,
-                                highlightColor: Colors.transparent,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize:MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                        width: 60,
-                                        height: 60,
-                                        child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(50),
-                                            child: CachedNetworkImage(
-                                              imageUrl: homeController.categories[index]['image'],
-                                              fit: BoxFit.cover,
-                                              errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                            ))),
-                                    const SizedBox(height: 4),
-                                    Expanded(
-                                      child: Text(
-                                        homeController.categories[index]['title'],
-                                        textAlign: TextAlign.center,
-                                        maxLines: 2,
-                                        style: Theme.of(context).textTheme.labelSmall!.copyWith(fontSize: 10.sp),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          })),
-                ),
+                      })),
+            ),
         ]));
   }
 
   Widget newestEcolodge() {
     return Column(
-      crossAxisAlignment:CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Text(
-            "رزرو اقامتگاه بوم گردی،هتل سنتی و کلبه",
+          child: Obx(() => homeController.newestEcolodge.value == null
+              ? Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+              width: MediaQuery.of(Get.context!).size.width / 3,
+              height: 12,
+            ),
+          )
+              : Text(
+            homeController.newestEcolodge.value!.additional.listTitle,
             style: Theme.of(Get.context!).textTheme.bodyMedium,
-          ),
+          ),)
         ),
         const SizedBox(
           height: 8,
@@ -317,10 +335,10 @@ class HomeScreen extends StatelessWidget {
                   scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
                   allowImplicitScrolling: true,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: homeController.newestEcolodgeList.isEmpty ? 3 : homeController.newestEcolodgeList.length,
+                  itemCount: homeController.newestEcolodge.value == null ? 3 : homeController.newestEcolodge.value!.data.length,
                   controller: homeController.newestEcolodgeController,
                   itemBuilder: (context, index) {
-                    if (homeController.newestEcolodgeList.isEmpty|| homeController.loading.value) {
+                    if (homeController.newestEcolodge.value == null || homeController.loading.value) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
@@ -377,19 +395,18 @@ class HomeScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             InkWell(
-                              onTap: ()  {
-                                print(homeController.newestEcolodgeList[index].url);
-                                Get.toNamed('${Routes.reservationScreen}/${homeController.newestEcolodgeList[index].url}',arguments: {
-                                  'url':homeController.newestEcolodgeList[index].url
-                                });
+                              onTap: () {
+                                print(homeController.newestEcolodge.value!.data[index].url);
 
-                                // Get.to(() {
-                                //   return ReservationScreen(url: homeController.newestEcolodgeList[index].url,);
-                                // } );
+                                Get.to(() {
+                                  return ReservationScreen(
+                                    url: homeController.newestEcolodge.value!.data[index].url,
+                                  );
+                                });
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(
-                                imageUrl: homeController.newestEcolodgeList[index].image,
+                                imageUrl: homeController.newestEcolodge.value!.data[index].image,
                                 fit: BoxFit.cover,
                                 imageBuilder: (context, imageProvider) {
                                   return Container(
@@ -434,7 +451,7 @@ class HomeScreen extends StatelessWidget {
                                                   child: IconButton(
                                                 splashRadius: 18,
                                                 onPressed: () {
-                                                  if (index != homeController.newestEcolodgeList.length) {
+                                                  if (index != homeController.newestEcolodge.value!.data.length) {
                                                     homeController.newestEcolodgeController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                                                   }
                                                 },
@@ -474,13 +491,13 @@ class HomeScreen extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                                             child: Text(
-                                              homeController.newestEcolodgeList[index].minPrice == 0 ?'تماس با پشتیبانی':'${homeController.newestEcolodgeList[index].minPrice?.toString().beToman().seRagham() ?? '0'} ${checkCurrency(homeController.newestEcolodgeList[index].currency)}/ ${homeController.newestEcolodgeList[index].unitPrice}',
+                                              homeController.newestEcolodge.value!.data[index].minPrice == 0 ? 'تماس با پشتیبانی' : '${homeController.newestEcolodge.value!.data[index].minPrice?.toString().beToman().seRagham() ?? '0'} ${checkCurrency(homeController.newestEcolodge.value!.data[index].currency)}/ ${homeController.newestEcolodge.value!.data[index].unitPrice}',
                                               maxLines: 1,
                                               style: Theme.of(context).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
                                             ),
                                           ),
                                         ),
-                                        if (homeController.newestEcolodgeList[index].maxDiscountPercent != null && homeController.newestEcolodgeList[index].maxDiscountPercent! > 0)
+                                        if (homeController.newestEcolodge.value!.data[index].maxDiscountPercent != null && homeController.newestEcolodge.value!.data[index].maxDiscountPercent! > 0)
                                           Positioned(
                                             right: Get.width * 0.10,
                                             top: 0,
@@ -488,7 +505,7 @@ class HomeScreen extends StatelessWidget {
                                               height: 25,
                                               width: 40,
                                               decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12))),
-                                              child: Center(child: Text('${homeController.newestEcolodgeList[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
+                                              child: Center(child: Text('${homeController.newestEcolodge.value!.data[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
                                             ),
                                           )
                                         else
@@ -503,7 +520,7 @@ class HomeScreen extends StatelessWidget {
                             const SizedBox(
                               height: 20,
                             ),
-                            Text(homeController.newestEcolodgeList[index].title, style: Theme.of(context).textTheme.displayMedium),
+                            Text(homeController.newestEcolodge.value!.data[index].title, style: Theme.of(context).textTheme.displayMedium),
                             const SizedBox(
                               height: 8,
                             ),
@@ -521,7 +538,7 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Text(
-                                    '${homeController.newestEcolodgeList[index].province}, ${homeController.newestEcolodgeList[index].city}, ${homeController.newestEcolodgeList[index].address}',
+                                    '${homeController.newestEcolodge.value!.data[index].province}, ${homeController.newestEcolodge.value!.data[index].city}, ${homeController.newestEcolodge.value!.data[index].address}',
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.right,
                                     maxLines: 2,
@@ -543,20 +560,26 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget specialPlaces() {
-    return Column(children: [
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              "اقامتگاه های خاص",
-              style: Theme.of(Get.context!).textTheme.bodyMedium,
-            ),
-          ],
-        ),
+        child: Obx(() => homeController.specialPlacesList.isEmpty ? Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+            width: MediaQuery.of(Get.context!).size.width / 3,
+            height: 12,
+          ),
+        )
+:        Text(
+          "اقامتگاه های خاص",
+          style: Theme.of(Get.context!).textTheme.bodyMedium,
+        )),
       ),
-      const SizedBox(height:20),
+      const SizedBox(height: 20),
       SizedBox(
         width: MediaQuery.of(Get.context!).size.width,
         height: 220,
@@ -571,7 +594,7 @@ class HomeScreen extends StatelessWidget {
                   return const SizedBox(width: 15);
                 },
                 itemBuilder: (context, index) {
-                  if (homeController.specialPlacesList.isEmpty|| homeController.loading.value) {
+                  if (homeController.specialPlacesList.isEmpty || homeController.loading.value) {
                     return Shimmer.fromColors(
                       baseColor: Colors.grey.shade300,
                       highlightColor: Colors.grey.shade100,
@@ -587,7 +610,7 @@ class HomeScreen extends StatelessWidget {
                   } else {
                     return InkWell(
                       borderRadius: BorderRadius.circular(22),
-                      onTap:(){
+                      onTap: () {
                         searchController.specialPlaceUrl.value = homeController.specialPlacesList[index].url;
                         searchController.specialPlaceTitle.value = homeController.specialPlacesList[index].title;
                         baseController.pageIndex.value = 2;
@@ -601,21 +624,16 @@ class HomeScreen extends StatelessWidget {
                             fit: BoxFit.cover,
                             imageBuilder: (context, imageProvider) {
                               return Container(
-                                constraints: BoxConstraints(
-                                  minWidth: MediaQuery.of(context).size.width / 2.0,
-                                ),
+                                width: Get.width/2,
                                 clipBehavior: Clip.none,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      stops: const [
-                                        0.50,30
-                                      ],
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withOpacity(1),
-                                      ]),
+                                    gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                      0.50,
+                                      30
+                                    ], colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(1),
+                                    ]),
                                     image: DecorationImage(
                                       image: imageProvider,
                                       fit: BoxFit.cover,
@@ -628,10 +646,11 @@ class HomeScreen extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                                       child: Text(
                                         homeController.specialPlacesList[index].title,
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.clip,
                                         style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
-                                      ),)
+                                      ),
+                                    )
                                   ],
                                 ),
                               );
@@ -643,21 +662,16 @@ class HomeScreen extends StatelessWidget {
                             fit: BoxFit.cover,
                             imageBuilder: (context, imageProvider) {
                               return Container(
-                                constraints: BoxConstraints(
-                                  minWidth: MediaQuery.of(context).size.width / 2.0,
-                                ),
+                                width: Get.width/2,
                                 clipBehavior: Clip.none,
                                 decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      stops: const [
-                                        0.80,0.98
-                                      ],
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withOpacity(0.9),
-                                      ]),
+                                    gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                      0.80,
+                                      0.98
+                                    ], colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.9),
+                                    ]),
                                     image: DecorationImage(
                                       opacity: 0,
                                       image: imageProvider,
@@ -671,10 +685,11 @@ class HomeScreen extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
                                       child: Text(
                                         homeController.specialPlacesList[index].title,
-                                        maxLines: 1,
+                                        maxLines: 2,
                                         overflow: TextOverflow.clip,
                                         style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white),
-                                      ),)
+                                      ),
+                                    )
                                   ],
                                 ),
                               );
@@ -693,18 +708,24 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget bestPlaces() {
-    return Column(children: [
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
-          mainAxisAlignment:MainAxisAlignment.end,
-          children: [
-            Text(
-              "بهترین شهر های بوم گردی",
-              style: Theme.of(Get.context!).textTheme.bodyMedium,
-            ),
-          ],
-        ),
+        child: Obx(() => homeController.bestPlacesList.isEmpty ? Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+            width: MediaQuery.of(Get.context!).size.width / 3,
+            height: 12,
+          ),
+        )
+            : Text(
+          "بهترین شهر های بوم گردی",
+          style: Theme.of(Get.context!).textTheme.bodyMedium,
+        )),
       ),
       const SizedBox(
         height: 20,
@@ -715,113 +736,119 @@ class HomeScreen extends StatelessWidget {
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: Obx(() => ListView.separated(
-            scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            physics: const BouncingScrollPhysics(),
-            itemCount: homeController.bestPlacesList.isEmpty ? 4 : homeController.bestPlacesList.length,
-            separatorBuilder: (context, index) {
-              return const SizedBox(width: 15);
-            },
-            itemBuilder: (context, index) {
-              if (homeController.bestPlacesList.isEmpty|| homeController.loading.value) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-                        width: 110,
-                        height: 115,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Container(
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
-                        width: 55,
-                        height: 8,
-                      ),
-                    ),
-                  ],
-                );
-              } else {
-                return InkWell(
-                  onTap:(){
-                    searchController.cityTitle.value = homeController.bestPlacesList[index].title;
-                    searchController.cityUrl.value = homeController.bestPlacesList[index].url;
-                    searchController.searchWithFilter('');
-                    baseController.pageIndex.value = 2;
-                    searchController.searchScrollController.animateTo(0.0, duration: const Duration(microseconds: 1), curve: Curves.linear);
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        alignment: Alignment.topRight,
+                scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                physics: const BouncingScrollPhysics(),
+                itemCount: homeController.bestPlacesList.isEmpty ? 4 : homeController.bestPlacesList.length,
+                separatorBuilder: (context, index) {
+                  return const SizedBox(width: 15);
+                },
+                itemBuilder: (context, index) {
+                  if (homeController.bestPlacesList.isEmpty || homeController.loading.value) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                            width: 110,
+                            height: 115,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(5)),
+                            width: 55,
+                            height: 8,
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return InkWell(
+                      onTap: () {
+                        searchController.cityTitle.value = homeController.bestPlacesList[index].title;
+                        searchController.cityUrl.value = homeController.bestPlacesList[index].url;
+                        searchController.searchWithFilter('');
+                        baseController.pageIndex.value = 2;
+                        searchController.searchScrollController.animateTo(0.0, duration: const Duration(microseconds: 1), curve: Curves.linear);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                              height: 110,
-                              width: 115,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: CachedNetworkImage(
-                                    imageUrl: homeController.bestPlacesList[index].image,
-                                    fit: BoxFit.cover,
-                                    errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                                  ))),
-                          Positioned(
-                              right: 10,
-                              child: Container(
-                                width: 23,
-                                height: 27,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(8),
-                                    bottomLeft: Radius.circular(8),
-                                  ),
-                                  color: AppColors.mainColor,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3.5),
-                                  child: SvgPicture.asset('assets/icons/medal_ic.svg'),
-                                ),
-                              ))
+                          Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              SizedBox(
+                                  height: 110,
+                                  width: 115,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: CachedNetworkImage(
+                                        imageUrl: homeController.bestPlacesList[index].image,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                      ))),
+                              Positioned(
+                                  right: 10,
+                                  child: Container(
+                                    width: 23,
+                                    height: 27,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomRight: Radius.circular(8),
+                                        bottomLeft: Radius.circular(8),
+                                      ),
+                                      color: AppColors.mainColor,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3.5),
+                                      child: SvgPicture.asset('assets/icons/medal_ic.svg'),
+                                    ),
+                                  ))
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Expanded(child: Text(homeController.bestPlacesList[index].title, maxLines: 2, style: Theme.of(Get.context!).textTheme.labelMedium))
                         ],
                       ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Expanded(child: Text(homeController.bestPlacesList[index].title, maxLines: 2, style: Theme.of(Get.context!).textTheme.labelMedium))
-                    ],
-                  ),
-                );
-              }
-            },
-          )),
+                    );
+                  }
+                },
+              )),
         ),
       )
     ]);
   }
 
   Widget seasonalSuggest() {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min, children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              "پیشنهاد های فصلی",
-              style: Theme.of(Get.context!).textTheme.bodyMedium,
-            ),
-          ],
-        ),
+        child: Obx(() => homeController.sessionSuggest.value == null ? Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+            width: MediaQuery.of(Get.context!).size.width / 3,
+            height: 12,
+          ),
+        )
+            :        Text(
+          "پیشنهاد های فصلی",
+          style: Theme.of(Get.context!).textTheme.bodyMedium,
+        )),
       ),
       const SizedBox(
         height: 10,
@@ -835,12 +862,12 @@ class HomeScreen extends StatelessWidget {
               scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               physics: const BouncingScrollPhysics(),
-              itemCount: homeController.sessionSuggestList.isEmpty ? 3 : homeController.sessionSuggestList.length,
+              itemCount: homeController.sessionSuggest.value == null ? 3 : homeController.sessionSuggest.value!.data.length,
               separatorBuilder: (context, index) {
                 return const SizedBox(width: 18);
               },
               itemBuilder: (context, index) {
-                if (homeController.sessionSuggestList.isEmpty || homeController.loading.value) {
+                if (homeController.sessionSuggest.value == null || homeController.loading.value) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: SizedBox(
@@ -940,9 +967,10 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return CardEcolodge(ecolodge: homeController.sessionSuggestList[index],);
+                  return CardEcolodge(
+                    ecolodge: homeController.sessionSuggest.value!.data[index],
+                  );
                 }
-
               })),
         ),
       )
@@ -950,17 +978,28 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget bestSellersEcolodge() {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min, children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
+        child: Obx(() => homeController.bestSellersEcolodge.value == null ? Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+            width: MediaQuery.of(Get.context!).size.width / 3,
+            height: 12,
+          ),
+        )
+            : Row(
           children: [
             TextButton(
               onPressed: () {
                 searchController.sortByValue.value = 'پرفروش ترین';
                 searchController.searchWithFilter('');
-                baseController.pageIndex.value =2;
-                searchController.searchScrollController.animateTo(0, duration:const Duration(microseconds: 1), curve: Curves.linear);
+                baseController.pageIndex.value = 2;
+                searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
               },
               child: Text(
                 "مشاهده همه",
@@ -973,7 +1012,7 @@ class HomeScreen extends StatelessWidget {
               style: Theme.of(Get.context!).textTheme.bodyMedium,
             ),
           ],
-        ),
+        )),
       ),
       const SizedBox(
         height: 10,
@@ -987,12 +1026,12 @@ class HomeScreen extends StatelessWidget {
               scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               physics: const BouncingScrollPhysics(),
-              itemCount: homeController.bestSellersEcolodgeList.isEmpty ? 3 : homeController.bestSellersEcolodgeList.length,
+              itemCount: homeController.bestSellersEcolodge.value == null ? 3 : homeController.bestSellersEcolodge.value!.data.length,
               separatorBuilder: (context, index) {
                 return const SizedBox(width: 18);
               },
               itemBuilder: (context, index) {
-                if (homeController.bestSellersEcolodgeList.isEmpty|| homeController.loading.value) {
+                if (homeController.bestSellersEcolodge.value == null || homeController.loading.value) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: SizedBox(
@@ -1092,9 +1131,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return CardEcolodge(ecolodge: homeController.bestSellersEcolodgeList[index]);
+                  return CardEcolodge(ecolodge: homeController.bestSellersEcolodge.value!.data[index]);
                 }
-
               })),
         ),
       )
@@ -1102,17 +1140,28 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget bestOfferEcolodge() {
-    return Column(mainAxisSize: MainAxisSize.min, children: [
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min, children: [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Row(
+        child: Obx(() => homeController.bestOfferEcolodge.value == null ? Shimmer.fromColors(
+          baseColor: Colors.grey.shade300,
+          highlightColor: Colors.grey.shade100,
+          child: Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+            width: MediaQuery.of(Get.context!).size.width / 3,
+            height: 12,
+          ),
+        )
+            :        Row(
           children: [
             TextButton(
               onPressed: () {
                 searchController.sortByValue.value = 'بیشترین تخفیف';
                 searchController.searchWithFilter('');
-                baseController.pageIndex.value =2;
-                searchController.searchScrollController.animateTo(0, duration:const Duration(microseconds: 1), curve: Curves.linear);
+                baseController.pageIndex.value = 2;
+                searchController.searchScrollController.animateTo(0, duration: const Duration(microseconds: 1), curve: Curves.linear);
               },
               child: Text(
                 "مشاهده همه",
@@ -1125,7 +1174,7 @@ class HomeScreen extends StatelessWidget {
               style: Theme.of(Get.context!).textTheme.bodyMedium,
             ),
           ],
-        ),
+        )),
       ),
       const SizedBox(
         height: 10,
@@ -1139,12 +1188,12 @@ class HomeScreen extends StatelessWidget {
               scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               physics: const BouncingScrollPhysics(),
-              itemCount: homeController.bestOfferEcolodgeList.isEmpty ? 3 : homeController.bestOfferEcolodgeList.length,
+              itemCount: homeController.bestOfferEcolodge.value == null ? 3 : homeController.bestOfferEcolodge.value!.data.length,
               separatorBuilder: (context, index) {
                 return const SizedBox(width: 18);
               },
               itemBuilder: (context, index) {
-                if (homeController.bestOfferEcolodgeList.isEmpty|| homeController.loading.value) {
+                if (homeController.bestOfferEcolodge.value == null || homeController.loading.value) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
                     child: SizedBox(
@@ -1192,7 +1241,6 @@ class HomeScreen extends StatelessWidget {
                                         SvgPicture.asset(
                                           'assets/icons/location_small_pin_ic.svg',
                                           color: AppColors.disabledIcon,
-
                                           width: 13,
                                         ),
                                         const SizedBox(
@@ -1219,7 +1267,6 @@ class HomeScreen extends StatelessWidget {
                                         SvgPicture.asset(
                                           'assets/icons/price_ic.svg',
                                           color: AppColors.disabledIcon,
-
                                           width: 13,
                                         ),
                                         const SizedBox(
@@ -1246,7 +1293,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                 } else {
-                  return CardEcolodge(ecolodge: homeController.bestOfferEcolodgeList[index]);
+                  return CardEcolodge(ecolodge: homeController.bestOfferEcolodge.value!.data[index]);
                 }
               })),
         ),
@@ -1262,17 +1309,9 @@ class HomeScreen extends StatelessWidget {
       ),
       Wrap(
         alignment: WrapAlignment.center,
-        children: [
-          progress(footer: 'روستا های تحت پوشش', centerText: '+755', startColor: const Color(0xff63b9ff), endColor: const Color(0xff3451FF), percent: Random.secure().nextDouble() * (0.8)),
-          const SizedBox(width:5),
-          progress(footer: 'شهر های تحت پوشش', centerText: '+450', startColor: const Color(0xffFFD551), endColor: const Color(0xffFF4B34), percent: Random.secure().nextDouble() * (0.8)),
-          const SizedBox(width:5),
-          progress(footer: 'اقامتگاه های فعال', centerText: '+1976', startColor: const Color(0xff6AC873), endColor: const Color(0xffF9841A), percent: Random.secure().nextDouble() * (0.8)),
-          const SizedBox(width:5),
-          progress(centerText: '+148400', footer: 'تعداد کل سفارشات', startColor: const Color(0xffE42C64), endColor: const Color(0xff614AD3), percent: Random.secure().nextDouble() * (0.8))
-        ],
+        runSpacing: 10,
+        children: [progress(footer: 'روستا های تحت پوشش', centerText: '+755', startColor: const Color(0xff63b9ff), endColor: const Color(0xff3451FF), percent: Random.secure().nextDouble() * (0.8)), const SizedBox(width: 5), progress(footer: 'شهر های تحت پوشش', centerText: '+450', startColor: const Color(0xffFFD551), endColor: const Color(0xffFF4B34), percent: Random.secure().nextDouble() * (0.8)), const SizedBox(width: 5), progress(footer: 'اقامتگاه های فعال', centerText: '+1976', startColor: const Color(0xff6AC873), endColor: const Color(0xffF9841A), percent: Random.secure().nextDouble() * (0.8)), const SizedBox(width: 5), progress(centerText: '+148400', footer: 'تعداد کل سفارشات', startColor: const Color(0xffE42C64), endColor: const Color(0xff614AD3), percent: Random.secure().nextDouble() * (0.8))],
       ),
-
     ]);
   }
 
@@ -1293,7 +1332,6 @@ class HomeScreen extends StatelessWidget {
           : const SizedBox(),
     );
   }
-
 
   progress({
     required String footer,
@@ -1335,8 +1373,8 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  mainGalleryType(String type,int index) {
-    switch(type){
+  mainGalleryType(String type, int index) {
+    switch (type) {
       case 'category':
         searchController.categoryId.value = homeController.mainGalleryList.value!.data[index].destination;
         searchController.categoryTitle.value = homeController.mainGalleryList.value!.data[index].caption;
