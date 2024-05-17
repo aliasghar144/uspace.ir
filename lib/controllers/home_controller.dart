@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:uni_links/uni_links.dart';
 import 'package:uspace_ir/constance/constance.dart';
+import 'package:uspace_ir/models/GeneralInfoModel.dart';
 import 'package:uspace_ir/models/best_places_model.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
 import 'package:uspace_ir/models/main_gallery_model.dart';
@@ -40,14 +41,8 @@ class HomeController extends GetxController {
     }
     initUniLinks();
 
-    fetchMainGallery();
-    fetchCategories();
-    fetchNewestEcolodge();
-    fetchSpecialPlaces();
-    fetchBestPlaces();
-    fetchSessionSuggest();
-    fetchBestSellersEcolodge();
-    fetchBestOfferEcolodge();
+    fetchMainData();
+
     super.onInit();
   }
 
@@ -66,6 +61,7 @@ class HomeController extends GetxController {
   final sessionSuggest = Rxn<EcolodgeModel>();
   final bestSellersEcolodge = Rxn<EcolodgeModel>();
   final bestOfferEcolodge = Rxn<EcolodgeModel>();
+  final generalInfo = Rxn<GeneralInfoModel>();
 
 
   List<BestPlacesModel> bestPlacesList = <BestPlacesModel>[].obs;
@@ -210,7 +206,6 @@ class HomeController extends GetxController {
     }
   }
 
-
   fetchSpecialPlaces()async{
     try{
       loading.value = true;
@@ -228,9 +223,38 @@ class HomeController extends GetxController {
     }
   }
 
+  fetchGeneralInfo()async{
+    try{
+      loading.value = true;
+      var url = Uri.parse('$mainUrl/general-info');
+      var response = await http.get(url,headers: requestHeaders);
+      if(response.statusCode == 200){
+        generalInfo.value = generalInfoModelFromJson(response.body);
+        print(generalInfo.value);
+        loading.value = false;
+      }
+    }catch (e){
+      print('ERR=====best Place=======> $e');
+      loading.value = false;
+
+    }
+  }
+
   retryConnection(){
     retry.value = false;
     onInit();
+  }
+
+  fetchMainData() {
+    fetchMainGallery();
+    fetchCategories();
+    fetchNewestEcolodge();
+    fetchSpecialPlaces();
+    fetchBestPlaces();
+    fetchSessionSuggest();
+    fetchBestSellersEcolodge();
+    fetchBestOfferEcolodge();
+    fetchGeneralInfo();
   }
 
 

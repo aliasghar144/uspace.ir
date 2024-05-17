@@ -155,6 +155,8 @@ class RoomReservationScreen extends StatelessWidget {
                       child: IconButton(
                         onPressed: () {
                           Get.to(ImageView(
+                            imageList: null,
+                            userImages: false,
                             index: 0,
                             url: reservationController.room.value!.data.url,
                             image:reservationController.room.value!.data.rooms[roomsIndex].thumbImage

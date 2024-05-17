@@ -55,7 +55,6 @@ class Data {
   List<ImageList> imageList;
   Rules rules;
   List<DataFeature> features;
-  List<Comment> comments;
   List<CommentsFile> commentsFiles;
     EcolodgeSuggestions ecolodgeSuggestions;
   List<Room> rooms;
@@ -91,7 +90,6 @@ class Data {
     required this.imageList,
     required this.rules,
     required this.features,
-    required this.comments,
     required this.commentsFiles,
     required this.ecolodgeSuggestions,
     required this.rooms,
@@ -128,7 +126,6 @@ class Data {
     imageList: List<ImageList>.from(json["image_list"].map((x) => ImageList.fromJson(x))),
     rules: Rules.fromJson(json["rules"]),
     features: List<DataFeature>.from(json["features"].map((x) => DataFeature.fromJson(x))),
-    comments: List<Comment>.from(json["comments"].map((x) => Comment.fromJson(x))),
     commentsFiles: List<CommentsFile>.from(json["comments_files"].map((x) => CommentsFile.fromJson(x))),
         ecolodgeSuggestions: EcolodgeSuggestions.fromJson(json["ecolodge_suggestions"]),
     rooms: List<Room>.from(json["rooms"].map((x) => Room.fromJson(x))),
@@ -165,7 +162,6 @@ class Data {
     "image_list": List<dynamic>.from(imageList.map((x) => x.toJson())),
     "rules": rules.toJson(),
     "features": List<dynamic>.from(features.map((x) => x.toJson())),
-    "comments": List<dynamic>.from(comments.map((x) => x.toJson())),
     "comments_files": List<dynamic>.from(commentsFiles.map((x) => x.toJson())),
         "ecolodge_suggestions": ecolodgeSuggestions.toJson(),
     "rooms": List<dynamic>.from(rooms.map((x) => x.toJson())),
@@ -213,114 +209,6 @@ class AvgFbRate {
     "title": title,
     "value": value,
     "number_feedback": numberFeedback,
-  };
-}
-
-class Comment {
-  String name;
-  DateTime date;
-  String? comment;
-  String show;
-  String type;
-  List<Reply> replies;
-  String? durationReserve;
-  Option? option1;
-  Option? option2;
-  Option? option3;
-  Option? option4;
-  Option? option5;
-
-  Comment({
-    required this.name,
-    required this.date,
-    required this.comment,
-    required this.show,
-    required this.type,
-    required this.replies,
-    this.durationReserve,
-    this.option1,
-    this.option2,
-    this.option3,
-    this.option4,
-    this.option5,
-  });
-
-  factory Comment.fromJson(Map<String, dynamic> json) => Comment(
-    name: json["name"],
-    date: DateTime.parse(json["date"]),
-    comment: json["comment"],
-    show: json["show"],
-    type: json["type"],
-    replies: List<Reply>.from(json["replies"].map((x) => Reply.fromJson(x))),
-    durationReserve: json["duration_reserve"],
-    option1: json["option1"] == null ? null : Option.fromJson(json["option1"]),
-    option2: json["option2"] == null ? null : Option.fromJson(json["option2"]),
-    option3: json["option3"] == null ? null : Option.fromJson(json["option3"]),
-    option4: json["option4"] == null ? null : Option.fromJson(json["option4"]),
-    option5: json["option5"] == null ? null : Option.fromJson(json["option5"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "date": date.toIso8601String(),
-    "comment": comment,
-    "show": show,
-    "type": type,
-    "replies": List<dynamic>.from(replies.map((x) => x.toJson())),
-    "duration_reserve": durationReserve,
-    "option1": option1?.toJson(),
-    "option2": option2?.toJson(),
-    "option3": option3?.toJson(),
-    "option4": option4?.toJson(),
-    "option5": option5?.toJson(),
-  };
-}
-
-class Option {
-  String title;
-  String? point;
-
-  Option({
-    required this.title,
-    required this.point,
-  });
-
-  factory Option.fromJson(Map<String, dynamic> json) => Option(
-    title: json["title"],
-    point: json["point"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "title": title,
-    "point": point,
-  };
-}
-
-class Reply {
-  String? replier;
-  String? replyComment;
-  String? replyDate;
-  String? replyAvatar;
-
-  Reply({
-     this.replier,
-     this.replyComment,
-     this.replyDate,
-     this.replyAvatar,
-  });
-
-  factory Reply.fromJson(Map<String, dynamic> json) => Reply(
-    replier: json["replier"],
-    replyComment: json["reply_comment"],
-    replyDate: json["reply_date"],
-    replyAvatar: json["reply_avatar"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "replier": replier,
-    "reply_comment": replyComment,
-        "reply_date": replyDate,
-    "reply_avatar": replyAvatar,
   };
 }
 

@@ -157,7 +157,7 @@ class SearchScreen extends StatelessWidget {
                           icon: const Icon(Icons.tune_rounded),
                           onPressed: () {
                             searchController.fetchAllPlaces();
-                            Get.to(() => FilterScreen(), transition: Transition.leftToRight)?.then((value) {
+                            Get.to(() => FilterScreen())?.then((value) {
                               if (searchController.needSearchAgain.value) {
                                 searchController.searchWithFilter(searchController.searchTextFieldController.text);
                               }

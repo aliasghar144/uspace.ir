@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -19,6 +18,7 @@ import 'package:uspace_ir/controllers/search_controller.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 import 'package:uspace_ir/testscreen.dart';
 import 'package:uspace_ir/widgets/card_ecolodge.dart';
+import 'package:uspace_ir/widgets/custom_progress.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -36,7 +36,6 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             retry(),
-            IconButton(onPressed: (){Get.to(TestScreen());}, icon: Icon(Icons.height)),
             mainGallery(),
             const SizedBox(
               height: 20,
@@ -1307,11 +1306,78 @@ class HomeScreen extends StatelessWidget {
       const SizedBox(
         height: 20,
       ),
-      Wrap(
+      Obx(() => homeController.generalInfo.value == null ? Wrap(
         alignment: WrapAlignment.center,
         runSpacing: 10,
-        children: [progress(footer: 'روستا های تحت پوشش', centerText: '+755', startColor: const Color(0xff63b9ff), endColor: const Color(0xff3451FF), percent: Random.secure().nextDouble() * (0.8)), const SizedBox(width: 5), progress(footer: 'شهر های تحت پوشش', centerText: '+450', startColor: const Color(0xffFFD551), endColor: const Color(0xffFF4B34), percent: Random.secure().nextDouble() * (0.8)), const SizedBox(width: 5), progress(footer: 'اقامتگاه های فعال', centerText: '+1976', startColor: const Color(0xff6AC873), endColor: const Color(0xffF9841A), percent: Random.secure().nextDouble() * (0.8)), const SizedBox(width: 5), progress(centerText: '+148400', footer: 'تعداد کل سفارشات', startColor: const Color(0xffE42C64), endColor: const Color(0xff614AD3), percent: Random.secure().nextDouble() * (0.8))],
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              width: Get.width/4.5,
+              height: Get.width/4.5,
+              decoration:BoxDecoration(
+                border: Border.all(width: 3,color: AppColors.grayColor),
+                color: Colors.transparent,
+                shape:BoxShape.circle,
+              ),
+            ),
+          ),
+          const SizedBox(width: 4,),
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              width: Get.width/4.5,
+              height: Get.width/4.5,
+              decoration:BoxDecoration(
+                border: Border.all(width: 3,color: AppColors.grayColor),
+                color: Colors.transparent,
+                shape:BoxShape.circle,
+              ),
+            ),
+          ),
+          const SizedBox(width: 4,),
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              width: Get.width/4.5,
+              height: Get.width/4.5,
+              decoration:BoxDecoration(
+                border: Border.all(width: 3,color: AppColors.grayColor),
+                color: Colors.transparent,
+                shape:BoxShape.circle,
+              ),
+            ),
+          ),
+          const SizedBox(width: 4,),
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              width: Get.width/4.5,
+              height: Get.width/4.5,
+              decoration:BoxDecoration(
+                border: Border.all(width: 3,color: AppColors.grayColor),
+                color: Colors.transparent,
+                shape:BoxShape.circle,
+              ),
+            ),
+          ),
+          ]
+      ):       Wrap(
+        alignment: WrapAlignment.center,
+        runSpacing: 10,
+        children: [
+          customProgress(footer: homeController.generalInfo.value!.totalVillageNum!.title ?? '', centerText: '+${homeController.generalInfo.value!.totalVillageNum!.value.toString()}', startColor: const Color(0xff63b9ff), endColor: const Color(0xff3451FF), percent: 1), const SizedBox(width: 5),
+          customProgress(footer: homeController.generalInfo.value!.totalCityNum!.title ??'', centerText: '+${homeController.generalInfo.value!.totalCityNum!.value.toString()}', startColor: const Color(0xffFFD551), endColor: const Color(0xffFF4B34), percent: 1),
+          const SizedBox(width: 5),
+          customProgress(footer: homeController.generalInfo.value!.activeEcolodges!.title ?? '', centerText: '+${homeController.generalInfo.value!.activeEcolodges!.value.toString()}', startColor: const Color(0xff6AC873), endColor: const Color(0xffF9841A), percent: 1),
+          const SizedBox(width: 5),
+          customProgress(centerText: '+${homeController.generalInfo.value!.totalRsv!.value.toString()}', footer: homeController.generalInfo.value!.totalRsv!.title??'', startColor: const Color(0xffE42C64), endColor: const Color(0xff614AD3), percent: 1)],
       ),
+      )
     ]);
   }
 
@@ -1333,45 +1399,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  progress({
-    required String footer,
-    required String centerText,
-    required Color startColor,
-    required Color endColor,
-    required double percent,
-  }) {
-    return Column(
-      children: [
-        CircularPercentIndicator(
-          center: Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: const Color(0xff9e9e9e).withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 30,
-                  offset: const Offset(0, 0), // changes position of shadow
-                ),
-              ]),
-              child: Text(
-                centerText,
-                style: Theme.of(Get.context!).textTheme.displaySmall!.copyWith(color: const Color(0xff737373)),
-              )),
-          radius: 40,
-          reverse: true,
-          circularStrokeCap: CircularStrokeCap.round,
-          footer: Padding(
-            padding: const EdgeInsets.only(top: 10.0),
-            child: Text(footer, style: Theme.of(Get.context!).textTheme.labelSmall),
-          ),
-          percent: percent,
-          lineWidth: 3,
-          backgroundColor: const Color(0xffcbccc466).withOpacity(0.1),
-          startAngle: 180,
-          linearGradient: LinearGradient(colors: [endColor, startColor]),
-        ),
-      ],
-    );
-  }
+
 
   mainGalleryType(String type, int index) {
     switch (type) {

@@ -7,20 +7,27 @@ import 'package:uspace_ir/models/room_reservation_model.dart';
 
 class ImageView extends StatelessWidget {
   final int? index;
+  final bool userImages;
   final String url;
   final String? image;
   final List<ImageList>? imageList;
+  final List<CommentsFile>? commentList;
   ImageView({
     this.index,
     required this.url,
     this.image,
+    this.userImages = true,
     this.imageList,
+    this.commentList,
     Key? key,}) : super(key: key);
 
   final RxBool horizontalImage = true.obs;
 
   @override
   Widget build(BuildContext context) {
+    print(imageList);
+    print(commentList);
+    print(userImages);
     return WillPopScope(
       onWillPop:  () async {
         if (horizontalImage.value) {
@@ -44,14 +51,15 @@ class ImageView extends StatelessWidget {
               Center(
                 child: OrientationBuilder(
                   builder: (context, orientation) {
-                    if(imageList != null){
+                    if(imageList != null || userImages){
                       return PageView.builder(
                         reverse: true,
                         physics: const BouncingScrollPhysics(),
-                        itemCount: imageList!.length,
+                        itemCount: !userImages ? imageList!.length : commentList!.length,
                         controller: PageController(initialPage: index == null ?  0 : index!),
                         itemBuilder: (context, index) {
-                          return CachedNetworkImage(imageUrl: 'https://www.uspace.ir/spaces/$url/images/main/${imageList![index].fullImage}',
+                          return CachedNetworkImage(
+                            imageUrl: !userImages ? 'https://www.uspace.ir/spaces/$url/images/main/${imageList![index].fullImage}' : commentList![index].fileName,
                               errorWidget: (context, url, error) {
                                 return Container(
                                   clipBehavior: Clip.none,
@@ -112,13 +120,16 @@ class ImageView extends StatelessWidget {
                   top: 0,
                   child: IconButton(
                     onPressed: () {
-                      if (!horizontalImage.value) {
+                      if (horizontalImage.value) {
+                        Get.forceAppUpdate();
+                        Get.back();
+                      }else{
+                        horizontalImage.value = true;
                         SystemChrome.setPreferredOrientations([
                           DeviceOrientation.portraitUp,
                           DeviceOrientation.portraitDown,
                         ]);
                       }
-                      Get.back();
                     },
                     icon: const Icon(Icons.arrow_back),
                     color: Colors.white,

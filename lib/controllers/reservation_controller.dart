@@ -10,6 +10,7 @@ import 'package:uspace_ir/app/utils/error_handle.dart';
 import 'package:uspace_ir/base_screen.dart';
 import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
+import 'package:uspace_ir/models/comment_model.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
 import 'package:uspace_ir/routes/route.dart';
 
@@ -21,25 +22,33 @@ class ReservationController extends GetxController {
   @override
   void onInit(){
     getMainInfo(roomUrl: url);
+    //declare global key
 
+    // pass it to the desired widget in a widget tree
 
-    // listen to user scroll
-    // mainScrollController.addListener(() {
-    //   // if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
-    //   //   tabIndex.value = 1;
-    //   // }
-    //   if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
-    //     tabIndex.value = 2;
-    //   }else{
-    //     tabIndex.value = 1;
-    //   }
-    //   // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
-    //   //   tabIndex.value = 3;
-    //   // }
-    // });
+    //call _getChildSize method, this should return the size of above SizedBox. Make sure to call this method after the first frame
 
+      mainScrollController.addListener(() {
+       print(mainScrollController.position.pixels);
+
+      // if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
+      //   tabIndex.value = 1;
+      // }
+      // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
+      //   tabIndex.value = 2;
+      // }
+      // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
+      //   tabIndex.value = 3;
+      // }
+    });
 
     super.onInit();
+  }
+
+  Size getChildSize(BuildContext context) {
+    final widget = context.findRenderObject() as RenderBox?;
+
+    return widget != null ? widget.size : Size.zero;
   }
 
   ScrollController screenScrollController = ScrollController();
@@ -63,6 +72,7 @@ class ReservationController extends GetxController {
       loading.value = true;
       var url = Uri.parse('$mainUrl/ecolodge/$roomUrl');
       var response = await http.get(url);
+      loadMoreComment();
       if (response.statusCode == 200) {
         room.value = roomReservationModelFromJson(response.body);
         loading.value = false;
@@ -170,6 +180,13 @@ class ReservationController extends GetxController {
 
   //#region =============== Comments =======================
 
+  final RxInt commentsPages = 1.obs;
+  final RxBool loadMore = false.obs;
+  final RxBool hasMoreComment = true.obs;
+
+  final List<Comment> commentList = <Comment>[].obs;
+
+
   final List<File> selectedImages = <File>[].obs;
   final picker = ImagePicker();
 
@@ -177,6 +194,34 @@ class ReservationController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController commentController = TextEditingController();
+
+  loadMoreComment() async {
+    try {
+      loadMore.value = true;
+      var uri = Uri.parse('$mainUrl/ecolodge/$url/comments?page=${commentsPages.value.toString()}');
+      var response = await http.get(uri);
+      if (response.statusCode == 200) {
+        if(jsonDecode(response.body)['data'].isNotEmpty){
+          commentList.addAll(List<Comment>.from(jsonDecode((response.body))['data'].map((x) => Comment.fromJson(x))));
+        }else{
+          commentsPages.value -= 1;
+          hasMoreComment.value = false;
+        }
+        print(commentList.length);
+        loadMore.value = false;
+      }else{
+      }
+    } on SocketException {
+      Errors().connectLost(onTap: () {
+        getMainInfo(roomUrl: url);
+        Get.closeCurrentSnackbar();
+      },);
+    } catch (e) {
+      loadMore.value = false;
+      Get.offAllNamed(Routes.home);
+      print(e);
+    }
+  }
 
   sendReply()async{
     try{
@@ -212,5 +257,15 @@ class ReservationController extends GetxController {
   //#endregion =============== Comments =======================
 
   final PageController pageController = PageController();
+
+  favChecker(){
+    for(String fav in userController.favList){
+      RoomReservationModel room = roomReservationModelFromJson(fav);
+      if(url == room.data.url){
+        return true.obs;
+      }
+    }
+    return false.obs;
+  }
 
 }

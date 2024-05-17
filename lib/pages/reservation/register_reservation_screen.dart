@@ -277,7 +277,11 @@ class RegisterReservationScreen extends StatelessWidget {
                                         height: 10,
                                       ),
                                       Text(
-                                        '${mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.priceInfo.totalCustomerPrice.toString().seRagham()}تومان / ${mainController.duration.toString()} شب',
+                                        '${priceCalculator(
+                                          additionalGust: mainController.roomRegisterList[roomIndex].additionalGuest.value,
+                                          oneNightPrice: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.priceInfo.totalCustomerPrice,
+                                          gustPrice: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.days[0].additionalGustPrice,
+                                        )}تومان / ${mainController.duration.toString()} شب',
                                         style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 16.sp, color: AppColors.mainColor),
                                         textDirection: TextDirection.rtl,
                                       ),
@@ -999,5 +1003,13 @@ class RegisterReservationScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  priceCalculator(
+      {required int additionalGust, required int oneNightPrice ,int? gustPrice}){
+    if(additionalGust != 0){
+      oneNightPrice += (additionalGust * gustPrice!);
+    }
+    return oneNightPrice.toString().seRagham();
   }
 }
