@@ -28,28 +28,22 @@ class ReservationController extends GetxController {
 
     //call _getChildSize method, this should return the size of above SizedBox. Make sure to call this method after the first frame
 
-      mainScrollController.addListener(() {
-       print(mainScrollController.position.pixels);
-
-      // if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
-      //   tabIndex.value = 1;
-      // }
-      // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
-      //   tabIndex.value = 2;
-      // }
-      // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
-      //   tabIndex.value = 3;
-      // }
-    });
+    //   mainScrollController.addListener(() {
+    //
+    //   // if(mainScrollController.position.pixels >= mainScrollController.position.minScrollExtent+100){
+    //   //   tabIndex.value = 1;
+    //   // }
+    //   // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent/2.5){
+    //   //   tabIndex.value = 2;
+    //   // }
+    //   // if(mainScrollController.position.pixels >= mainScrollController.position.maxScrollExtent-100){
+    //   //   tabIndex.value = 3;
+    //   // }
+    // });
 
     super.onInit();
   }
 
-  Size getChildSize(BuildContext context) {
-    final widget = context.findRenderObject() as RenderBox?;
-
-    return widget != null ? widget.size : Size.zero;
-  }
 
   ScrollController screenScrollController = ScrollController();
   ScrollController mainScrollController = ScrollController();
@@ -76,7 +70,7 @@ class ReservationController extends GetxController {
       if (response.statusCode == 200) {
         room.value = roomReservationModelFromJson(response.body);
         loading.value = false;
-        print(room.value!.data.url);
+        // print(room.value!.data.url);
       }else{
       }
     } on SocketException {
@@ -101,12 +95,12 @@ class ReservationController extends GetxController {
         uri += 'start_date=${DateTime.now().year.toString()}-${dateEdit(DateTime.now().month)}-${dateEdit(DateTime.now().day)}&pick_date=1&duration=${durationValue.value.toString()}';
       }
       var localUrl = Uri.parse(uri.toString());
-      print(localUrl.path);
-      print(localUrl.queryParameters);
+      // print(localUrl.path);
+      // print(localUrl.queryParameters);
       var response = await http.get(localUrl);
       if(response.statusCode == 200){
         room.value!.data.rooms.clear();
-        print(jsonDecode(response.body)['data']);
+        // print(jsonDecode(response.body)['data']);
         room.value!.data.rooms = List<Room>.from(jsonDecode(response.body)['data'].map((x) => Room.fromJson(x)));
         loadingRoom.value = false;
       }
@@ -180,11 +174,15 @@ class ReservationController extends GetxController {
 
   //#region =============== Comments =======================
 
+  final RxBool likeDislikeLoading = false.obs;
+
   final RxInt commentsPages = 1.obs;
   final RxBool loadMore = false.obs;
   final RxBool hasMoreComment = true.obs;
 
   final List<Comment> commentList = <Comment>[].obs;
+  final List<String> likedComment = <String>[].obs;
+  final List<String> dislikedComment = <String>[].obs;
 
 
   final List<File> selectedImages = <File>[].obs;
@@ -207,7 +205,6 @@ class ReservationController extends GetxController {
           commentsPages.value -= 1;
           hasMoreComment.value = false;
         }
-        print(commentList.length);
         loadMore.value = false;
       }else{
       }
@@ -225,7 +222,6 @@ class ReservationController extends GetxController {
 
   sendReply()async{
     try{
-      loadingRoom.value = true;
       Uri url = Uri.parse('https://api.uspace.ir/api/p_u_api/v1/comments/new-comment');
       Map<String,String> body = {
         'name':nameController.text,
@@ -254,6 +250,163 @@ class ReservationController extends GetxController {
       throw 'ERR = $e';
     }
   }
+
+  likeLocal(String id){
+    //
+    ////    at the first need check likedComment
+    //
+    if(likedComment.contains(id)){
+
+      //if exist in likedComment that mean we need to unlike comment
+      likedComment.removeWhere((element) => element == id);
+      int index = commentList.indexWhere((element) => element.id == id);
+      // commentList[index].like.value = false;
+      commentList[index].likes.value -= 1;
+
+    }else{
+
+      //
+      ////   check if in dislikedList remove from that
+      //
+
+      if(dislikedComment.contains(id)){
+        dislikedComment.removeWhere((element) => element == id);
+        int index = commentList.indexWhere((element) => element.id == id);
+        commentList[index].dislikes.value -= 1;
+        // commentList[index].dislike.value = false;
+      }
+
+      //
+      ////   after deleted from dislikeList  add comment to liked
+      //
+
+      likedComment.add(id);
+      int index = commentList.indexWhere((element) => element.id == id);
+      // commentList[index].like.value = true;
+      commentList[index].likes.value += 1;
+
+    }
+  }
+
+  dislikeLocal(String id){
+    //
+    ////    at the first need check likedComment
+    //
+    if(dislikedComment.contains(id)){
+
+      print('check here');
+      //if exist in likedComment that mean we need to unlike comment
+      dislikedComment.removeWhere((element) => element == id);
+      int index = commentList.indexWhere((element) => element.id == id);
+      // commentList[index].dislike.value = false;
+      commentList[index].dislikes.value -= 1;
+
+    }else{
+
+      //
+      ////   check if in dislikedList remove from that
+      //
+
+      if(likedComment.contains(id)){
+        likedComment.removeWhere((element) => element == id);
+        int index = commentList.indexWhere((element) => element.id == id);
+        commentList[index].likes.value -= 1;
+        // commentList[index].like.value = false;
+      }
+
+      //
+      ////   after deleted from dislikeList  add comment to liked
+      //
+
+      dislikedComment.add(id);
+      int index = commentList.indexWhere((element) => element.id == id);
+      // commentList[index].dislike.value = true;
+      commentList[index].dislikes.value += 1;
+    }
+  }
+
+  void likeApi({required String id,required String commentType,required int index}) async {
+    try{
+      likeDislikeLoading.value = true;
+
+      Map<String,dynamic> body = {
+        'type': 'like',
+        'comment_type': commentType,
+        'comment_id':id,
+      };
+
+      Uri url = Uri.parse('$mainUrl/comment/like-dislike');
+
+      var response = await http.post(url,body: jsonEncode(body),headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      if(response.statusCode == 200){
+        print(response.body);
+        if(response.body == 'vote save.') {
+          commentList[index].likes.value += 1;
+          likeDislikeLoading.value = false;
+
+        }
+
+      }else{
+        print(response.body);
+        likeDislikeLoading.value = false;
+      }
+    }catch(e){
+      rethrow;
+    }
+  }
+
+
+  void dislikeApi({required String id,required String commentType,required int index}) async {
+    try{
+      likeDislikeLoading.value = true;
+
+      Map<String,dynamic> body = {
+        'type': 'dislike',
+        'comment_type': commentType,
+        'comment_id':id,
+      };
+
+      Uri url = Uri.parse('$mainUrl/comment/like-dislike');
+
+      var response = await http.post(url,body: jsonEncode(body),headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json'
+      });
+
+      if(response.statusCode == 200){
+
+
+        if(response.body == 'vote save.') {
+          commentList[index].dislikes.value += 1;
+          likeDislikeLoading.value = false;
+        }
+
+
+      }else{
+
+        likeDislikeLoading.value = false;
+
+      }
+    }catch(e){
+      rethrow;
+    }
+  }
+
+
+
+  RxBool checkCommentId(String id) {
+    for(String comment in dislikedComment){
+      if(id == comment) {
+        return true.obs;
+      }
+    }
+    return false.obs;
+  }
+
   //#endregion =============== Comments =======================
 
   final PageController pageController = PageController();
@@ -267,5 +420,8 @@ class ReservationController extends GetxController {
     }
     return false.obs;
   }
+
+
+
 
 }

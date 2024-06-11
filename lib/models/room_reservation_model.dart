@@ -213,7 +213,7 @@ class AvgFbRate {
 }
 
 class CommentsFile {
-  int feedbackId;
+    String feedbackId;
   String type;
   String fileName;
   int fileSize;

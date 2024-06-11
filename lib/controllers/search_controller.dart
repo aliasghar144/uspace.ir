@@ -195,7 +195,6 @@ class SearchController extends GetxController {
 
   void loadMoreData() async{
     try{
-      print(' here we go nextLink $nextLink');
       if(nextLink.value != 'null'){
         url = Uri.parse(nextLink.value);
         var response = await http.get(url);

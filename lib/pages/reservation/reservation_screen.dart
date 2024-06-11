@@ -32,6 +32,7 @@ class ReservationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(url);
     ReservationController reservationController = Get.put(ReservationController(url));
     return Scaffold(
       body: SafeArea(
@@ -108,17 +109,21 @@ class ReservationScreen extends StatelessWidget {
                     child: InkWell(
                       onTap: () {
                         if (!reservationController.loading.value) {
-                          reservationController.tabIndex.value = 3;
-                          Scrollable.ensureVisible(
-                            reservationController.key3.currentContext!,
-                            duration: const Duration(milliseconds: 400),
-                            curve: Curves.easeInOut,
-                          );
+                          if (reservationController.commentList.isEmpty) {
+                            sendComment(reservationController);
+                          } else {
+                            reservationController.tabIndex.value = 3;
+                            Scrollable.ensureVisible(
+                              reservationController.key3.currentContext!,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeInOut,
+                            );
+                          }
                         }
                       },
                       child: Container(
                           alignment: Alignment.center,
-                          margin: EdgeInsets.only(right: 5),
+                          margin: const EdgeInsets.only(right: 5),
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
                               border: const Border(
@@ -635,6 +640,7 @@ class ReservationScreen extends StatelessWidget {
                               imageBuilder: (context, imageProvider) {
                                 return InkWell(
                                   onTap: () {
+                                    reservationController.userImages.value = false;
                                     dialogImagesView(reservationController);
                                   },
                                   child: Container(
@@ -674,6 +680,7 @@ class ReservationScreen extends StatelessWidget {
                             errorWidget: (context, url, error) {
                               return InkWell(
                                 onTap: () {
+                                  reservationController.userImages.value = true;
                                   dialogImagesView(reservationController);
                                 },
                                 child: Container(
@@ -726,7 +733,7 @@ class ReservationScreen extends StatelessWidget {
                         ? Flexible(
                             child: InkWell(
                               onTap: () {
-                                reservationController.pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+                                reservationController.pageController.animateToPage(3, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
                               },
                               child: CachedNetworkImage(
                                 imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[3].thumbImage}',
@@ -762,53 +769,49 @@ class ReservationScreen extends StatelessWidget {
                             ),
                           )
                         : Flexible(
-                      child: InkWell(
-                        onTap: () {
-                          reservationController.pageController.animateToPage(2, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
-                        },
-                        child: CachedNetworkImage(
-                          imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[3].thumbImage}',
-                          fit: BoxFit.cover,
-                          progressIndicatorBuilder: (context, url, progress) {
-                            return SizedBox(
-                              width: Get.width / 7,
-                              height: Get.width / 6.5,
-                              child: const Align(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 1,
-                                  color: AppColors.mainColor,
-                                ),
-                              ),
-                            );
-                          },
-                          errorWidget: (context, url, error) {
-                            return const SizedBox();
-                          },
-                          imageBuilder: (context, imageProvider) {
-                            return InkWell(
-                              onTap: () {
-                                dialogImagesView(reservationController);
-                              },
-                              child: Container(
-                                  clipBehavior: Clip.none,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      opacity: 0.3,
-                                      fit: BoxFit.cover,
+                            child: CachedNetworkImage(
+                              imageUrl: 'https://www.uspace.ir/spaces/${reservationController.url}/images/thumb/${reservationController.room.value!.data.imageList[3].thumbImage}',
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder: (context, url, progress) {
+                                return SizedBox(
+                                  width: Get.width / 7,
+                                  height: Get.width / 6.5,
+                                  child: const Align(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 1,
+                                      color: AppColors.mainColor,
                                     ),
-                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    '...',
-                                    style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 25),
-                                  )),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                                );
+                              },
+                              errorWidget: (context, url, error) {
+                                return const SizedBox();
+                              },
+                              imageBuilder: (context, imageProvider) {
+                                return InkWell(
+                                  onTap: () {
+                                    reservationController.userImages.value = true;
+                                    dialogImagesView(reservationController);
+                                  },
+                                  child: Container(
+                                      clipBehavior: Clip.none,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: imageProvider,
+                                          opacity: 0.3,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '...',
+                                        style: Theme.of(Get.context!).textTheme.bodyLarge!.copyWith(fontSize: 25),
+                                      )),
+                                );
+                              },
+                            ),
+                          ),
                     const SizedBox(width: 5),
                     Flexible(
                       child: InkWell(
@@ -2306,6 +2309,7 @@ class ReservationScreen extends StatelessWidget {
                         width: Get.width,
                         color: Colors.black.withOpacity(0.1),
                       ),
+                      userImages(reservationController),
                       const SizedBox(height: 20),
                       ListView.separated(
                           shrinkWrap: true,
@@ -2407,6 +2411,42 @@ class ReservationScreen extends StatelessWidget {
                                               ),
                                         const SizedBox(height: 5),
                                         Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                                          Row(children: [
+                                            SizedBox(width: 15, child: Align(
+                                                alignment:Alignment.center,
+                                                child: Obx(() => Text(reservationController.commentList[index].dislikes.value.toString())))),
+                                            InkWell(
+                                                borderRadius: BorderRadius.circular(8),
+                                                onTap: () {
+                                                  // reservationController.dislikeLocal(reservationController.commentList[index].id);
+                                                  reservationController.dislikeApi(id:reservationController.commentList[index].id,commentType:reservationController.commentList[index].type,index:index);
+                                                },
+                                                child: Obx(() => Padding(
+                                                      padding: const EdgeInsets.all(3),
+                                                      child: Icon(Icons.thumb_down, size: 20, color: reservationController.dislikedComment.contains(reservationController.commentList[index].id) ? AppColors.redColor : AppColors.disabledIcon),
+                                                    ))),
+                                            const SizedBox(width:5),
+                                            InkWell(
+                                                borderRadius: BorderRadius.circular(8),
+                                                onTap: () {
+                                                  // reservationController.likeLocal(reservationController.commentList[index].id);
+                                                  reservationController.likeApi(id:reservationController.commentList[index].id,commentType:reservationController.commentList[index].type,index:index);
+
+                                                },
+                                                child: Obx(() => Padding(
+                                                      padding: const EdgeInsets.all(3.0),
+                                                      child: Icon(Icons.thumb_up_sharp, size: 20, color: reservationController.likedComment.contains(reservationController.commentList[index].id) ? AppColors.acceptedGuest : AppColors.disabledIcon),
+                                                    ))),
+                                            SizedBox(
+                                                width: 15,
+                                                child: Align(
+                                                  alignment:Alignment.center,
+                                                  child: Obx(
+                                                    () => Text(reservationController.commentList[index].likes.value.toString()),
+                                                  ),
+                                                )),
+                                          ]),
+                                          const Spacer(),
                                           InkWell(
                                             borderRadius: BorderRadius.circular(8),
                                             onTap: () {
@@ -2436,7 +2476,7 @@ class ReservationScreen extends StatelessWidget {
                                   const SizedBox(height: 10),
                                   reservationController.commentList[index].replies[0].replier != null
                                       ? ListView.separated(
-                                    physics: const NeverScrollableScrollPhysics(),
+                                          physics: const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
                                           itemBuilder: (context, commentIndex) {
                                             return Align(
@@ -3027,6 +3067,259 @@ class ReservationScreen extends StatelessWidget {
     } else {
       reservationController.getMainInfo(roomUrl: url);
       reservationController.choseEntryDate();
+    }
+  }
+
+  userImages(ReservationController reservationController) {
+    if (reservationController.room.value!.data.commentsFiles.isEmpty) {
+      return const SizedBox();
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            const SizedBox(height: 15),
+            const Text('تصاویر ارسالی کاربران'),
+            const SizedBox(height: 15),
+            Row(
+              children: [
+                reservationController.room.value!.data.commentsFiles.length >= 3
+                    ? InkWell(
+                        onTap: () {
+                          reservationController.userImages.value = true;
+                          dialogImagesView(reservationController);
+                        },
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                            decoration: BoxDecoration(border: Border.all(color: AppColors.mainColor, width: 0.8), borderRadius: BorderRadius.circular(5)),
+                            child: Text(
+                              'مشاهده همه تصاویر',
+                              style: Theme.of(Get.context!).textTheme.bodySmall,
+                            )),
+                      )
+                    : const SizedBox(),
+                const SizedBox(width: 10),
+                reservationController.room.value!.data.commentsFiles.isNotEmpty
+                    ? Expanded(
+                        child: CachedNetworkImage(
+                            imageUrl: reservationController.room.value!.data.commentsFiles[2].fileName,
+                            fit: BoxFit.cover,
+                            imageBuilder: (context, imageProvider) {
+                              return Container(
+                                clipBehavior: Clip.none,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: const Offset(
+                                          1.0,
+                                          2.0,
+                                        ),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 0.0,
+                                      ), //BoxShadow
+                                      const BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 0.0,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ],
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(22)),
+                                height: Get.height * 0.15,
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(25),
+                                          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                            0.50,
+                                            1
+                                          ], colors: [
+                                            Colors.transparent,
+                                            Colors.black.withOpacity(1),
+                                          ])),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 110,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            errorWidget: (context, url, error) {
+                              return Container(
+                                clipBehavior: Clip.none,
+                                width: MediaQuery.of(context).size.width,
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/image_not_available.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }))
+                    : const SizedBox(),
+                const SizedBox(width: 10),
+                reservationController.room.value!.data.commentsFiles.length >= 2
+                    ? Expanded(
+                        child: CachedNetworkImage(
+                            imageUrl: reservationController.room.value!.data.commentsFiles[1].fileName,
+                            fit: BoxFit.cover,
+                            imageBuilder: (context, imageProvider) {
+                              return Container(
+                                clipBehavior: Clip.none,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: const Offset(
+                                          1.0,
+                                          2.0,
+                                        ),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 0.0,
+                                      ), //BoxShadow
+                                      const BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 0.0,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ],
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(22)),
+                                height: Get.height * 0.15,
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(25),
+                                          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                            0.50,
+                                            1
+                                          ], colors: [
+                                            Colors.transparent,
+                                            Colors.black.withOpacity(1),
+                                          ])),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 110,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            errorWidget: (context, url, error) {
+                              return Container(
+                                clipBehavior: Clip.none,
+                                width: MediaQuery.of(context).size.width,
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/image_not_available.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }))
+                    : const SizedBox(),
+                const SizedBox(width: 10),
+                reservationController.room.value!.data.commentsFiles.length >= 3
+                    ? Expanded(
+                        child: CachedNetworkImage(
+                            imageUrl: reservationController.room.value!.data.commentsFiles[0].fileName,
+                            fit: BoxFit.cover,
+                            imageBuilder: (context, imageProvider) {
+                              return Container(
+                                clipBehavior: Clip.none,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: const Offset(
+                                          1.0,
+                                          2.0,
+                                        ),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 0.0,
+                                      ), //BoxShadow
+                                      const BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(0.0, 0.0),
+                                        blurRadius: 0.0,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ],
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(22)),
+                                height: Get.height * 0.15,
+                                child: Stack(
+                                  clipBehavior: Clip.none,
+                                  alignment: Alignment.bottomCenter,
+                                  children: [
+                                    Container(
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(25),
+                                          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
+                                            0.50,
+                                            1
+                                          ], colors: [
+                                            Colors.transparent,
+                                            Colors.black.withOpacity(1),
+                                          ])),
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 110,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            errorWidget: (context, url, error) {
+                              return Container(
+                                clipBehavior: Clip.none,
+                                width: MediaQuery.of(context).size.width,
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/image_not_available.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }))
+                    : const SizedBox(),
+              ],
+            ),
+            const SizedBox(height: 15),
+            Container(
+              height: 1,
+              width: Get.width,
+              color: Colors.black.withOpacity(0.1),
+            ),
+          ],
+        ),
+      );
     }
   }
 }

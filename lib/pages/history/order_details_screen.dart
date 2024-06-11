@@ -25,7 +25,6 @@ class OrderDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? orderCode = Get.parameters['orderCode'];
-    print(orderCode);
     OrderDetailsController mainController = Get.put(OrderDetailsController(orderCode!));
     return Scaffold(
       appBar: AppBar(

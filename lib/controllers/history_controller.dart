@@ -32,7 +32,7 @@ class HistoryController extends GetxController{
 
   fetchOrderHistory(String? orderCode) async {
     try{
-      print(Memory().readOrderCode());
+      // print(Memory().readOrderCode());
       if(orderCode != null){
         loading.value = true;
         orderHistory.clear();
@@ -48,7 +48,7 @@ class HistoryController extends GetxController{
               return 1;
             }
           });
-          Memory().saveOrderCode(orderCode!);
+          Memory().saveOrderCode(orderCode);
           loading.value = false;
           return true;
         }else{

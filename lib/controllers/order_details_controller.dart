@@ -158,7 +158,7 @@ class OrderDetailsController extends GetxController{
       Uri url = Uri.parse('$mainUrl/customer/reserves/$orderCode');
       var response = await http.get(url);
       if(response.statusCode == 200){
-        print(orderDetailsModelFromJson(response.body));
+        // print(orderDetailsModelFromJson(response.body));
         order.value = orderDetailsModelFromJson(response.body);
         setCancelingNeedCode();
         loading.value = false;
@@ -283,16 +283,15 @@ class OrderDetailsController extends GetxController{
       }else{
         uri = operation;
       }
-      print(uri);
       Uri url = Uri.parse(uri);
 
       var response = await http.post(url);
 
       if(response.statusCode == 200){
-        print(response.body);
+        // print(response.body);
         fetchOrderDetails(orderCode);
       }else{
-        print(jsonDecode(response.body));
+        // print(jsonDecode(response.body));
       }
     }catch(e){
       print(e);
@@ -368,7 +367,7 @@ class OrderDetailsController extends GetxController{
       });
 
       var data = jsonDecode(response.body);
-      print(response.body);
+      // print(response.body);
       if(response.statusCode == 200){
         Get.back();
         Get.showSnackbar(
@@ -411,9 +410,9 @@ class OrderDetailsController extends GetxController{
       });
       if(response.statusCode == 200){
         fetchOrderDetails(orderCode);
-        print(jsonDecode(response.body));
+        // print(jsonDecode(response.body));
       }else{
-        print(jsonDecode(response.body));
+        // print(jsonDecode(response.body));
       }
     }catch(e){
       print(e);
@@ -430,7 +429,7 @@ class OrderDetailsController extends GetxController{
   }
 
   void setCancelingNeedCode() {
-    print(order.value!.data.cancelInfo);
+    // print(order.value!.data.cancelInfo);
     if(order.value!.data.cancelInfo != null){
       cancelingNeedCode.value = true;
     }else{

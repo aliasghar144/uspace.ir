@@ -167,7 +167,6 @@ class LoginScreen extends StatelessWidget {
                                         ),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
-                                        print('read form');
                                         // Single tapped.
                                       },
                                   ),

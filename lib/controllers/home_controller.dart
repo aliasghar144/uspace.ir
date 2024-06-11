@@ -32,7 +32,7 @@ class HomeController extends GetxController {
         final initialLink = await getInitialLink();
         // Parse the link and warn the user, if it is not correct,
         // but keep in mind it could be `null`.
-        print(initialLink);
+        // print(initialLink);
       } catch (e){
         print(e);
         // Handle exception by warning the user their action did not succeed
@@ -76,7 +76,7 @@ class HomeController extends GetxController {
       if(response.statusCode == 200){
         test.value = testModelFromJson(response.body);
       }
-      print(test.value?.links.next);
+      // print(test.value?.links.next);
     }
     on SocketException {
       retry.value = true;
@@ -230,7 +230,7 @@ class HomeController extends GetxController {
       var response = await http.get(url,headers: requestHeaders);
       if(response.statusCode == 200){
         generalInfo.value = generalInfoModelFromJson(response.body);
-        print(generalInfo.value);
+        // print(generalInfo.value);
         loading.value = false;
       }
     }catch (e){

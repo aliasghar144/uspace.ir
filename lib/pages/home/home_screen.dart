@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -15,8 +14,8 @@ import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
+import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
-import 'package:uspace_ir/testscreen.dart';
 import 'package:uspace_ir/widgets/card_ecolodge.dart';
 import 'package:uspace_ir/widgets/custom_progress.dart';
 
@@ -395,13 +394,14 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             InkWell(
                               onTap: () {
-                                print(homeController.newestEcolodge.value!.data[index].url);
-
                                 Get.to(() {
                                   return ReservationScreen(
                                     url: homeController.newestEcolodge.value!.data[index].url,
                                   );
                                 });
+                                //     ?.then((value){
+                                //   Memory().saveLikeDislike();
+                                // });
                               },
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(

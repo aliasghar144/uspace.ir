@@ -307,7 +307,6 @@ class CancelingScreen extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () {
                         if(mainController.formKey.currentState!.validate()){
-                          print('object');
                           mainController.operation(name:'کنسلی');
                         }
                       },
@@ -344,7 +343,6 @@ class CancelingScreen extends StatelessWidget {
                             enableDrag: false,
 
                             onClosing: () {
-                              print('object');
                             mainController.verifyCode.clear();
                           }, builder: (context) {
                             return Container(

@@ -6,8 +6,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
+import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
-import 'package:uspace_ir/routes/route.dart';
 
 class LiveSearchScreen extends StatelessWidget {
   LiveSearchScreen({Key? key}) : super(key: key);
@@ -152,6 +152,9 @@ class LiveSearchScreen extends StatelessWidget {
                                           onTap: () {
 
                                             Get.to(ReservationScreen(url:liveSearchController.liveSearchEcolodgesResult[index].url));
+                                            //     ?.then((value){
+                                            //   Memory().saveLikeDislike();
+                                            // });;
                                           },
                                           borderRadius: BorderRadius.circular(12),
                                           child: Container(

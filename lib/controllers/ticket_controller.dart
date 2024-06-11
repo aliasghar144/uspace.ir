@@ -140,7 +140,6 @@ class TicketController extends GetxController{
 
         if(response.statusCode == 200){
           var data = jsonDecode(response.body);
-          print('data on seconde pm is : ${data}');
           if(data['status'] == 'ok'){
             allMessage.value!.data.conversation.add(Conversation(side: Side(sideId: 2, sideName: 'مهمان'), content: replyTxtEditCtr.text, mStartDate: DateTime.now(), jStartDate: ''));
             // loading.value = false;

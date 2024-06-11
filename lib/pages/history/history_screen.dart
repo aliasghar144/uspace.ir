@@ -22,7 +22,6 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(Get.currentRoute);
     return Form(
       key: historyController.formKey,
       child: Padding(
@@ -108,7 +107,6 @@ class HistoryScreen extends StatelessWidget {
                   return InkWell(
                     borderRadius:BorderRadius.circular(24),
                     onTap: (){
-                      print(historyController.orderHistory[orderIndex].trackCode);
                       if(historyController.orderHistory[orderIndex].trackCode != null){
                         navigateTo(historyController.orderHistory[orderIndex].trackCode!);
                       }else{

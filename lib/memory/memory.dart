@@ -19,5 +19,21 @@ class Memory{
   readFavList(){
     return box.get(favList);
   }
+  //
+  // saveLikeDislike(){
+  //     box.put(likes,likedComment);
+  //     box.put(dislikes, dislikedComment);
+  // }
+  //
+  // readLikeDisLike(){
+  //   if(box.containsKey(likes)){
+  //     likedComment.addAll(box.get(likes));
+  //     print(likedComment);
+  //   }
+  //
+  //   if(box.containsKey(dislikes)){
+  //     dislikedComment.addAll(box.get(dislikes));
+  //   }
+  // }
 
 }

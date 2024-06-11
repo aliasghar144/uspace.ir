@@ -25,9 +25,6 @@ class ImageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(imageList);
-    print(commentList);
-    print(userImages);
     return WillPopScope(
       onWillPop:  () async {
         if (horizontalImage.value) {

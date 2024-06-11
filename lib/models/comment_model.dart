@@ -1,10 +1,18 @@
 
+import 'package:get/get.dart';
+import 'package:uspace_ir/constance/constance.dart';
+
 class Comment {
   String name;
+  String id;
   DateTime date;
   String? comment;
   String show;
   String type;
+  RxInt likes;
+  RxInt dislikes;
+  // RxBool like;
+  // RxBool dislike;
   List<Reply> replies;
   String? durationReserve;
   Option? option1;
@@ -15,10 +23,15 @@ class Comment {
 
   Comment({
     required this.name,
+    required this.id,
     required this.date,
     required this.comment,
     required this.show,
     required this.type,
+    required this.likes,
+    // required this.like,
+    // required this.dislike,
+    required this.dislikes,
     required this.replies,
     this.durationReserve,
     this.option1,
@@ -30,10 +43,15 @@ class Comment {
 
   factory Comment.fromJson(Map<String, dynamic> json) => Comment(
     name: json["name"],
+    id: json["id"],
     date: DateTime.parse(json["date"]),
     comment: json["comment"],
     show: json["show"],
     type: json["type"],
+    likes: RxInt(json['likes']),
+    dislikes: RxInt(json['dislikes']),
+    // like: likedComment.contains(json["id"]) ? RxBool(true) : RxBool(false),
+    // dislike: dislikedComment.contains(json["id"]) ? RxBool(true) : RxBool(false),
     replies: List<Reply>.from(json["replies"].map((x) => Reply.fromJson(x))),
     durationReserve: json["duration_reserve"],
     option1: json["option1"] == null ? null : Option.fromJson(json["option1"]),

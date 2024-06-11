@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/check_currency.dart';
+import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
-import 'package:uspace_ir/routes/route.dart';
 
 class CardEcolodge extends StatelessWidget {
   final Datum ecolodge;
@@ -24,6 +24,9 @@ class CardEcolodge extends StatelessWidget {
           InkWell(
             onTap:(){
               Get.to(ReservationScreen(url:ecolodge.url));
+              //     ?.then((value){
+              //   Memory().saveLikeDislike();
+              // });
             },
             borderRadius: BorderRadius.circular(12),
             child: SizedBox(

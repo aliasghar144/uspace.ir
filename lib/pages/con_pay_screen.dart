@@ -9,7 +9,6 @@ class PayStatusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // String? resCode = Get.parameters['orderCode'];
     // String? code = Get.parameters['payStatus'];
-    print(Get.currentRoute);
     return Scaffold(
       body: SizedBox(
         width: Get.width,

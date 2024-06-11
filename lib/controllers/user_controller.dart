@@ -10,6 +10,7 @@ class UserController extends GetxController{
 
       favList.addAll(Memory().readFavList());
     }
+    // Memory().readLikeDisLike();
     super.onInit();
   }
 

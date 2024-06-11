@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
+import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 
@@ -65,6 +66,9 @@ class FavouriteScreen extends StatelessWidget {
                       onTap: () {
 
                         Get.to(ReservationScreen(url:room.data.url));
+                        //     ?.then((value){
+                        //   // Memory().saveLikeDislike();
+                        // });
                       },
                       borderRadius: BorderRadius.circular(25),
                       child: Stack(
