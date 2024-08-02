@@ -98,9 +98,10 @@ class BaseScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 15,top: 15.0),
                       child: IconButton(
                         onPressed: (){
+                          BottomSheets().contactUs();
                         },
                         splashRadius: 20,
-                        icon: const Icon(Icons.menu,color: Colors.grey,),
+                        icon: const Icon(Icons.phone,color: Colors.grey,),
                       ),
                     ),
                   ],
@@ -146,7 +147,9 @@ class BaseScreen extends StatelessWidget {
                                       }
                                     },
                                     onChanged: (value) {
-                                      searchController.searchWithFilter(value);
+                                      baseController.debouncer.run((){
+                                        searchController.searchWithFilter(value);
+                                      });
                                     },
                                     decoration: InputDecoration(
                                         hintTextDirection: TextDirection.rtl,

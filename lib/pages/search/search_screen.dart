@@ -10,7 +10,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
-import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 import 'package:uspace_ir/pages/search/filter_screen.dart';
 
@@ -24,230 +23,232 @@ class SearchScreen extends StatelessWidget {
     return SizedBox(
       width: Get.width,
       child: Center(
-        child: Obx(() => Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 15.0, right: 20, left: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(
-                        child: SizedBox(
-                      height: 25,
-                      child: Obx(() => ListView(
-                          reverse: true,
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true, children: [
-                            if (searchController.specialPlaceTitle.value != '') ...[
-                              Container(
-                                padding: const EdgeInsets.only(right: 4, left: 6),
-                                margin: const EdgeInsets.symmetric(horizontal: 3),
-                                decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
-                                child: Row(
-                                  children: [
-                                    Text(searchController.specialPlaceTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
-                                    const SizedBox(
-                                      width: 3,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        searchController.specialPlaceTitle.value = '';
-                                        searchController.specialPlaceUrl.value = '';
-                                        searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                                      },
-                                      child: const Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ] else ...[
-                              searchController.categoryTitle.value != ''
-                                  ? Container(
-                                      padding: const EdgeInsets.only(right: 4, left: 6),
-                                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                                      decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
-                                      child: Row(
-                                        children: [
-                                          Text(searchController.categoryTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
-                                          const SizedBox(
-                                            width: 3,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              searchController.categoryTitle.value = '';
-                                              searchController.categoryId.value = '';
-                                              searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                                            },
-                                            child: const Icon(
-                                              Icons.close,
-                                              color: Colors.white,
-                                              size: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                              searchController.cityTitle.value != ''
-                                  ? Container(
-                                      padding: const EdgeInsets.only(right: 4, left: 6),
-                                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                                      decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
-                                      child: Row(
-                                        children: [
-                                          Text(searchController.cityTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
-                                          const SizedBox(
-                                            width: 3,
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              searchController.cityTitle.value = '';
-                                              searchController.cityUrl.value = '';
-                                              searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                                            },
-                                            child: const Icon(
-                                              Icons.close,
-                                              color: Colors.white,
-                                              size: 14,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : const SizedBox(),
-                              searchController.rangeStart.value != 0 || searchController.rangeEnd.value != 100 ?
-                              Container(
-                                padding: const EdgeInsets.only(right: 4, left: 6),
-                                margin: const EdgeInsets.symmetric(horizontal: 3),
-                                decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
-                                child: Row(
-                                  children: [
-                                    Text('قیمت', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
-                                    const SizedBox(
-                                      width: 3,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        searchController.rangeStart.value = 0;
-                                        searchController.rangeEnd.value = 100;
-                                        searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                                      },
-                                      child: const Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                        size: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                                  : const SizedBox(),
-                            ]
-                          ])),
-                    )),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        IconButton(
-                          splashRadius: 20,
-                          icon: const Icon(Icons.tune_rounded),
-                          onPressed: () {
-                            searchController.fetchAllPlaces();
-                            Get.to(() => FilterScreen())?.then((value) {
-                              if (searchController.needSearchAgain.value) {
-                                searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                              }
-                              searchController.needSearchAgain.value = false;
-                            });
-                          },
-                        ),
-                        Obx(() => searchController.cityTitle.value == '' && searchController.categoryTitle.value == ''
-                            ? const SizedBox()
-                            : Positioned(
-                                left: Get.width * 0.033,
-                                top: Get.width * 0.03,
-                                child: Container(
-                                  margin: EdgeInsets.zero,
-                                  padding: EdgeInsets.zero,
-                                  width: 12,
-                                  height: 12,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.mainColor,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0, right: 20, left: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Expanded(
+                      child: SizedBox(
+                        height: 25,
+                        child: Obx(() => ListView(
+                            reverse: true,
+                            scrollDirection: Axis.horizontal,
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true, children: [
+                          if (searchController.specialPlaceTitle.value != '') ...[
+                            Container(
+                              padding: const EdgeInsets.only(right: 4, left: 6),
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
+                              child: Row(
+                                children: [
+                                  Text(searchController.specialPlaceTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
+                                  const SizedBox(
+                                    width: 3,
                                   ),
-                                ),
-                              ))
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 2,
-                    ),
-                    Obx(
-                      () => Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2(
-                            isExpanded: true,
-                            items: searchController.sortByItems
-                                .map((item) => DropdownMenuItem<String>(
-                                      value: item,
-                                      child: Text(
-                                        item,
-                                        style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.disabledText),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ))
-                                .toList(),
-                            value: searchController.sortByValue.value,
-                            onChanged: (value) {
-                              searchController.sortByValue.value = value as String;
+                                  InkWell(
+                                    onTap: () {
+                                      searchController.specialPlaceTitle.value = '';
+                                      searchController.specialPlaceUrl.value = '';
+                                      searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ] else ...[
+                            searchController.categoryTitle.value != ''
+                                ? Container(
+                              padding: const EdgeInsets.only(right: 4, left: 6),
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
+                              child: Row(
+                                children: [
+                                  Text(searchController.categoryTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      searchController.categoryTitle.value = '';
+                                      searchController.categoryId.value = '';
+                                      searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                                : const SizedBox(),
+                            searchController.cityTitle.value != ''
+                                ? Container(
+                              padding: const EdgeInsets.only(right: 4, left: 6),
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
+                              child: Row(
+                                children: [
+                                  Text(searchController.cityTitle.value, style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      searchController.cityTitle.value = '';
+                                      searchController.cityUrl.value = '';
+                                      searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                                : const SizedBox(),
+                            searchController.rangeStart.value != 0 || searchController.rangeEnd.value != 100 ?
+                            Container(
+                              padding: const EdgeInsets.only(right: 4, left: 6),
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              decoration: BoxDecoration(color: AppColors.mainColor, borderRadius: BorderRadius.circular(6)),
+                              child: Row(
+                                children: [
+                                  Text('قیمت', style: Theme.of(context).textTheme.labelSmall!.copyWith(color: Colors.white)),
+                                  const SizedBox(
+                                    width: 3,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      searchController.rangeStart.value = 0;
+                                      searchController.rangeEnd.value = 100;
+                                      searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                                    },
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                                : const SizedBox(),
+                          ]
+                        ])),
+                      )),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      IconButton(
+                        splashRadius: 20,
+                        icon: const Icon(Icons.tune_rounded),
+                        onPressed: () {
+                          searchController.fetchAllPlaces();
+                          Get.to(() => FilterScreen())?.then((value) {
+                            if (searchController.needSearchAgain.value) {
                               searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                            },
-                            buttonStyleData: ButtonStyleData(
-                              height: 40,
-                              width: Get.width / 3,
-                              padding: const EdgeInsets.only(right: 8, left: 5, top: 5, bottom: 2),
+                            }
+                            searchController.needSearchAgain.value = false;
+                          });
+                        },
+                      ),
+                      Obx(() => searchController.cityTitle.value == '' && searchController.categoryTitle.value == ''
+                          ? const SizedBox()
+                          : Positioned(
+                        left: Get.width * 0.033,
+                        top: Get.width * 0.03,
+                        child: Container(
+                          margin: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
+                          width: 12,
+                          height: 12,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.mainColor,
+                          ),
+                        ),
+                      ))
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 2,
+                  ),
+                  Obx(
+                        () => Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          items: searchController.sortByItems
+                              .map((item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: Theme.of(Get.context!).textTheme.bodyMedium!.copyWith(color: AppColors.disabledText),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ))
+                              .toList(),
+                          value: searchController.sortByValue.value,
+                          onChanged: (value) {
+                            searchController.sortByValue.value = value as String;
+                            searchController.searchWithFilter(searchController.searchTextFieldController.text);
+                          },
+                          buttonStyleData: ButtonStyleData(
+                            height: 40,
+                            width: Get.width / 3,
+                            padding: const EdgeInsets.only(right: 8, left: 5, top: 5, bottom: 2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: Colors.black26,
+                              ),
+                            ),
+                          ),
+                          iconStyleData: const IconStyleData(
+                            icon: Icon(
+                              Icons.keyboard_arrow_down_rounded,
+                            ),
+                            iconEnabledColor: AppColors.disabledIcon,
+                          ),
+                          dropdownStyleData: DropdownStyleData(
+                              elevation: 3,
+                              padding: EdgeInsets.zero,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: Colors.black26,
-                                ),
                               ),
-                            ),
-                            iconStyleData: const IconStyleData(
-                              icon: Icon(
-                                Icons.keyboard_arrow_down_rounded,
-                              ),
-                              iconEnabledColor: AppColors.disabledIcon,
-                            ),
-                            dropdownStyleData: DropdownStyleData(
-                                elevation: 3,
-                                padding: EdgeInsets.zero,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                scrollbarTheme: ScrollbarThemeData(
-                                  radius: const Radius.circular(40),
-                                  thickness: MaterialStateProperty.all(6),
-                                  thumbVisibility: MaterialStateProperty.all(true),
-                                )),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 40,
-                              padding: EdgeInsets.only(left: 14, right: 14),
-                            ),
+                              scrollbarTheme: ScrollbarThemeData(
+                                radius: const Radius.circular(40),
+                                thickness: MaterialStateProperty.all(6),
+                                thumbVisibility: MaterialStateProperty.all(true),
+                              )),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 14, right: 14),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              if (searchController.loading.value) ...[
-                SizedBox(
+            ),
+            Obx(() {
+              if(searchController.loading.value) {
+                return SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Directionality(
@@ -292,29 +293,32 @@ class SearchScreen extends StatelessWidget {
                           }),
                     ),
                   ),
-                ),
-              ] else if (searchController.searchEcolodgesResult.isEmpty && searchController.searchError.value) ...[
-                Row(
+                );
+              }
+              if(searchController.searchEcolodgesResult.isEmpty && searchController.searchError.value){
+                return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(
-                        onPressed: () {
-                          searchController.searchWithFilter(searchController.searchTextFieldController.text);
-                        },
-                        icon: const Icon(Icons.refresh)),
-                    const Text('عدم اتصال به اینترنت'),
+                    Text('موردی یافت نشد',
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black),
+                    ),
                   ],
-                )
-              ] else if (searchController.searchEcolodgesResult.isEmpty) ...[
-                Padding(
+                );
+              }
+              if(searchController.searchEcolodgesResult.isEmpty){
+                return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 35.0),
-                  child: Text(
-                    searchController.firstOpen.value ? '' : '',
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      searchController.firstOpen.value ? '' : 'موردی یافت نشد',
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(color: Colors.black),
+                    ),
                   ),
-                )
-              ] else ...[
-                SizedBox(
+                );
+              }
+              else{
+                return                   SizedBox(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Directionality(
@@ -325,7 +329,7 @@ class SearchScreen extends StatelessWidget {
                               height: 25,
                             );
                           },
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
                           padding: const EdgeInsets.only(bottom: 15, top: 15),
                           itemCount: searchController.searchEcolodgesResult.isEmpty ? 5 : searchController.searchEcolodgesResult.length + 1,
@@ -469,10 +473,12 @@ class SearchScreen extends StatelessWidget {
                           }),
                     ),
                   ),
-                ),
-                const SizedBox(height: 20),
-              ]
-            ])),
+                );
+              }
+            }),
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }

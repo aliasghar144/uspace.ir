@@ -14,6 +14,7 @@ class UserController extends GetxController{
     super.onInit();
   }
 
+
   RxBool favLoading = false.obs;
   RxList<String> favList = <String>[].obs;
 

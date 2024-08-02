@@ -96,7 +96,7 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    title: json["title"],
+    title: json["title"] ,
     mainImage: json["main_image"],
     mainImageThumb: json["main_image_thumb"],
     province: json["province"],
@@ -270,8 +270,8 @@ class Datum {
   String url;
   int minPrice;
   String unitPrice;
-  int maxDiscountPercent;
-  int maxDiscountPrice;
+    int? maxDiscountPercent;
+    int? maxDiscountPrice;
   double dollarEquivalent;
   String currency;
 
@@ -702,7 +702,7 @@ class PriceInfo {
 
 class Rules {
   String kidsTerms;
-  String cancelTerms;
+  String? cancelTerms;
   String entryTime;
   String exitTime;
 

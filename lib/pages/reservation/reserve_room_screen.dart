@@ -293,7 +293,7 @@ class RoomReservationScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-        Container(
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() : Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: AppColors.mainColor.withOpacity(0.8),
@@ -315,7 +315,7 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() :Row(mainAxisAlignment: MainAxisAlignment.end, children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
             decoration: BoxDecoration(
@@ -369,7 +369,7 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        RichText(
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() : RichText(
           text: TextSpan(children: [
             TextSpan(text: 'پرداختی برای: ', style: Theme.of(Get.context!).textTheme.bodyMedium),
             TextSpan(text: '${reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.paidNumber} نفر'.toPersianDigit(), style: Theme.of(Get.context!).textTheme.titleLarge),
@@ -378,7 +378,7 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        RichText(
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() : RichText(
           text: TextSpan(children: [
             TextSpan(text: 'ظرفیت اضافه:', style: Theme.of(Get.context!).textTheme.bodyMedium),
             TextSpan(text: '${reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.additionalNumber} نفر'.toPersianDigit(), style: Theme.of(Get.context!).textTheme.titleLarge),
@@ -387,7 +387,7 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        Obx(() => reservationController.durationValue.value != 1 && reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount == 0?
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() : Obx(() => reservationController.durationValue.value != 1 && reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount == 0?
             Obx(() => reservationController.loadingRoom.value || reservationController.loading.value ? const SizedBox(): RichText(
               textDirection: TextDirection.rtl,
               text: TextSpan(children: [
@@ -397,7 +397,7 @@ class RoomReservationScreen extends StatelessWidget {
               ]),
             )):const SizedBox(),),
         const SizedBox(height: 5),
-        Obx(() => reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() : Obx(() => reservationController.room.value!.data.rooms[roomsIndex].roomPackages[0].finance.priceInfo.totalCustomerDiscount != 0
             ? RichText(
           textDirection: TextDirection.rtl,
           text: TextSpan(children: [
@@ -410,7 +410,7 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 5,
         ),
-        Row(
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() : Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Obx(() => Directionality(
@@ -483,7 +483,7 @@ class RoomReservationScreen extends StatelessWidget {
         const SizedBox(
           height: 15,
         ),
-        Obx(() => reservationController.loading.value || reservationController.loadingRoom.value
+        reservationController.room.value!.data.rooms[roomsIndex].roomPackages.isEmpty ? const SizedBox() : Obx(() => reservationController.loading.value || reservationController.loadingRoom.value
             ? Shimmer.fromColors(
     baseColor: Colors.grey.shade300,
     highlightColor: Colors.grey.shade100,

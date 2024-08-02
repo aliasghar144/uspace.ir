@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -22,82 +23,42 @@ class ImageView extends StatelessWidget {
     Key? key,}) : super(key: key);
 
   final RxBool horizontalImage = true.obs;
-
+  final RxInt rotate = 0.obs;
+  final RxDouble width = Get.width.obs;
+  final RxDouble height = (Get.height/3).obs;
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop:  () async {
-        if (horizontalImage.value) {
-          Get.forceAppUpdate();
-          return true;
-        }else{
-          horizontalImage.value = true;
-          SystemChrome.setPreferredOrientations([
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.portraitDown,
-          ]);
-          return false;
-        }
-      },
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.black,
-          body: Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              Center(
-                child: OrientationBuilder(
-                  builder: (context, orientation) {
-                    if(imageList != null || userImages){
-                      return PageView.builder(
-                        reverse: true,
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: !userImages ? imageList!.length : commentList!.length,
-                        controller: PageController(initialPage: index == null ?  0 : index!),
-                        itemBuilder: (context, index) {
-                          return CachedNetworkImage(
-                            imageUrl: !userImages ? 'https://www.uspace.ir/spaces/$url/images/main/${imageList![index].fullImage}' : commentList![index].fileName,
-                              errorWidget: (context, url, error) {
-                                return Container(
-                                  clipBehavior: Clip.none,
-                                  width: Get.width / 4,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Image.asset(
-                                    'assets/images/image_not_available.png',
-                                    fit: BoxFit.scaleDown,
-                                  ),
-                                );
-                              },
-                            imageBuilder: (context, imageProvider) {
-                            return AspectRatio(
-                              aspectRatio: 16/9,
-                              child: PhotoView(
-                                imageProvider: imageProvider,
-                                minScale: PhotoViewComputedScale.contained,
-                                maxScale: PhotoViewComputedScale.covered * 2,
-                              ),
-                            );
-                          },);
-                        },
-                      );
-                    }else{
-                      return CachedNetworkImage(imageUrl: image!,
-                          errorWidget: (context, url, error) {
-                            return Container(
-                              clipBehavior: Clip.none,
-                              width: Get.width / 4,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Image.asset(
-                                'assets/images/image_not_available.png',
-                                fit: BoxFit.scaleDown,
-                              ),
-                            );
-                          },
-                        imageBuilder: (context, imageProvider) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            Center(
+              child: Obx(() => RotatedBox(
+                quarterTurns: rotate.value,
+                child: SizedBox(
+                  width: width.value,
+                  height: height.value,
+                  child: CarouselSlider.builder(
+                      itemCount: !userImages ? imageList!.length : commentList!.length,
+                      itemBuilder: (context, index, realIndex) {
+                    return CachedNetworkImage(
+                      imageUrl: !userImages ? 'https://www.uspace.ir/spaces/$url/images/main/${imageList![index].fullImage}' : commentList![index].fileName,
+                      errorWidget: (context, url, error) {
+                        return Container(
+                          clipBehavior: Clip.none,
+                          width: Get.width / 4,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Image.asset(
+                            'assets/images/image_not_available.png',
+                            fit: BoxFit.scaleDown,
+                          ),
+                        );
+                      },
+                      imageBuilder: (context, imageProvider) {
                         return AspectRatio(
                           aspectRatio: 16/9,
                           child: PhotoView(
@@ -107,51 +68,63 @@ class ImageView extends StatelessWidget {
                           ),
                         );
                       },);
-
-                    }
-                  },
-                ),
-              ),
-              Positioned(
-                  left: 0,
-                  top: 0,
-                  child: IconButton(
-                    onPressed: () {
-                      if (horizontalImage.value) {
-                        Get.forceAppUpdate();
-                        Get.back();
-                      }else{
-                        horizontalImage.value = true;
-                        SystemChrome.setPreferredOrientations([
-                          DeviceOrientation.portraitUp,
-                          DeviceOrientation.portraitDown,
-                        ]);
-                      }
-                    },
-                    icon: const Icon(Icons.arrow_back),
-                    color: Colors.white,
+                  }, options: CarouselOptions(
+                    initialPage: index ?? 0,
+                    height: height.value,
+                    viewportFraction: 1.0,
+                    enlargeCenterPage: false,
                   )),
-              IconButton(
-                  onPressed: () async {
-                    horizontalImage.toggle();
+                ),
+              )),
+            ),
+            Positioned(
+                left: 0,
+                top: 0,
+                child: IconButton(
+                  onPressed: () {
                     if (horizontalImage.value) {
-                      await SystemChrome.setPreferredOrientations([
+                      Get.forceAppUpdate();
+                      Get.back();
+                    }else{
+                      horizontalImage.value = true;
+                      SystemChrome.setPreferredOrientations([
                         DeviceOrientation.portraitUp,
                         DeviceOrientation.portraitDown,
                       ]);
-                    } else {
-                      await SystemChrome.setPreferredOrientations([
-                        DeviceOrientation.landscapeLeft,
-                        DeviceOrientation.landscapeRight,
-                      ]);
                     }
                   },
-                  icon: const Icon(
-                    Icons.screen_rotation_alt,
-                    color: Colors.white,
-                  ))
-            ],
-          ),
+                  icon: const Icon(Icons.arrow_back),
+                  color: Colors.white,
+                )),
+            IconButton(
+                onPressed: (){
+                  if(rotate.value == 0){
+                    rotate.value = 1;
+                    width.value = Get.height;
+                    height.value = Get.width;
+                  }else{
+                    rotate.value =0;
+                    width.value = Get.width;
+                    height.value = Get.height/3;
+                  }
+                  // horizontalImage.toggle();
+                  // if (horizontalImage.value) {
+                  //   await SystemChrome.setPreferredOrientations([
+                  //     DeviceOrientation.portraitUp,
+                  //     DeviceOrientation.portraitDown,
+                  //   ]);
+                  // } else {
+                  //   await SystemChrome.setPreferredOrientations([
+                  //     DeviceOrientation.landscapeLeft,
+                  //     DeviceOrientation.landscapeRight,
+                  //   ]);
+                  // }
+                },
+                icon: const Icon(
+                  Icons.screen_rotation_alt,
+                  color: Colors.white,
+                ))
+          ],
         ),
       ),
     );

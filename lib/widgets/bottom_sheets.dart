@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/controllers/history_controller.dart';
 
@@ -269,7 +270,101 @@ class BottomSheets{
         )    );
   }
 
-  // phoneAuth(){
+  contactUs(){
+    Get.bottomSheet(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(23),
+                topRight: Radius.circular(23))),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 25,width:Get.width),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 5),
+                decoration:const BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      width: 0.8,color: Colors.black
+                    )
+                  )
+                ),child: Text('تماس با ما',
+                  textDirection: TextDirection.rtl,
+                  style: Theme.of(Get.context!).textTheme.displayMedium!.copyWith(fontSize:22),),
+              ),
+              const SizedBox(height: 25,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.call,color: AppColors.acceptedGuest,size: 18,),
+                  InkWell(
+                      onTap: (){
+                        _makingPhoneCall('09129426988');
+                      },
+                      borderRadius: BorderRadius.circular(5),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text('09129426988',style: Theme.of(Get.context!).textTheme.displayMedium,),
+                      )),
+                  const Text('شماره تماس در روز های تعطیل: ',textDirection: TextDirection.rtl),
+                ],
+              ),
+              const SizedBox(height: 25,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.call,color: AppColors.acceptedGuest,size: 18,),
+                  InkWell(
+                      borderRadius: BorderRadius.circular(5),
+                      onTap: (){
+                        _makingPhoneCall('09124802722');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text('09124802722',style: Theme.of(Get.context!).textTheme.displayMedium,),
+                      )),
+                  const Text('شماره بخش اداری و مالی: ',textDirection: TextDirection.rtl,),
+                ],
+              ),
+              const SizedBox(height: 25,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Icon(Icons.call,color: AppColors.acceptedGuest,size: 18,),
+                  InkWell(
+                      borderRadius: BorderRadius.circular(5),
+                      onTap: (){
+                        _makingPhoneCall('09215216526');
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text('09215216526',style: Theme.of(Get.context!).textTheme.displayMedium,),
+                      )),
+                  const Text('شماره همراه بخش فنی:',textDirection: TextDirection.rtl,),
+                ],
+              ),
+              const SizedBox(height: 50,),
+            ],
+          ),
+        )    );
+  }
+
+
+  Future<void> _makingPhoneCall(String phone) async {
+    var url = Uri.parse("tel:$phone");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+// phoneAuth(){
   //   return Column(
   //     children: [
   //       const Spacer(flex:3),

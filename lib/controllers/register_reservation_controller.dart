@@ -182,7 +182,7 @@ class RegisterReservationController extends GetxController{
                   ])),
             ],
           )));
-      if(room.roomPackages[0].finance.priceInfo.additionalNumber!=0){
+      if(room.roomPackages.isNotEmpty && room.roomPackages[0].finance.priceInfo.additionalNumber!=0){
           for(int i = 1 ; i<=room.roomPackages[0].finance.priceInfo.additionalNumber ; i++){
             list.add(DropdownMenuItem(
                 value: i,

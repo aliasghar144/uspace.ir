@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:uspace_ir/base_screen.dart';
 import 'package:uspace_ir/pages/auth/login/login_screen.dart';
 import 'package:uspace_ir/pages/history/order_details_screen.dart';
-import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 import 'package:uspace_ir/pages/search/search_screen.dart';
 
 class Routes {
@@ -17,7 +16,8 @@ class Routes {
 
   static const historyScreen = '$home/customer/reserves?tracking_code=';
 
-  static const reservationScreen = '$home/reservation';
+  // static const reservationScreen = '$home/reservation';
+
 
   static const orderDetailsScreen = '$home/customer/reserves';
 
@@ -40,7 +40,10 @@ class Pages{
 
     // GetPage(name: '${Routes.statusPayScreen}/:orderCode/:payStatus', page:() =>  PayStatusScreen(),),
 
-    GetPage(name: Routes.search, page:() =>  SearchScreen(),),
+    // GetPage(name: '${Routes.reservationScreen}/:url', page: ()=> ReservationScreen(url: Get.parameters['url']??'')),
+
+
+    GetPage(name: Routes.search, page:() =>  SearchScreen()),
     GetPage(name: Routes.login, page:() =>  LoginScreen(),),
   ];
 

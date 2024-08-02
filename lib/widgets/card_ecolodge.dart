@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:uspace_ir/app/config/app_colors.dart';
 import 'package:uspace_ir/app/utils/check_currency.dart';
-import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/models/ecolodge_model.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 

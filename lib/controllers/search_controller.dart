@@ -56,6 +56,7 @@ class SearchController extends GetxController {
   Rxn<AllPlacesModel> cityList  = Rxn<AllPlacesModel>();
 
   List<SearchModel> liveSearchEcolodgesResult = <SearchModel>[].obs;
+  List<SearchModel> ecolodgesResult = <SearchModel>[].obs;
   List<SearchPlacesModel> searchPlacesResult = <SearchPlacesModel>[].obs;
   List<SearchModel> searchEcolodgesResult = <SearchModel>[].obs;
   List<SearchLandingPagesModel> liveSearchLandingPagesResult = <SearchLandingPagesModel>[].obs;
@@ -104,13 +105,14 @@ class SearchController extends GetxController {
 
   searchWithFilter(String q) async {
     try {
+      print('run');
       Map<String, dynamic> body = <String, dynamic>{
         'q': q,
         'sortBy': sortByToCode(),
         'page': 1,
         'num': 12,
-        'minPrice': (rangeStart.value * 500000).toInt(),
-        'maxPrice': (rangeEnd.value * 500000).toInt(),
+        'minPrice': (rangeStart.value * 5000000).toInt(),
+        'maxPrice': (rangeEnd.value * 5000000).toInt() == (rangeStart.value * 5000000).toInt() ?  (rangeEnd.value * 5000000).toInt() -1 : (rangeEnd.value * 5000000).toInt(),
         'cat': categoryId.value,
       }.map((key, value) => MapEntry(key, value.toString()));
       firstOpen.value = false;
@@ -124,13 +126,14 @@ class SearchController extends GetxController {
       }else{
         url = Uri.parse('$mainUrl/all_ecolodges').replace(queryParameters: body);
       }
-      print(url);
-      var response = await http.get(url);
+      print('serach Url : $url');
+      print('qure is : $q');
+      var response = await http.Client().get(url);
+      ecolodgesResult.clear();
       if (response.statusCode == 200) {
-        clearResultList();
-        final data = jsonDecode(response.body)['data'];
+        final  data = jsonDecode(response.body)['data'];
         final link = jsonDecode(response.body)['links'];
-        searchEcolodgesResult.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        ecolodgesResult.addAll(ecolodgeModelFromJson(jsonEncode(data)));
         nextLink.value = link['next'].toString();
       }else{
         searchError.value = true;
@@ -145,6 +148,7 @@ class SearchController extends GetxController {
       loading.value = false;
       print(e);
     }
+    updateResult();
   }
 
   searchWithLink(String link) async {
@@ -178,10 +182,9 @@ class SearchController extends GetxController {
         final ecolodges = jsonDecode(response.body)['ecolodges'];
         final place = jsonDecode(response.body)['places'];
         final landing = jsonDecode(response.body)['landing_pages'];
-
-        liveSearchEcolodgesResult.addAll(ecolodgeModelFromJson(jsonEncode(ecolodges)));
-        liveSearchLandingPagesResult.addAll(liveSearchLandingPagesModelFromJson(jsonEncode(landing)));
-        searchPlacesResult.addAll(liveSearchPlacesModelFromJson(jsonEncode(place)));
+        liveSearchEcolodgesResult.addAll(ecolodgeModelFromJson(jsonEncode(ecolodges['data'])));
+        // liveSearchLandingPagesResult.addAll(liveSearchLandingPagesModelFromJson(jsonEncode(landing)));
+        // searchPlacesResult.addAll(liveSearchPlacesModelFromJson(jsonEncode(place)));
       }
       loading.value = false;
     } on SocketException {
@@ -195,6 +198,7 @@ class SearchController extends GetxController {
 
   void loadMoreData() async{
     try{
+      print(nextLink.value);
       if(nextLink.value != 'null'){
         url = Uri.parse(nextLink.value);
         var response = await http.get(url);
@@ -248,6 +252,12 @@ class SearchController extends GetxController {
     cityUrl.value = '';
     specialPlaceTitle.value = '';
     specialPlaceUrl.value = '';
+  }
+
+  void updateResult() {
+    print('update Done');
+    clearResultList();
+    searchEcolodgesResult.addAll(ecolodgesResult);
   }
 
 }

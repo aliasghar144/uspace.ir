@@ -249,7 +249,7 @@ class RegisterReservationScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
+                                mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages.isEmpty ? const SizedBox() :Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
@@ -412,7 +412,7 @@ class RegisterReservationScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              InkWell(
+                              mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages.isEmpty ? const SizedBox() : InkWell(
                                 borderRadius: BorderRadius.circular(30),
                                 onTap: () {
                                   Get.dialog(facilityDialog(roomFeatures: mainController.roomRegisterList[roomIndex].roomReservationModel.features, title: mainController.roomRegisterList[roomIndex].roomReservationModel.title, hasBrakeFast: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].features[0].value, hasDinner: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].features[1].value, hasLunch: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].features[2].value));
@@ -435,7 +435,7 @@ class RegisterReservationScreen extends StatelessWidget {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                              mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages.isEmpty ? const SizedBox() : Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                                 Flexible(
                                   flex: 2,
                                   child: Container(
@@ -499,7 +499,7 @@ class RegisterReservationScreen extends StatelessWidget {
                               const SizedBox(
                                 height: 5,
                               ),
-                              RichText(
+                              mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages.isEmpty ? const SizedBox() : RichText(
                                 text: TextSpan(children: [
                                   TextSpan(text: 'پرداختی برای: ', style: Theme.of(Get.context!).textTheme.bodyMedium),
                                   TextSpan(text: mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages[0].finance.priceInfo.paidNumber.toString().toPersianDigit(), style: Theme.of(Get.context!).textTheme.titleLarge),
@@ -509,7 +509,7 @@ class RegisterReservationScreen extends StatelessWidget {
                               const SizedBox(
                                 height: 5,
                               ),
-                              Row(
+                              mainController.roomRegisterList[roomIndex].roomReservationModel.roomPackages.isEmpty ? const SizedBox() : Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Flexible(

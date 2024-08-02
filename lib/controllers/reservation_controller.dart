@@ -12,6 +12,7 @@ import 'package:uspace_ir/constance/constance.dart';
 import 'package:uspace_ir/controllers/user_controller.dart';
 import 'package:uspace_ir/models/comment_model.dart';
 import 'package:uspace_ir/models/room_reservation_model.dart';
+import 'package:uspace_ir/models/search_model.dart';
 import 'package:uspace_ir/routes/route.dart';
 
 class ReservationController extends GetxController {
@@ -21,7 +22,13 @@ class ReservationController extends GetxController {
 
   @override
   void onInit(){
+    print(url);
     getMainInfo(roomUrl: url);
+    bottomSheetScreenScrollController.addListener(() {
+      if (bottomSheetScreenScrollController.position.pixels == bottomSheetScreenScrollController.position.maxScrollExtent && !loadMoreSuggest.value) {
+        loadMoreData();
+      }
+    },);
     //declare global key
 
     // pass it to the desired widget in a widget tree
@@ -44,9 +51,13 @@ class ReservationController extends GetxController {
     super.onInit();
   }
 
+  late Uri uri;
+
 
   ScrollController screenScrollController = ScrollController();
   ScrollController mainScrollController = ScrollController();
+
+  ScrollController searchScrollController = ScrollController();
 
   UserController userController = Get.find<UserController>();
 
@@ -59,6 +70,9 @@ class ReservationController extends GetxController {
 
   final room = Rxn<RoomReservationModel>();
 
+  RxString nextLink = ''.obs;
+
+
   getMainInfo({
     required String roomUrl,
   }) async {
@@ -66,6 +80,7 @@ class ReservationController extends GetxController {
       loading.value = true;
       var url = Uri.parse('$mainUrl/ecolodge/$roomUrl');
       var response = await http.get(url);
+      commentList.clear();
       loadMoreComment();
       if (response.statusCode == 200) {
         room.value = roomReservationModelFromJson(response.body);
@@ -79,8 +94,11 @@ class ReservationController extends GetxController {
         Get.closeCurrentSnackbar();
       },);
     } catch (e) {
-      loading.value = false;
-      Get.offAllNamed(Routes.home);
+      // loading.value = false;
+      Errors().dialogErr(onPress: () {
+        loading.value = false;
+        Get.offAllNamed(Routes.home);
+      });
       print(e);
     }
   }
@@ -421,7 +439,77 @@ class ReservationController extends GetxController {
     return false.obs;
   }
 
+  //#region =============== suggestion screen =======================
 
+  ScrollController bottomSheetScreenScrollController = ScrollController();
+
+  RxBool suggestionLoading = false.obs;
+
+  List<SearchModel> ecolodgesResult = <SearchModel>[].obs;
+
+  final RxBool loadMoreSuggest = false.obs;
+
+
+  RxString nextLinkSuggest = ''.obs;
+
+  Future<void> fetchSuggestion({
+    required String? link}) async {
+    try{
+      ecolodgesResult.clear();
+      suggestionLoading.value = true;
+      Map<String, dynamic> body = <String, dynamic>{
+        'q': link,
+      }.map((key, value) => MapEntry(key, value.toString()));
+      uri = Uri.parse('$mainUrl/all_ecolodges').replace(queryParameters: body);
+      var response = await http.Client().get(uri);
+      ecolodgesResult.clear();
+      if (response.statusCode == 200) {
+        final  data = jsonDecode(response.body)['data'];
+        final link = jsonDecode(response.body)['links'];
+        ecolodgesResult.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+        nextLinkSuggest.value = link['next'].toString();
+        suggestionLoading.value = false;
+      }else{
+        Errors().dialogErr(onPress: (){
+          fetchSuggestion(
+              link: link);
+        });
+      }
+    } on SocketException {
+      print('خطا در دریافت اطلاعات${SocketException}');
+      fetchSuggestion(
+          link: link);
+    } catch (e) {
+      print('خطا در دریافت اطلاعات${e}');
+      fetchSuggestion(
+          link: link);
+      print(e);
+    }
+  }
+
+  void loadMoreData() async{
+    try{
+      print(nextLink.value);
+      if(nextLinkSuggest.value != 'null'){
+        uri = Uri.parse(nextLink.value);
+        var response = await http.get(uri);
+        if(response.statusCode == 200){
+          loadMore.value = true;
+          final data = jsonDecode(response.body)['data'];
+          final link = jsonDecode(response.body)['links'];
+          ecolodgesResult.addAll(ecolodgeModelFromJson(jsonEncode(data)));
+          nextLink.value = link['next'].toString();
+        }
+      }
+      loadMoreSuggest.value = false;
+    }catch(e){
+      loadMoreSuggest.value = false;
+      rethrow ;
+    }
+  }
+
+
+//#endregion =============== suggestion screen =======================
 
 
 }

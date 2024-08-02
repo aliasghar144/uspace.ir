@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:uspace_ir/app/config/app_colors.dart';
 
 class Errors{
 
@@ -41,29 +42,24 @@ class Errors{
 
           },
         ));
-    // return Get.dialog(
-    //     Dialog(
-    //       insetPadding: EdgeInsets.symmetric(horizontal: Get.width/3.5),
-    //       shape: RoundedRectangleBorder(
-    //           borderRadius: BorderRadius.circular(12)
-    //       ),
-    //       child: Container(
-    //         decoration:const BoxDecoration(
-    //           borderRadius:BorderRadius.all(Radius.circular(15)),
-    //           color: Colors.white,
-    //         ),
-    //         child: Column(
-    //           mainAxisSize:MainAxisSize.min,
-    //           children: [
-    //             const SizedBox(height: 10,),
-    //             Text('خطا',style:Theme.of(Get.context!).textTheme.displayLarge!.copyWith(color:AppColors.redColor,fontSize: 20),textDirection: TextDirection.rtl,),
-    //             const SizedBox(height: 15,),
-    //             Text('مشکل در برقراری ارتباط',style:Theme.of(Get.context!).textTheme.bodyMedium),
-    //             const SizedBox(height: 10,),
-    //           ],
-    //         ),
-    //       ),
-    //     ));
+  }
+
+  Future dialogErr({
+    required GestureTapCallback onPress
+}){
+    return Get.defaultDialog(
+      onWillPop: () async => false,
+
+      barrierDismissible: false,
+      titlePadding: const EdgeInsets.only(top: 15,bottom: 10),
+      title: "مشکل در دریافت اطلاعات",
+      titleStyle: const TextStyle(
+        color:AppColors.mainColor,
+        fontSize:18,fontWeight: FontWeight.w800,
+      ),
+      middleTextStyle: const TextStyle(fontSize: 16,fontWeight:FontWeight.w700),
+      confirm: TextButton(onPressed: onPress, child: const Text('تلاش مجدد',style:TextStyle(fontSize:14,fontWeight:FontWeight.w700))),
+    );
   }
 
 }

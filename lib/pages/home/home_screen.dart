@@ -14,7 +14,6 @@ import 'package:uspace_ir/app/utils/check_currency.dart';
 import 'package:uspace_ir/controllers/base_controller.dart';
 import 'package:uspace_ir/controllers/home_controller.dart';
 import 'package:uspace_ir/controllers/search_controller.dart';
-import 'package:uspace_ir/memory/memory.dart';
 import 'package:uspace_ir/pages/reservation/reservation_screen.dart';
 import 'package:uspace_ir/widgets/card_ecolodge.dart';
 import 'package:uspace_ir/widgets/custom_progress.dart';
@@ -322,236 +321,246 @@ class HomeScreen extends StatelessWidget {
           ),)
         ),
         const SizedBox(
-          height: 8,
+          height: 15,
         ),
         SizedBox(
           width: MediaQuery.of(Get.context!).size.width,
           height: 277,
           child: Directionality(
             textDirection: TextDirection.rtl,
-            child: Obx(() => PageView.builder(
-                  scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
-                  allowImplicitScrolling: true,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: homeController.newestEcolodge.value == null ? 3 : homeController.newestEcolodge.value!.data.length,
-                  controller: homeController.newestEcolodgeController,
-                  itemBuilder: (context, index) {
-                    if (homeController.newestEcolodge.value == null || homeController.loading.value) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Shimmer.fromColors(
-                              baseColor: Colors.grey.shade300,
-                              highlightColor: Colors.grey.shade100,
-                              child: Container(
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: Colors.white),
-                                width: MediaQuery.of(context).size.width,
-                                height: 180,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Shimmer.fromColors(
-                              baseColor: Colors.grey.shade300,
-                              highlightColor: Colors.grey.shade100,
-                              child: Container(
-                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
-                                width: MediaQuery.of(context).size.width / 3,
-                                height: 12,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
+            child: Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.bottomCenter,
+              children: [
+                Obx(() => PageView.builder(
+                      scrollDirection: axisDirectionToAxis(flipAxisDirection(AxisDirection.right)),
+                      allowImplicitScrolling: true,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: homeController.newestEcolodge.value == null ? 3 : homeController.newestEcolodge.value!.data.length,
+                      controller: homeController.newestEcolodgeController,
+                      itemBuilder: (context, index) {
+                        if (homeController.newestEcolodge.value == null || homeController.loading.value) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Shimmer.fromColors(
-                                    baseColor: Colors.grey.shade300,
-                                    highlightColor: Colors.grey.shade100,
-                                    child: Container(
-                                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
-                                      width: MediaQuery.of(context).size.width / 3,
-                                      height: 12,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Get.to(() {
-                                  return ReservationScreen(
-                                    url: homeController.newestEcolodge.value!.data[index].url,
-                                  );
-                                });
-                                //     ?.then((value){
-                                //   Memory().saveLikeDislike();
-                                // });
-                              },
-                              borderRadius: BorderRadius.circular(12),
-                              child: CachedNetworkImage(
-                                imageUrl: homeController.newestEcolodge.value!.data[index].image,
-                                fit: BoxFit.cover,
-                                imageBuilder: (context, imageProvider) {
-                                  return Container(
-                                    clipBehavior: Clip.none,
-                                    decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.shade300,
-                                            offset: const Offset(
-                                              1.0,
-                                              2.0,
-                                            ),
-                                            blurRadius: 10.0,
-                                            spreadRadius: 0.0,
-                                          ), //BoxShadow
-                                          const BoxShadow(
-                                            color: Colors.white,
-                                            offset: Offset(0.0, 0.0),
-                                            blurRadius: 0.0,
-                                            spreadRadius: 0.0,
-                                          ),
-                                        ],
-                                        image: DecorationImage(
-                                          image: imageProvider,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius: BorderRadius.circular(22)),
+                                Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade300,
+                                  highlightColor: Colors.grey.shade100,
+                                  child: Container(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(25), color: Colors.white),
                                     width: MediaQuery.of(context).size.width,
                                     height: 180,
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      alignment: Alignment.bottomCenter,
-                                      children: [
-                                        Positioned(
-                                          left: -10,
-                                          top: Get.width * 0.20,
-                                          child: Container(
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                              child: Center(
-                                                  child: IconButton(
-                                                splashRadius: 18,
-                                                onPressed: () {
-                                                  if (index != homeController.newestEcolodge.value!.data.length) {
-                                                    homeController.newestEcolodgeController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                  }
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_forward_ios_rounded,
-                                                  color: AppColors.mainColor,
-                                                  size: 18,
-                                                ),
-                                                padding: EdgeInsets.zero,
-                                                alignment: Alignment.center,
-                                              ))),
-                                        ),
-                                        Positioned(
-                                          right: -10,
-                                          top: Get.width * 0.20,
-                                          child: Container(
-                                              width: 30,
-                                              height: 30,
-                                              decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
-                                              child: IconButton(
-                                                  splashRadius: 18,
-                                                  onPressed: () {
-                                                    if (index != 0) {
-                                                      homeController.newestEcolodgeController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                                                    }
-                                                  },
-                                                  alignment: Alignment.center,
-                                                  padding: EdgeInsets.zero,
-                                                  icon: const Icon(
-                                                    Icons.arrow_back_ios_rounded,
-                                                    color: AppColors.mainColor,
-                                                    size: 18,
-                                                  ))),
-                                        ),
-                                        Container(
-                                          decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.elliptical(45, 50), topRight: Radius.elliptical(45, 50))),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                                            child: Text(
-                                              homeController.newestEcolodge.value!.data[index].minPrice == 0 ? 'تماس با پشتیبانی' : '${homeController.newestEcolodge.value!.data[index].minPrice?.toString().beToman().seRagham() ?? '0'} ${checkCurrency(homeController.newestEcolodge.value!.data[index].currency)}/ ${homeController.newestEcolodge.value!.data[index].unitPrice}',
-                                              maxLines: 1,
-                                              style: Theme.of(context).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
-                                            ),
-                                          ),
-                                        ),
-                                        if (homeController.newestEcolodge.value!.data[index].maxDiscountPercent != null && homeController.newestEcolodge.value!.data[index].maxDiscountPercent! > 0)
-                                          Positioned(
-                                            right: Get.width * 0.10,
-                                            top: 0,
-                                            child: Container(
-                                              height: 25,
-                                              width: 40,
-                                              decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12))),
-                                              child: Center(child: Text('${homeController.newestEcolodge.value!.data[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
-                                            ),
-                                          )
-                                        else
-                                          const SizedBox(),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(homeController.newestEcolodge.value!.data[index].title, style: Theme.of(context).textTheme.displayMedium),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SvgPicture.asset(
-                                  'assets/icons/location_small_pin_ic.svg',
-                                  color: Colors.black,
-                                  width: 18,
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    '${homeController.newestEcolodge.value!.data[index].province}, ${homeController.newestEcolodge.value!.data[index].city}, ${homeController.newestEcolodge.value!.data[index].address}',
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.right,
-                                    maxLines: 2,
-                                    style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.black),
                                   ),
                                 ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Shimmer.fromColors(
+                                  baseColor: Colors.grey.shade300,
+                                  highlightColor: Colors.grey.shade100,
+                                  child: Container(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+                                    width: MediaQuery.of(context).size.width / 3,
+                                    height: 12,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade300,
+                                        highlightColor: Colors.grey.shade100,
+                                        child: Container(
+                                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
+                                          width: MediaQuery.of(context).size.width / 3,
+                                          height: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
                               ],
-                            )
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                )),
+                            ),
+                          );
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    Get.to(()=>ReservationScreen(url: homeController.newestEcolodge.value!.data[index].url));
+                                    // Get.toNamed('${Routes.reservationScreen}/${homeController.newestEcolodge.value!.data[index].url}');
+                                    // Get.to(() {
+                                    //   return ReservationScreen(
+                                    //     url: homeController.newestEcolodge.value!.data[index].url,
+                                    //   );
+                                    // });
+                                    //     ?.then((value){
+                                    //   Memory().saveLikeDislike();
+                                    // });
+                                  },
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: CachedNetworkImage(
+                                    imageUrl: homeController.newestEcolodge.value!.data[index].image,
+                                    fit: BoxFit.cover,
+                                    imageBuilder: (context, imageProvider) {
+                                      return Container(
+                                        clipBehavior: Clip.none,
+                                        decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.shade300,
+                                                offset: const Offset(
+                                                  1.0,
+                                                  2.0,
+                                                ),
+                                                blurRadius: 10.0,
+                                                spreadRadius: 0.0,
+                                              ), //BoxShadow
+                                              const BoxShadow(
+                                                color: Colors.white,
+                                                offset: Offset(0.0, 0.0),
+                                                blurRadius: 0.0,
+                                                spreadRadius: 0.0,
+                                              ),
+                                            ],
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius: BorderRadius.circular(22)),
+                                        width: MediaQuery.of(context).size.width,
+                                        height: 180,
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+
+                                            Container(
+                                              decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.elliptical(45, 50), topRight: Radius.elliptical(45, 50))),
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                                                child: Text(
+                                                  homeController.newestEcolodge.value!.data[index].minPrice == 0 ? 'تماس با پشتیبانی' : '${homeController.newestEcolodge.value!.data[index].minPrice?.toString().beToman().seRagham() ?? '0'} ${checkCurrency(homeController.newestEcolodge.value!.data[index].currency)}/ ${homeController.newestEcolodge.value!.data[index].unitPrice}',
+                                                  maxLines: 1,
+                                                  style: Theme.of(context).textTheme.labelMedium!.copyWith(color: AppColors.mainColor),
+                                                ),
+                                              ),
+                                            ),
+                                            if (homeController.newestEcolodge.value!.data[index].maxDiscountPercent != null && homeController.newestEcolodge.value!.data[index].maxDiscountPercent! > 0)
+                                              Positioned(
+                                                right: Get.width * 0.10,
+                                                top: 0,
+                                                child: Container(
+                                                  height: 25,
+                                                  width: 40,
+                                                  decoration: const BoxDecoration(color: Color(0xffEA213B), borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12))),
+                                                  child: Center(child: Text('${homeController.newestEcolodge.value!.data[index].maxDiscountPercent}%', style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white))),
+                                                ),
+                                              )
+                                            else
+                                              const SizedBox(),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    errorWidget: (context, url, error) => const Icon(Icons.broken_image_outlined),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text(homeController.newestEcolodge.value!.data[index].title, style: Theme.of(context).textTheme.displayMedium),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/icons/location_small_pin_ic.svg',
+                                      color: Colors.black,
+                                      width: 18,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        '${homeController.newestEcolodge.value!.data[index].province}, ${homeController.newestEcolodge.value!.data[index].city}, ${homeController.newestEcolodge.value!.data[index].address}',
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.right,
+                                        maxLines: 2,
+                                        style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.black),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                    )),
+                Obx(() => homeController.newestEcolodge.value == null || homeController.loading.value ? const SizedBox() : Positioned(
+                  left: 10,
+                  top: Get.width * 0.20,
+                  child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                      child: Center(
+                          child: IconButton(
+                            splashRadius: 18,
+                            onPressed: () {
+                              if (homeController.newestEcolodgeController.page != homeController.newestEcolodge.value!.data.length-1) {
+                                homeController.newestEcolodgeController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                              }
+                            },
+                            icon: const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: AppColors.mainColor,
+                              size: 18,
+                            ),
+                            padding: EdgeInsets.zero,
+                            alignment: Alignment.center,
+                          ))),
+                ),),
+                Obx(() => homeController.newestEcolodge.value == null || homeController.loading.value ? const SizedBox() :                 Positioned(
+                  right: 10,
+                  top: Get.width * 0.20,
+                  child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(color: Colors.white, boxShadow: [const BoxShadow(color: Colors.black12, spreadRadius: 1.2, blurRadius: 2.75, offset: Offset(1.5, 0)), BoxShadow(color: AppColors.mainColor.withOpacity(0.1), spreadRadius: 1.2, blurRadius: 2.75, offset: const Offset(1.5, 0))], shape: BoxShape.circle),
+                      child: IconButton(
+                          splashRadius: 18,
+                          onPressed: () {
+                            if (homeController.newestEcolodgeController.page != 0) {
+                              homeController.newestEcolodgeController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                            }
+                          },
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.zero,
+                          icon: const Icon(
+                            Icons.arrow_back_ios_rounded,
+                            color: AppColors.mainColor,
+                            size: 18,
+                          ))),
+                ),
+                )
+              ],
+            ),
           ),
         ),
       ],
